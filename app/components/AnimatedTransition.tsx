@@ -3,7 +3,6 @@
 import React from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { usePathname } from 'next/navigation'
-import { useState, useEffect } from 'react'
 
 function AnimatedTransition( {children}:{ children: React.ReactNode } ){
     const pathName = usePathname()
