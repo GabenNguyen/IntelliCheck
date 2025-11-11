@@ -19,10 +19,10 @@ function NavBar() {
 
                 <NavigationMenu className="flex-1 -m-px flex justify-center">
                     <NavigationMenuList className="flex items-center justify-center space-x-3 mt-4 mb-2">
-                        {["About", "Quiz", "Results"].map((item) => (
+                        {["Home", "About", "Quiz", "Results"].map((item) => (
                             <NavigationMenuItem key={item}>
                                 <NavigationMenuLink asChild>
-                                    <Link href={item === "About" ? `/`: `/${item.toLowerCase()}` } 
+                                    <Link href={item === "Home" ? `/`: `/${item.toLowerCase()}` } 
                                     className="!text-xl hover:underline"
                                     >
                                         {item}
