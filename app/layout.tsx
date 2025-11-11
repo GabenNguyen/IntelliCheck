@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import NavBar from "./components/NavBar";
 import ThemeProvider  from "./components/ThemeProvider";
+import AnimatedTransition from "./components/AnimatedTransition";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,8 +34,15 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <NavBar />
-          {children}
+            <NavBar />
+          <AnimatedTransition>
+            {children}
+          </AnimatedTransition>
+
+          <footer className="text-center py-6 text-gray-600 dark:text-gray-400 border-t border-gray-200 dark:border-gray-700 mt-10">
+            © {new Date().getFullYear()} <span className="font-semibold text-blue-600">Quizzify</span> - <span className="font-semibold">Ba Hoa NGUYEN</span>
+          </footer>
+        
         </ThemeProvider>
       </body>
     </html>
