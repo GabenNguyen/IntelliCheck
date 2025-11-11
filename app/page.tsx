@@ -9,10 +9,12 @@ import {
 
 import { ArrowRight } from "lucide-react";
 
+import Link from "next/link";
+
 
 export default function Home() {
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gradient-to-b from-blue-100 to-white dark:from-gray-900 dark:to-black p-6">
+    <div className="flex justify-center items-center max-h-screen bg-gradient-to-b from-blue-100 to-white dark:from-gray-900 dark:to-black p-6">
       <Card className="w-full max-w-3xl shadow-2xl border border-gray-300 dark:border-gray-700 rounded-2xl p-6">
         <CardHeader className="text-center space-y-3">
           <CardTitle className="text-4xl font-extrabold tracking-tight">
@@ -33,8 +35,8 @@ export default function Home() {
         </CardContent>
 
         <CardFooter className="flex justify-center">
-          <button className="cursor-pointer flex items-center bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-3 px-2 border border-blue-500 hover:border-transparent rounded active:scale-90 transition-all">
-            Start a Quiz <ArrowRight className="w-5 h-5 transition-transform duration-200 group-hover:translate-x-1"/>
+          <button className="cursor-pointer bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-3 px-2 border border-blue-500 hover:border-transparent rounded active:scale-90 transition-all">
+            <Link className="flex items-center" href={`/quiz`}> Start a Quiz <ArrowRight className="w-5 h-5 transition-transform duration-200 group-hover:translate-x-1 mx-1"/> </Link>
           </button>
         </CardFooter>
       </Card>
