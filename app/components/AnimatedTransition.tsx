@@ -7,15 +7,6 @@ import { useState, useEffect } from 'react'
 
 function AnimatedTransition( {children}:{ children: React.ReactNode } ){
     const pathName = usePathname()
-    const [mounted, setMounted] = useState(false)
-
-    useEffect(() => {
-        setMounted(true);
-    }, []);
-
-    if(!mounted) {
-        return null;
-    }
 
     return (
         <AnimatePresence mode='wait' initial={true}>
