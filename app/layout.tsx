@@ -40,7 +40,7 @@ export default function RootLayout({
           </AnimatedTransition>
 
           <footer className="text-center py-6 text-gray-600 dark:text-gray-400 border-t border-gray-200 dark:border-gray-700 mt-10">
-            © {new Date().getFullYear()} <span className="font-semibold text-blue-600">Quizzify</span> - <span className="font-semibold">Ba Hoa NGUYEN</span>
+            © {new Date().getFullYear()} <span className="font-semibold text-blue-600">QuizGenie</span> - <span className="font-semibold">Ba Hoa NGUYEN</span>
           </footer>
         
         </ThemeProvider>
