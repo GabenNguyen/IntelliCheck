@@ -4,6 +4,7 @@ import "./globals.css";
 import NavBar from "./components/NavBar";
 import ThemeProvider  from "./components/ThemeProvider";
 import AnimatedTransition from "./components/AnimatedTransition";
+import { Toaster } from "sonner";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -35,6 +36,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
             <NavBar />
+            <Toaster />
           <AnimatedTransition>
             {children}
           </AnimatedTransition>
