@@ -17,7 +17,7 @@ function About() {
           </CardTitle>
           <CardDescription className="text-lg text-gray-600 dark:text-white">
             Are you preparing for your exam, or just simply want to test your knowledge?
-            <span className="text-blue-600 text-xl font-semibold"> Quizzify </span> got you covered ✅
+            <span className="text-blue-600 text-xl font-semibold"> QuizGenie </span> got you covered ✅
           </CardDescription>
         </CardHeader>
 
