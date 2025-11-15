@@ -14,7 +14,7 @@ import Link from "next/link";
 
 export default function Home() {
   return (
-    <div className="flex justify-center items-center max-h-screen bg-gradient-to-b from-blue-100 to-white dark:from-gray-900 dark:to-black p-6">
+    <div className="flex justify-center items-center max-h-screen bg-linear-to-b from-blue-100 to-white dark:from-gray-900 dark:to-black p-6">
       <Card className="w-full max-w-3xl shadow-2xl border border-gray-300 dark:border-gray-700 rounded-2xl p-6">
         <CardHeader className="text-center space-y-3">
           <CardTitle className="text-4xl font-extrabold tracking-tight">
@@ -30,7 +30,7 @@ export default function Home() {
             Type a topic, pick your difficulty, and let AI create a custom quiz just for you.
           </p>
           <p className="text-gray-700 dark:text-gray-300">
-            Whether you're revising for exams or just having fun — Quizzify’s got you covered.
+            Whether you are revising for exams or just having fun — <span className="text-blue-600 font-semibold">QuizGenie</span> got you covered.
           </p>
         </CardContent>
 
