@@ -36,7 +36,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
             <NavBar />
-            <Toaster />
+            <Toaster position="top-center" />
           <AnimatedTransition>
             {children}
           </AnimatedTransition>
