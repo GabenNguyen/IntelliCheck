@@ -178,7 +178,7 @@ function QuizPage() {
             ) : (
                <div className="text-center space-y-4 mt-4">
                         <CardTitle className="text-3xl font-bold">
-                          🎉 Congratulations! You scored {score} out of {questions.length}
+                          🎉 Congratulations! You have finished the quiz
                         </CardTitle>
                         <Button
                           className="cursor-pointer mt-4"
