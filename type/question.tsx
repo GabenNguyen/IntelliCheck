@@ -1,0 +1,7 @@
+export default interface Question {
+    id: string
+    question: string
+    options: string[]
+    correctAnswer: string
+    explanation?: string
+}
