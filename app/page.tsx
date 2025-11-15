@@ -18,7 +18,7 @@ export default function Home() {
       <Card className="w-full max-w-3xl shadow-2xl border border-gray-300 dark:border-gray-700 rounded-2xl p-6">
         <CardHeader className="text-center space-y-3">
           <CardTitle className="text-4xl font-extrabold tracking-tight">
-            Welcome to <span className="text-blue-600">Quizzify</span> 🧠
+            Welcome to <span className="text-blue-600">QuizGenie</span> 🧠
           </CardTitle>
           <CardDescription className="text-lg text-gray-600 dark:text-gray-400">
             Generate AI-powered quizzes on any topic. Learn faster, test smarter.
