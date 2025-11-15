@@ -2,6 +2,7 @@
 import React from 'react'
 import Question from '@/type/question'
 import { useState } from 'react'
+import { useRouter } from 'next/navigation';
 import { toast } from "sonner"
 import { Progress } from "@/components/ui/progress"
 import { Input } from '@/components/ui/input';
@@ -23,8 +24,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { Button } from '@/components/ui/button';
 
+import { Button } from '@/components/ui/button';
 
 const sampleQuestions: Question[] = [
   {
@@ -60,7 +61,9 @@ function QuizPage() {
     const [optionSelected, setOptionSelected] = useState<string | null>(null);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [score, setScore] = useState(0)
+    const [quizFinished, setQuizFinished] = useState(false)
 
+    const router = useRouter();
 
     const handleStartQuiz = () => {
         if(!topic) {
@@ -73,7 +76,7 @@ function QuizPage() {
 
 
   return (
-   <div className="flex justify-center items-center max-h-screen bg-gradient-to-b from-blue-100 to-white dark:from-gray-900 dark:to-black p-6">
+   <div className="flex justify-center items-center max-h-screen bg-linear-to-b from-blue-100 to-white dark:from-gray-900 dark:to-black p-6">
      
         {!quizStarted ? (
           <Card className="w-full max-w-3xl shadow-2xl border border-gray-300 dark:border-gray-700 rounded-2xl p-6">
@@ -86,7 +89,7 @@ function QuizPage() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6 text-center text-lg">
-            <Input 
+            <Input
                 type='text'
                 placeholder="Enter a topic"
                 value={topic}
@@ -116,22 +119,85 @@ function QuizPage() {
                 onChange={(e) => setNumOfQuestions(parseInt(e.target.value))}
             />
             <CardFooter className="flex justify-center">
-              <Button type='submit' onClick={handleStartQuiz}>Generate Quiz</Button>
+              <Button 
+              className="cursor-pointer active:scale-90 transition-all" 
+              type='submit' 
+              onClick={handleStartQuiz}
+              >
+                Generate Quiz
+              </Button>
             </CardFooter>
           </CardContent>
         </Card>
         ) : 
           <Card className="w-full max-w-3xl shadow-2xl border border-gray-300 dark:border-gray-700 rounded-2xl p-6">
-            <CardHeader className="text-center space-y-3"> 
+            {!quizFinished ? (
+              <CardHeader className="text-center space-y-3"> 
                 <div className="flex justify-between text-sm text-gray-500 dark:text-gray-400">
                     Question: {currentQuestionIndex + 1} / {questions.length}
                 </div>
             
-                <Progress className="h-2 rounded-full mt-2" value={(currentQuestionIndex + 1 / questions.length) * 100} />
+                <Progress className="h-2 rounded-full mt-2" value={(((currentQuestionIndex + 1) / questions.length)) * 100} />
                 <CardTitle className='className="text-2xl font-bold mt-4"'>
                     {questions[currentQuestionIndex].question}
                 </CardTitle>
+                <CardContent className="grid gap-4 mt-4">
+                  {questions[currentQuestionIndex].options.map((option) => (
+                    <Button
+                      key={option}
+                      variant={optionSelected === option ? "default" : "outline"}
+                      className="w-full cursor-pointer active:scale-95 transition-all"
+                      onClick={() => setOptionSelected(option)}
+                    >
+                      {option}
+                    </Button>
+                  ))}
+                </CardContent>
+                 <CardFooter className="flex justify-center mt-4">
+                        <Button
+                            className="cursor-pointer active:scale-90 transition-all"
+                            onClick={() => {
+                                if (optionSelected === null) {
+                                  return toast.warning("Please select an option!");
+                                }
+                              
+                                if (currentQuestionIndex + 1 < questions.length) {
+                                  setCurrentQuestionIndex(currentQuestionIndex + 1);
+                                
+                                } else {
+                                  const finalScore = score + (optionSelected === questions[currentQuestionIndex].correctAnswer ? 1 : 0)
+                                  setScore(finalScore);
+                                  setQuizFinished(true);
+                                }
+                            }}
+                          >
+                            {currentQuestionIndex + 1 < questions.length ? "Next Question" : "Finish Quiz"}
+                      </Button>
+                    </CardFooter>
             </CardHeader>
+            ) : (
+               <div className="text-center space-y-4 mt-4">
+                        <CardTitle className="text-3xl font-bold">
+                          🎉 Congratulations! You scored {score} out of {questions.length}
+                        </CardTitle>
+                        <Button
+                          className="cursor-pointer mt-4"
+                          onClick={() => {
+                            setQuizFinished(false);
+                            setQuizStarted(false);
+                            setCurrentQuestionIndex(0);
+                            setScore(0);
+                            setQuestions([]);
+                            setOptionSelected(null);
+
+                            router.push("/results")
+                      
+                          }}
+                        >
+                          Show Results
+                        </Button>
+                    </div>
+            ) }
           </Card>
         }
     </div>
