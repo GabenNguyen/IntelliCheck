@@ -6,6 +6,8 @@ import { useRouter } from 'next/navigation';
 import { toast } from "sonner"
 import { Progress } from "@/components/ui/progress"
 import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { Spinner } from "@/components/ui/spinner"
 import {
   Card,
   CardContent,
@@ -25,7 +27,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 
-import { Button } from '@/components/ui/button';
+
 
 const sampleQuestions: Question[] = [
   {
@@ -46,14 +48,79 @@ const sampleQuestions: Question[] = [
     options: ["useEffect", "useState", "useRef", "useReducer"],
     correctAnswer: "useState",
   },
+  {
+    id: "q4",
+    question: "What does CSS stand for?",
+    options: [
+      "Cascading Style Sheets",
+      "Creative Style System",
+      "Computer Style Syntax",
+      "Colorful Styling Script"
+    ],
+    correctAnswer: "Cascading Style Sheets",
+  },
+  {
+    id: "q5",
+    question: "Which HTML tag is used to define the largest heading?",
+    options: ["<h6>", "<header>", "<h1>", "<title>"],
+    correctAnswer: "<h1>",
+  },
+  {
+    id: "q6",
+    question: "Which HTTP method is commonly used to submit form data?",
+    options: ["PUT", "POST", "DELETE", "OPTIONS"],
+    correctAnswer: "POST",
+  },
+  {
+    id: "q7",
+    question: "Which of the following is a JavaScript framework?",
+    options: ["Laravel", "Django", "React", "Flask"],
+    correctAnswer: "React",
+  },
+  {
+    id: "q8",
+    question: "What does JSON stand for?",
+    options: [
+      "JavaScript Oriented Notation",
+      "Java Standard Output Notation",
+      "JavaScript Object Notation",
+      "Joined Syntax Object Network"
+    ],
+    correctAnswer: "JavaScript Object Notation",
+  },
+  {
+    id: "q9",
+    question: "Which command initializes a new Node.js project?",
+    options: ["node create", "npm init", "npm install", "node start"],
+    correctAnswer: "npm init",
+  },
+  {
+    id: "q10",
+    question: "Which CSS property controls text size?",
+    options: ["font-style", "font-size", "text-size", "text-style"],
+    correctAnswer: "font-size",
+  },
+  {
+    id: "q11",
+    question: "Which part of a URL is responsible for identifying the resource path?",
+    options: ["Protocol", "Domain", "Pathname", "Query String"],
+    correctAnswer: "Pathname",
+  },
+  {
+    id: "q12",
+    question: "Which hook runs after every render by default?",
+    options: ["useState", "useEffect", "useContext", "useMemo"],
+    correctAnswer: "useEffect",
+  }
 ];
 
 
 function QuizPage() {
     // Form state
     const [topic, setTopic] = useState("");
-    const [difficulty, setDifficulty] = useState("medium");
-    const [numOfQuestions, setNumOfQuestions] = useState(5);
+    const [difficulty, setDifficulty] = useState("");
+    const [numOfQuestions, setNumOfQuestions] = useState(parseInt(""));
+    const [isLoading, setIsLoading] = useState(false);
 
     // Quiz state
     const [quizStarted, setQuizStarted] = useState(false);
@@ -63,15 +130,23 @@ function QuizPage() {
     const [score, setScore] = useState(0)
     const [quizFinished, setQuizFinished] = useState(false)
 
+    // navigating to results page
     const router = useRouter();
 
     const handleStartQuiz = () => {
-        if(!topic) {
-            return toast.warning("Please enter a topic!")
+        if(!topic || !difficulty || !numOfQuestions) {
+            return toast.warning("Please fill in the blank!")
         }
+        
+        setIsLoading(true);
 
-        setQuestions(sampleQuestions.slice(0, numOfQuestions));
-        setQuizStarted(true);
+        // Simulate API call delay
+        setTimeout(() => {
+          setQuestions(sampleQuestions.slice(0, numOfQuestions));
+          setQuizStarted(true);
+          setIsLoading(false);
+        }, 1500);
+        
     }
 
 
@@ -90,6 +165,7 @@ function QuizPage() {
             </CardHeader>
             <CardContent className="space-y-6 text-center text-lg">
             <Input
+                className="shadow-lg"
                 type='text'
                 placeholder="Enter a topic"
                 value={topic}
@@ -97,7 +173,7 @@ function QuizPage() {
             />
             
             <Select value={difficulty} onValueChange={(difficulty) => setDifficulty(difficulty)}>
-                <SelectTrigger>
+                <SelectTrigger className="w-full shadow-lg cursor-pointer">
                     <SelectValue placeholder="Choose your difficulty"/>
                 </SelectTrigger>
                 <SelectContent>
@@ -111,6 +187,7 @@ function QuizPage() {
             </Select>
 
             <Input 
+                className="shadow-lg"
                 type='number'
                 min={`1`}
                 max={sampleQuestions.length}
@@ -124,7 +201,8 @@ function QuizPage() {
               type='submit' 
               onClick={handleStartQuiz}
               >
-                Generate Quiz
+                { isLoading && <Spinner />}
+                {isLoading ? "Genie is generating your quizzes... Hold your breath!!!" : "Generate Quiz"}
               </Button>
             </CardFooter>
           </CardContent>
