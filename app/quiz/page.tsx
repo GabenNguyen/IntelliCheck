@@ -27,6 +27,17 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
+
 
 
 const sampleQuestions: Question[] = [
@@ -119,7 +130,8 @@ function QuizPage() {
     // Form state
     const [topic, setTopic] = useState("");
     const [difficulty, setDifficulty] = useState("");
-    const [numOfQuestions, setNumOfQuestions] = useState(parseInt(""));
+    const [showAsianAlert, setShowAsianAlert] = useState(false);
+    const [numOfQuestions, setNumOfQuestions] = useState("");
     const [isLoading, setIsLoading] = useState(false);
 
     // Quiz state
@@ -133,20 +145,37 @@ function QuizPage() {
     // navigating to results page
     const router = useRouter();
 
+    const shuffleQuestions = (questions: Question[]) => {
+       const shuffledQuestion = [...questions]
+       for(let i = shuffledQuestion.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [shuffledQuestion[i], shuffledQuestion[j]] = [shuffledQuestion[j], shuffledQuestion[i]];
+       }
+       return shuffledQuestion;
+    }
+
+    const startQuiz = () => {
+        setIsLoading(true);
+
+        // Simulate API call delay
+        setTimeout(() => {
+          setQuestions(shuffleQuestions([...sampleQuestions].slice(0, parseInt(numOfQuestions))));
+          setQuizStarted(true);
+          setIsLoading(false);
+        }, 2000);
+    }
+
     const handleStartQuiz = () => {
         if(!topic || !difficulty || !numOfQuestions) {
             return toast.warning("Please fill in the blank!")
         }
         
-        setIsLoading(true);
-
-        // Simulate API call delay
-        setTimeout(() => {
-          setQuestions(sampleQuestions.slice(0, numOfQuestions));
-          setQuizStarted(true);
-          setIsLoading(false);
-        }, 1500);
+        if(difficulty === "asian") {
+          setShowAsianAlert(true);
+          return;
+        }
         
+        startQuiz();
     }
 
 
@@ -166,7 +195,7 @@ function QuizPage() {
             <CardContent className="space-y-6 text-center text-lg">
             <Input
                 className="shadow-lg"
-                type='text'
+                type="text"
                 placeholder="Enter a topic"
                 value={topic}
                 onChange={(e) => setTopic(e.target.value)}
@@ -182,6 +211,7 @@ function QuizPage() {
                         <SelectItem value="easy">Easy</SelectItem>
                         <SelectItem value="medium">Medium</SelectItem>
                         <SelectItem value="hard">Hard</SelectItem>
+                        <SelectItem value="asian">Asian</SelectItem>
                     </SelectGroup>
                 </SelectContent>
             </Select>
@@ -193,19 +223,45 @@ function QuizPage() {
                 max={sampleQuestions.length}
                 placeholder="Choose the number of questions"
                 value={numOfQuestions}
-                onChange={(e) => setNumOfQuestions(parseInt(e.target.value))}
+                onChange={(e) => setNumOfQuestions(e.target.value)}
             />
             <CardFooter className="flex justify-center">
               <Button 
               className="cursor-pointer active:scale-90 transition-all" 
               type='submit' 
               onClick={handleStartQuiz}
+              disabled={isLoading}
               >
-                { isLoading && <Spinner />}
-                {isLoading ? "Genie is generating your quizzes... Hold your breath!!!" : "Generate Quiz"}
+                {isLoading ? <>  Generating Quiz<Spinner /> </> : "Generate Quiz"}
               </Button>
             </CardFooter>
           </CardContent>
+          <AlertDialog open={showAsianAlert} onOpenChange={setShowAsianAlert}>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Asian Difficulty Selected</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Yo! You've selected the <span className="text-red-600 font-semibold">"Asian"</span> difficulty level. Are you sure you want to proceed?
+                  </AlertDialogDescription>
+              </AlertDialogHeader>
+                  
+                  <AlertDialogFooter>
+                    <AlertDialogCancel
+                      onClick={() => setShowAsianAlert(false)}
+                    >
+                      Cancel
+                    </AlertDialogCancel>
+                    <AlertDialogAction
+                      onClick={() => {
+                        startQuiz()
+                      }}
+                    
+                    > 
+                      Proceed
+                    </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
         </Card>
         ) : 
           <Card className="w-full max-w-3xl shadow-2xl border border-gray-300 dark:border-gray-700 rounded-2xl p-6">
@@ -278,6 +334,7 @@ function QuizPage() {
             ) }
           </Card>
         }
+       
     </div>
   )
 }
