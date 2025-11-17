@@ -155,29 +155,36 @@ function QuizPage() {
     }
 
     const validateInput = (input: string) => {
-        if(input.trim().length < 3 || input.trim().length > 50) {
+        const sanitisedInput = input.trim()
+
+        if(sanitisedInput.length < 3 || sanitisedInput.length > 50) {
             return false;
         }
 
+        // Reject ONLY Number
+        if(/^\d+$/.test(sanitisedInput)) {
+          return false;
+        }
+
         // Only letters and spaces allowed
-        if(/[^A-Za-z\s]/.test(input.trim())) {
+        if(!/^[A-Za-z\s]/.test(sanitisedInput)) {
           return false;
         }
 
         // Need at least one vowel and one consonant
-        if(/[^ueoai]/i.test(input.trim())) {
+        if(!/[ueoai]/i.test(sanitisedInput)) {
           return false;
         }
 
-        if(/[^bcdfghjklmnpqrstvwxyz]/i.test(input.trim())) {
+        if(!/[bcdfghjklmnpqrstvwxyz]/i.test(sanitisedInput)) {
           return false;
         }
 
-        if(/^(.)\1+$/.test(input.trim())) {
+        if(/(.)\1{2,}/.test(sanitisedInput)) {
           return false;
         }
 
-        if(/^(..)\1+$/.test(input.trim())) {
+        if(/(\w{2,})\1/.test(sanitisedInput)) {
           return false;
         }
 
@@ -202,7 +209,7 @@ function QuizPage() {
         }
 
         if(!validateInput(topic)) {
-            return toast.error("Invalid input!");
+            return toast.error("Invalid topic!");
         }        
         
         if(Number(numOfQuestions) > sampleQuestions.length || Number(numOfQuestions) < 1) {
@@ -292,6 +299,7 @@ function QuizPage() {
                       Cancel
                     </AlertDialogCancel>
                     <AlertDialogAction
+                      className='cursor-pointer'
                       onClick={() => {
                         startQuiz()
                       }}
