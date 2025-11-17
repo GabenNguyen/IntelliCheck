@@ -154,6 +154,37 @@ function QuizPage() {
        return shuffledQuestion;
     }
 
+    const validateInput = (input: string) => {
+        if(input.trim().length < 3 || input.trim().length > 50) {
+            return false;
+        }
+
+        // Only letters and spaces allowed
+        if(/[^A-Za-z\s]/.test(input.trim())) {
+          return false;
+        }
+
+        // Need at least one vowel and one consonant
+        if(/[^ueoai]/i.test(input.trim())) {
+          return false;
+        }
+
+        if(/[^bcdfghjklmnpqrstvwxyz]/i.test(input.trim())) {
+          return false;
+        }
+
+        if(/^(.)\1+$/.test(input.trim())) {
+          return false;
+        }
+
+        if(/^(..)\1+$/.test(input.trim())) {
+          return false;
+        }
+
+        return true;
+    }
+
+
     const startQuiz = () => {
         setIsLoading(true);
 
@@ -169,11 +200,20 @@ function QuizPage() {
         if(!topic || !difficulty || !numOfQuestions) {
             return toast.warning("Please fill in the blank!")
         }
+
+        if(!validateInput(topic)) {
+            return toast.error("Invalid input!");
+        }        
+        
+        if(Number(numOfQuestions) > sampleQuestions.length || Number(numOfQuestions) < 1) {
+            return toast.error(`Please choose a number between 1 and ${sampleQuestions.length}`);
+        }
         
         if(difficulty === "asian") {
           setShowAsianAlert(true);
           return;
         }
+
         
         startQuiz();
     }
@@ -208,10 +248,10 @@ function QuizPage() {
                 <SelectContent>
                   <SelectGroup>
                     <SelectLabel>Difficulty</SelectLabel>
-                        <SelectItem value="easy">Easy</SelectItem>
-                        <SelectItem value="medium">Medium</SelectItem>
-                        <SelectItem value="hard">Hard</SelectItem>
-                        <SelectItem value="asian">Asian</SelectItem>
+                        <SelectItem value="easy" className='cursor-pointer'>Easy</SelectItem>
+                        <SelectItem value="medium" className='cursor-pointer'>Medium</SelectItem>
+                        <SelectItem value="hard" className='cursor-pointer'>Hard</SelectItem>
+                        <SelectItem value="asian" className='cursor-pointer'>Asian</SelectItem>
                     </SelectGroup>
                 </SelectContent>
             </Select>
