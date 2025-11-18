@@ -1,13 +1,15 @@
 "use client";
 import React from 'react'
 import Question from '@/type/question'
+import CountDown from '../components/CountDown';
 import { useState } from 'react'
 import { useRouter } from 'next/navigation';
 import { toast } from "sonner"
 import { Progress } from "@/components/ui/progress"
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Spinner } from "@/components/ui/spinner"
+import { Spinner } from "@/components/ui/spinner";
+import { Label } from "@/components/ui/label"
 import {
   Card,
   CardContent,
@@ -197,6 +199,7 @@ function QuizPage() {
 
         // Simulate API call delay
         setTimeout(() => {
+          // Randomise the questions
           setQuestions(shuffleQuestions([...sampleQuestions].slice(0, parseInt(numOfQuestions))));
           setQuizStarted(true);
           setIsLoading(false);
@@ -240,14 +243,15 @@ function QuizPage() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6 text-center text-lg">
+            <Label htmlFor='topic' className='flex items-center gap-2 text-gray-700 dark:text-gray-300 font-semibold text-lg mb-2'>Topic</Label>
             <Input
                 className="shadow-lg"
                 type="text"
-                placeholder="Enter a topic"
+                placeholder="E.g. Art, History, Programming Languages."
                 value={topic}
                 onChange={(e) => setTopic(e.target.value)}
             />
-            
+            <Label htmlFor='difficulty' className='flex items-center gap-2 text-gray-700 dark:text-gray-300 font-semibold text-lg mb-2'>Difficulty</Label>
             <Select value={difficulty} onValueChange={(difficulty) => setDifficulty(difficulty)}>
                 <SelectTrigger className="w-full shadow-lg cursor-pointer">
                     <SelectValue placeholder="Choose your difficulty"/>
@@ -255,14 +259,15 @@ function QuizPage() {
                 <SelectContent>
                   <SelectGroup>
                     <SelectLabel>Difficulty</SelectLabel>
-                        <SelectItem value="easy" className='cursor-pointer'>Easy</SelectItem>
-                        <SelectItem value="medium" className='cursor-pointer'>Medium</SelectItem>
-                        <SelectItem value="hard" className='cursor-pointer'>Hard</SelectItem>
-                        <SelectItem value="asian" className='cursor-pointer'>Asian</SelectItem>
+                        <SelectItem value="easy" className='cursor-pointer hover:font-bold hover:text-lg'>Easy</SelectItem>
+                        <SelectItem value="medium" className='cursor-pointer hover:font-bold hover:text-lg'>Medium</SelectItem>
+                        <SelectItem value="hard" className='cursor-pointer hover:font-bold hover:text-lg'>Hard</SelectItem>
+                        <SelectItem value="asian" className='cursor-pointer hover:font-bold hover:text-lg'>Asian</SelectItem>
                     </SelectGroup>
                 </SelectContent>
             </Select>
 
+            <Label htmlFor='numOfQuestions' className='flex items-center gap-2 text-gray-700 dark:text-gray-300 font-semibold text-lg mb-2'>Number of Questions</Label>
             <Input 
                 className="shadow-lg"
                 type='number'
@@ -279,7 +284,7 @@ function QuizPage() {
               onClick={handleStartQuiz}
               disabled={isLoading}
               >
-                {isLoading ? <>  Generating Quiz<Spinner /> </> : "Generate Quiz"}
+                {isLoading ? <> Generating Quiz<Spinner /> </> : "Generate Quiz"}
               </Button>
             </CardFooter>
           </CardContent>
@@ -288,12 +293,13 @@ function QuizPage() {
               <AlertDialogHeader>
                 <AlertDialogTitle>Asian Difficulty Selected</AlertDialogTitle>
                   <AlertDialogDescription>
-                    Yo! You've selected the <span className="text-red-600 font-semibold">"Asian"</span> difficulty level. Are you sure you want to proceed?
+                    Yo! You've selected the <span className="text-red-600 font-semibold text-xl">"Asian"</span> difficulty level. Less time but with Asian-difficult questions. Are you sure you want to proceed?
                   </AlertDialogDescription>
               </AlertDialogHeader>
                   
                   <AlertDialogFooter>
                     <AlertDialogCancel
+                      className='cursor-pointer'
                       onClick={() => setShowAsianAlert(false)}
                     >
                       Cancel
@@ -320,6 +326,13 @@ function QuizPage() {
                 </div>
             
                 <Progress className="h-2 rounded-full mt-2" value={(((currentQuestionIndex + 1) / questions.length)) * 100} />
+                <CountDown
+                    difficulty={difficulty}
+                    onTimeUp={() => {
+                      setQuizFinished(true)
+                      toast.success("Time's up!")
+                    }}
+                />
                 <CardTitle className='className="text-2xl font-bold mt-4"'>
                     {questions[currentQuestionIndex].question}
                 </CardTitle>
