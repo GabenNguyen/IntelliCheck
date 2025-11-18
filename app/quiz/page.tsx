@@ -143,6 +143,7 @@ function QuizPage() {
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
     const [score, setScore] = useState(0)
     const [quizFinished, setQuizFinished] = useState(false)
+    const [showResultDialog, setShowResultDialog] = useState(false)
 
     // navigating to results page
     const router = useRouter();
@@ -329,8 +330,10 @@ function QuizPage() {
                 <CountDown
                     difficulty={difficulty}
                     onTimeUp={() => {
-                      setQuizFinished(true)
-                      toast.success("Time's up!")
+                      setTimeout(() => {
+                        setQuizFinished(true);
+                        toast.success("Time's up! Calculating your total score");
+                      }, 1500)
                     }}
                 />
                 <CardTitle className='className="text-5xl font-bold mt-4"'>
@@ -378,20 +381,36 @@ function QuizPage() {
                         <Button
                           className="cursor-pointer mt-4"
                           onClick={() => {
-                            setQuizFinished(false);
-                            setQuizStarted(false);
-                            setCurrentQuestionIndex(0);
-                            setScore(0);
-                            setQuestions([]);
-                            setOptionSelected(null);
-
-                            router.push("/results")
+                              setShowResultDialog(true)
+                              
+                              setTimeout(() => {
+                                setQuizFinished(false);
+                                setQuizStarted(false);
+                                setCurrentQuestionIndex(0);
+                                setScore(0);
+                                setQuestions([]);
+                                setOptionSelected(null);
+                                router.push("/results")
+                            }, 1500)
                       
                           }}
                         >
                           Show Results
+                          
                         </Button>
-                    </div>
+                        <AlertDialog open={showResultDialog} onOpenChange={setShowResultDialog}>
+                            <AlertDialogContent>
+                              <AlertDialogHeader>
+                                <AlertDialogTitle>
+                                   <div className="flex items-center justify-between">
+                                      <span className='text-xl'>Result being calculated</span>
+                                      <Spinner className='size-8'/>
+                                    </div>
+                                </AlertDialogTitle>
+                              </AlertDialogHeader>
+                            </AlertDialogContent>
+                        </AlertDialog>
+                </div>
             ) }
           </Card>
         }
