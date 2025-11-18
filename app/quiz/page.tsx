@@ -333,7 +333,7 @@ function QuizPage() {
                       toast.success("Time's up!")
                     }}
                 />
-                <CardTitle className='className="text-2xl font-bold mt-4"'>
+                <CardTitle className='className="text-5xl font-bold mt-4"'>
                     {questions[currentQuestionIndex].question}
                 </CardTitle>
                 <CardContent className="grid gap-4 mt-4">
