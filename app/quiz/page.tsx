@@ -144,6 +144,7 @@ function QuizPage() {
     const [score, setScore] = useState(0)
     const [quizFinished, setQuizFinished] = useState(false)
     const [showResultDialog, setShowResultDialog] = useState(false)
+    const [timeUpDialog, setTimeUpDialog] = useState(false)
 
     // navigating to results page
     const router = useRouter();
@@ -330,12 +331,24 @@ function QuizPage() {
                 <CountDown
                     difficulty={difficulty}
                     onTimeUp={() => {
+                      setTimeUpDialog(true)
                       setTimeout(() => {
                         setQuizFinished(true);
-                        toast.success("Time's up! Calculating your total score");
-                      }, 1500)
+                      }, 2000)
                     }}
                 />
+                 <AlertDialog open={timeUpDialog} onOpenChange={setTimeUpDialog}>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>
+                            <div className="flex items-center justify-between">
+                              <span className='text-xl'>Time's up! System is cleaning up your mess</span>
+                              <Spinner className='size-8'/>
+                            </div>
+                        </AlertDialogTitle>
+                      </AlertDialogHeader>
+                    </AlertDialogContent>
+                </AlertDialog>
                 <CardTitle className='className="text-5xl font-bold mt-4"'>
                     {questions[currentQuestionIndex].question}
                 </CardTitle>
@@ -379,7 +392,7 @@ function QuizPage() {
                           🎉 Congratulations! You have finished the quiz
                         </CardTitle>
                         <Button
-                          className="cursor-pointer mt-4"
+                          className="cursor-pointer mt-4 active:scale-90 transition-all"
                           onClick={() => {
                               setShowResultDialog(true)
                               
