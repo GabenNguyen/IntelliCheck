@@ -35,7 +35,7 @@ function About() {
             accessible for everyone.
           </p>
 
-          <p className="text-gray-700 dark:text-gray-300 text-2xl">
+          <p className="text-black dark:text-white font-bold text-3xl">
               Happy Learning!
           </p>
         </CardContent>
