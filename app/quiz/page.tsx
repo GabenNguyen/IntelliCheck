@@ -378,6 +378,9 @@ function QuizPage() {
                                 } else {
                                   const finalScore = score + (optionSelected === questions[currentQuestionIndex].correctAnswer ? 1 : 0)
                                   setScore(finalScore);
+                                  localStorage.setItem("topic", topic)
+                                  localStorage.setItem("score", String(finalScore))
+                                  localStorage.setItem("total", String(questions.length))
                                   setQuizFinished(true);
                                 }
                             }}
@@ -395,7 +398,6 @@ function QuizPage() {
                           className="cursor-pointer mt-4 active:scale-90 transition-all"
                           onClick={() => {
                               setShowResultDialog(true)
-                              
                               setTimeout(() => {
                                 setQuizFinished(false);
                                 setQuizStarted(false);
