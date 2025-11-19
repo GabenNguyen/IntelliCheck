@@ -35,9 +35,12 @@ export default function Home() {
         </CardContent>
 
         <CardFooter className="flex justify-center">
-          <button className="cursor-pointer bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-3 px-2 border border-blue-500 hover:border-transparent rounded active:scale-90 transition-all">
-            <Link className="flex items-center" href={`/quiz`}> Start a Quiz <ArrowRight className="w-5 h-5 transition-transform duration-200 group-hover:translate-x-1 mx-1"/> </Link>
-          </button>
+          <Link className="flex items-center" href={`/quiz`}> 
+              <button className="group cursor-pointer bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-3 px-2 border border-blue-500 hover:border-transparent rounded active:scale-90 transition-all flex items-center">
+                Start a Quiz 
+                <ArrowRight className="w-5 h-5 transition-transform duration-200 group-hover:translate-x-1 mx-1"/> 
+              </button>
+          </Link>
         </CardFooter>
       </Card>
     </div>
