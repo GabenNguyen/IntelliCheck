@@ -146,7 +146,7 @@ function QuizPage() {
     const [quizFinished, setQuizFinished] = useState(false)
     const [showResultDialog, setShowResultDialog] = useState(false)
     const [timeUpDialog, setTimeUpDialog] = useState(false)
-    const [userAnswer, setUserAnswer] = useState<(string | null)[]>(Array(sampleQuestions.length).fill(null))
+    const [userAnswer, setUserAnswer] = useState<(string | null)[]>([])
 
     // navigating to results page
     const router = useRouter();
@@ -204,7 +204,9 @@ function QuizPage() {
         // Simulate API call delay
         setTimeout(() => {
           // Randomise the questions
-          setQuestions(shuffleQuestions([...sampleQuestions].slice(0, parseInt(numOfQuestions))));
+          const selectedQuestions = shuffleQuestions([...sampleQuestions].slice(0, parseInt(numOfQuestions)));
+          setQuestions(selectedQuestions);
+          setUserAnswer(Array(selectedQuestions.length).fill(null))
           setQuizStarted(true);
           setIsLoading(false);
         }, 2000);
@@ -367,7 +369,7 @@ function QuizPage() {
                     {questions[currentQuestionIndex].question}
                 </CardTitle>
                 <CardContent className="grid gap-4 mt-4">
-                  {questions[currentQuestionIndex].options.map((option) => (
+                  {questions[currentQuestionIndex].options.map((option: string) => (
                     <Button
                       key={option}
                       variant={optionSelected === option ? "default" : "outline"}
