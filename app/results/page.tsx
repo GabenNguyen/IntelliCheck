@@ -20,7 +20,7 @@ function ResultPage() {
     useEffect(() => {
       setFinalScore(Number(localStorage.getItem("score")));
       setTotalQuestions(Number(localStorage.getItem("total")));
-      setSelectedTopic(localStorage.getItem("topic"));
+      setSelectedTopic((localStorage.getItem("topic")));
     }, [])
 
     return (
@@ -55,7 +55,7 @@ function ResultPage() {
                 </CardTitle>
                 <CardDescription className="text-lg text-black dark:text-white">
                     You have correctly answered <span className='font-bold'>{finalScore} </span> out of <span className='font-bold'>{totalQuestions}</span> question(s) <br></br>
-                    Knowledge on <span className='font-bold'>{selectedTopic}</span>: <span className='font-bold'>{((finalScore / totalQuestions) * 100).toFixed(2)}%</span>
+                    Knowledge on <span className='font-bold'>{selectedTopic?.toUpperCase()}</span>: <span className='font-bold'>{((finalScore / totalQuestions) * 100).toFixed(2)}%</span>
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6 text-center text-lg">
