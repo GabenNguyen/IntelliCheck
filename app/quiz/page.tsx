@@ -9,7 +9,8 @@ import { Progress } from "@/components/ui/progress"
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Spinner } from "@/components/ui/spinner";
-import { Label } from "@/components/ui/label"
+import { Label } from "@/components/ui/label";
+import { ArrowLeft, ArrowRight } from 'lucide-react';
 import {
   Card,
   CardContent,
@@ -145,6 +146,7 @@ function QuizPage() {
     const [quizFinished, setQuizFinished] = useState(false)
     const [showResultDialog, setShowResultDialog] = useState(false)
     const [timeUpDialog, setTimeUpDialog] = useState(false)
+    const [userAnswer, setUserAnswer] = useState<(string | null)[]>(Array(sampleQuestions.length).fill(null))
 
     // navigating to results page
     const router = useRouter();
@@ -230,6 +232,11 @@ function QuizPage() {
         startQuiz();
     }
 
+    const handleMovePrevQuestion = () => {
+      if(currentQuestionIndex > 0) {
+        setCurrentQuestionIndex(currentQuestionIndex - 1)
+      }
+    }
 
   return (
    <div className="flex justify-center items-center max-h-screen bg-linear-to-b from-blue-100 to-white dark:from-gray-900 dark:to-black p-6">
@@ -326,8 +333,15 @@ function QuizPage() {
                 <div className="flex justify-between text-sm text-gray-500 dark:text-gray-400">
                     Question: {currentQuestionIndex + 1} / {questions.length}
                 </div>
-            
-                <Progress className="h-2 rounded-full mt-2" value={(((currentQuestionIndex + 1) / questions.length)) * 100} />
+                <div className='flex justify-around gap-2'>
+                  <Button
+                    className='cursor-pointer text-black border border-black bg-transparent hover:text-white mb-2 transition-all active:scale-90'
+                    onClick={handleMovePrevQuestion}
+                  >
+                    <ArrowLeft className="w-5 h-5 mx-1"/> 
+                  </Button>
+                  <Progress className="h-2 rounded-full mt-3" value={(((currentQuestionIndex + 1) / questions.length)) * 100} />
+                </div>
                 <CountDown
                     difficulty={difficulty}
                     onTimeUp={() => {
@@ -357,8 +371,16 @@ function QuizPage() {
                     <Button
                       key={option}
                       variant={optionSelected === option ? "default" : "outline"}
-                      className="w-full cursor-pointer active:scale-95 transition-all"
-                      onClick={() => setOptionSelected(option)}
+                      className="w-full cursor-pointer active:scale-95 border-black transition-all"
+                      onClick={() => {
+                        setOptionSelected(option);
+
+                        const updatedAnswer = [...userAnswer] 
+
+                        updatedAnswer[currentQuestionIndex] = option
+                        setUserAnswer(updatedAnswer)
+                        
+                      }}
                     >
                       {option}
                     </Button>
@@ -368,10 +390,11 @@ function QuizPage() {
                         <Button
                             className="cursor-pointer active:scale-90 transition-all"
                             onClick={() => {
-                                if (optionSelected === null) {
+                                if(!userAnswer[currentQuestionIndex]) {
                                   return toast.warning("Please select an option!");
                                 }
-                              
+
+
                                 if (currentQuestionIndex + 1 < questions.length) {
                                   setCurrentQuestionIndex(currentQuestionIndex + 1);
                                 
