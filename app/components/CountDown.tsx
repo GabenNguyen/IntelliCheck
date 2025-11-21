@@ -31,7 +31,7 @@ function CountDown( { difficulty, onTimeUp }: CountDownTime ) {
     const seconds = counter % 60;
 
     return (
-        <div className={`text-center font-sans text-3xl ${minutes <= 5 && seconds <= 10 ? "text-white animate-pulse bg-red-600 rounded-lg" : ""}`}>
+        <div className={`text-center font-sans text-3xl ${minutes <= 0 && seconds <= 10 ? "text-red-600 animate-pulse bg-red-300 font-bold rounded-lg" : ""}`}>
             <span>{minutes.toString().padStart(2, "0")}:</span>
             <span>{seconds.toString().padStart(2, "0")}</span>
         </div>
