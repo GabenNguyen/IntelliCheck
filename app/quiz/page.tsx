@@ -410,14 +410,14 @@ function QuizPage() {
                                     userAnswer: userAnswer[answerIndex] || "",
                                     correctAnswer: question.correctAnswer
                                   }))
+
+                                  const correctAnswersCount = savedUserAnswers.filter((answer: Answer) => answer.userAnswer === answer.correctAnswer).length
                                   
-                                  const finalScore = savedUserAnswers.reduce((accumulator, currentAnswer) => {
-                                    return currentAnswer.userAnswer === currentAnswer.correctAnswer ? accumulator + 1 : accumulator;
-                                  }, 0);
+                                  const finalScore = score + correctAnswersCount
                                   
                                   localStorage.setItem("topic", topic)
-                                  localStorage.setItem("score", String(finalScore))                                  
-                                  localStorage.setItem("total", String(questions.length))                                  
+                                  localStorage.setItem("score", finalScore.toString())                                  
+                                  localStorage.setItem("total", questions.length.toString())                                  
                                   localStorage.setItem("answers", JSON.stringify(savedUserAnswers))
                                   
                                   setScore(finalScore);
