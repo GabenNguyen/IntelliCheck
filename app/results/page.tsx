@@ -3,6 +3,7 @@ import React from 'react'
 import { useState, useEffect} from 'react';
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import Answer from '@/type/answer';
 import {
   Card,
   CardContent,
@@ -16,16 +17,20 @@ function ResultPage() {
     const [finalScore, setFinalScore] = useState<number | 0>(0);
     const [totalQuestions, setTotalQuestions] = useState<number | 0>(0);
     const [selectedTopic, setSelectedTopic] = useState<string | null>("")
+    const [savedUserAnswers, setSavedUserAnswers] = useState<Answer[]>([])
 
     useEffect(() => {
       setFinalScore(Number(localStorage.getItem("score")));
       setTotalQuestions(Number(localStorage.getItem("total")));
       setSelectedTopic((localStorage.getItem("topic")));
+      setSavedUserAnswers(JSON.parse(localStorage.getItem("answers") || "[]"))
+
+
     }, [])
 
     return (
       <>
-       {!finalScore && !totalQuestions ? (
+       {totalQuestions === 0 ? (
         <div className="flex justify-center items-center w-full bg-linear-to-b from-blue-100 to-white dark:from-gray-900 dark:to-black p-6">
           <Card className="w-full max-w-3xl shadow-2xl border border-gray-300 dark:border-gray-700 rounded-2xl p-6">
             <CardHeader className="text-center space-y-3">
@@ -59,21 +64,30 @@ function ResultPage() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6 text-center text-lg">
-              <CardFooter className="flex justify-center">
-                   <Link className="flex items-center" href={`/quiz`}> 
-                      <button className="group cursor-pointer bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-3 px-2 border border-blue-500 hover:border-transparent rounded active:scale-90 transition-all flex flex-row items-center gap-2">
-                          <ArrowLeft className="w-5 h-5 transition-transform duration-200 group-hover:translate-x-1 mx-1"/> 
-                          <span>Return to Quiz Page </span>
-                      </button>
-                    </Link>
-              </CardFooter>
+                <div className='space-y-4'>
+                  {savedUserAnswers.map((answer: Answer, answerIndex: number) => {
+                    const isCorrect: boolean = answer.userAnswer === answer.correctAnswer;
+                    return (
+                      <div
+                        key={answerIndex}
+                        className={`p-4 rounded-lg border ${isCorrect ? `bg-green-500 text-white` : `bg-red-700 text-white` }`}
+                      >
+                        <p className='font-semibold'>Question {answerIndex + 1}: {answer.question}</p>
+                        <p className='font-semibold'>Your answer: {answer.userAnswer}</p>
+
+                        {!isCorrect && <p className='font-semibold'>Correct Answer: {answer.correctAnswer}</p>}
+                      </div>
+                    )
+                  })}
+
+                </div>
+              
             </CardContent>
           </Card>
       </div>
       )}
-    )
       </>
-    )
+    );
 }
 
 export default ResultPage
