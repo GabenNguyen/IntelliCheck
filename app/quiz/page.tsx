@@ -2,6 +2,7 @@
 import React from 'react'
 import Question from '@/type/question'
 import CountDown from '../components/CountDown';
+import Answer from '@/type/answer';
 import { useState } from 'react'
 import { useRouter } from 'next/navigation';
 import { toast } from "sonner"
@@ -382,6 +383,7 @@ function QuizPage() {
                         updatedAnswer[currentQuestionIndex] = option
                         setUserAnswer(updatedAnswer)
                         
+                        
                       }}
                     >
                       {option}
@@ -401,11 +403,24 @@ function QuizPage() {
                                   setCurrentQuestionIndex(currentQuestionIndex + 1);
                                 
                                 } else {
-                                  const finalScore = score + (optionSelected === questions[currentQuestionIndex].correctAnswer ? 1 : 0)
-                                  setScore(finalScore);
+                                  
+                                  // Map user answers to the Answer object
+                                  const savedUserAnswers: Answer[] = questions.map((question, answerIndex) => ({
+                                    question: question.question,
+                                    userAnswer: userAnswer[answerIndex] || "",
+                                    correctAnswer: question.correctAnswer
+                                  }))
+                                  
+                                  const finalScore = savedUserAnswers.reduce((accumulator, currentAnswer) => {
+                                    return currentAnswer.userAnswer === currentAnswer.correctAnswer ? accumulator + 1 : accumulator;
+                                  }, 0);
+                                  
                                   localStorage.setItem("topic", topic)
-                                  localStorage.setItem("score", String(finalScore))
-                                  localStorage.setItem("total", String(questions.length))
+                                  localStorage.setItem("score", String(finalScore))                                  
+                                  localStorage.setItem("total", String(questions.length))                                  
+                                  localStorage.setItem("answers", JSON.stringify(savedUserAnswers))
+                                  
+                                  setScore(finalScore);
                                   setQuizFinished(true);
                                 }
                             }}
