@@ -3,6 +3,8 @@ import React from 'react'
 import Question from '@/type/question'
 import CountDown from '../components/CountDown';
 import Answer from '@/type/answer';
+import shuffleQuestions from '@/utils/shuffle';
+import validateInput from '@/utils/validate_input';
 import { useState } from 'react'
 import { useRouter } from 'next/navigation';
 import { toast } from "sonner"
@@ -151,53 +153,6 @@ function QuizPage() {
 
     // navigating to results page
     const router = useRouter();
-
-    const shuffleQuestions = (questions: Question[]) => {
-       const shuffledQuestion = [...questions]
-       for(let i = shuffledQuestion.length - 1; i > 0; i--) {
-          const j = Math.floor(Math.random() * (i + 1));
-          [shuffledQuestion[i], shuffledQuestion[j]] = [shuffledQuestion[j], shuffledQuestion[i]];
-       }
-       return shuffledQuestion;
-    }
-
-    const validateInput = (input: string) => {
-        const sanitisedInput = input.trim()
-
-        if(sanitisedInput.length < 3 || sanitisedInput.length > 50) {
-            return false;
-        }
-
-        // Reject ONLY Number
-        if(/^\d+$/.test(sanitisedInput)) {
-          return false;
-        }
-
-        // Only letters and spaces allowed
-        if(!/^[A-Za-z\s]/.test(sanitisedInput)) {
-          return false;
-        }
-
-        // Need at least one vowel and one consonant
-        if(!/[ueoai]/i.test(sanitisedInput)) {
-          return false;
-        }
-
-        if(!/[bcdfghjklmnpqrstvwxyz]/i.test(sanitisedInput)) {
-          return false;
-        }
-
-        if(/(.)\1{2,}/.test(sanitisedInput)) {
-          return false;
-        }
-
-        if(/(\w{2,})\1/.test(sanitisedInput)) {
-          return false;
-        }
-
-        return true;
-    }
-
 
     const startQuiz = () => {
         setIsLoading(true);
@@ -394,7 +349,7 @@ function QuizPage() {
                         <Button
                             className="cursor-pointer active:scale-90 transition-all"
                             onClick={() => {
-                                if(!userAnswer[currentQuestionIndex]) {
+                                if(difficulty === "asian" && !userAnswer[currentQuestionIndex]) {
                                   return toast.warning("Please select an option!");
                                 }
 
@@ -424,6 +379,7 @@ function QuizPage() {
                                   setQuizFinished(true);
                                 }
                             }}
+                            disabled={difficulty === "asian" && !userAnswer[currentQuestionIndex]}
                           >
                             {currentQuestionIndex + 1 < questions.length ? "Next Question" : "Finish Quiz"}
                       </Button>
