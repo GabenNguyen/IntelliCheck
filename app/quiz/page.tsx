@@ -5,33 +5,24 @@ import CountDown from '../components/CountDown';
 import Answer from '@/type/answer';
 import shuffleQuestions from '@/utils/shuffle';
 import validateInput from '@/utils/validate_input';
+import sampleQuestions from '@/utils/sample_questions';
+import QuizSetup from '../components/QuizSetup';
 import { useState } from 'react'
 import { useRouter } from 'next/navigation';
 import { toast } from "sonner"
 import { Progress } from "@/components/ui/progress"
-import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Spinner } from "@/components/ui/spinner";
-import { Label } from "@/components/ui/label";
 import { ArrowLeft } from 'lucide-react';
+import { AnimatePresence, motion } from 'framer-motion';
+
 import {
   Card,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
 
 import {
   AlertDialog,
@@ -43,94 +34,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
-
-
-
-const sampleQuestions: Question[] = [
-  {
-    id: "q1",
-    question: "What does React primarily help developers build?",
-    options: ["User Interfaces", "Mobile Games", "Databases", "Operating Systems"],
-    correctAnswer: "User Interfaces",
-  },
-  {
-    id: "q2",
-    question: "Which language runs in a web browser?",
-    options: ["Java", "C++", "Python", "JavaScript"],
-    correctAnswer: "JavaScript",
-  },
-  {
-    id: "q3",
-    question: "Which hook is used to manage state in React?",
-    options: ["useEffect", "useState", "useRef", "useReducer"],
-    correctAnswer: "useState",
-  },
-  {
-    id: "q4",
-    question: "What does CSS stand for?",
-    options: [
-      "Cascading Style Sheets",
-      "Creative Style System",
-      "Computer Style Syntax",
-      "Colorful Styling Script"
-    ],
-    correctAnswer: "Cascading Style Sheets",
-  },
-  {
-    id: "q5",
-    question: "Which HTML tag is used to define the largest heading?",
-    options: ["<h6>", "<header>", "<h1>", "<title>"],
-    correctAnswer: "<h1>",
-  },
-  {
-    id: "q6",
-    question: "Which HTTP method is commonly used to submit form data?",
-    options: ["PUT", "POST", "DELETE", "OPTIONS"],
-    correctAnswer: "POST",
-  },
-  {
-    id: "q7",
-    question: "Which of the following is a JavaScript framework?",
-    options: ["Laravel", "Django", "React", "Flask"],
-    correctAnswer: "React",
-  },
-  {
-    id: "q8",
-    question: "What does JSON stand for?",
-    options: [
-      "JavaScript Oriented Notation",
-      "Java Standard Output Notation",
-      "JavaScript Object Notation",
-      "Joined Syntax Object Network"
-    ],
-    correctAnswer: "JavaScript Object Notation",
-  },
-  {
-    id: "q9",
-    question: "Which command initializes a new Node.js project?",
-    options: ["node create", "npm init", "npm install", "node start"],
-    correctAnswer: "npm init",
-  },
-  {
-    id: "q10",
-    question: "Which CSS property controls text size?",
-    options: ["font-style", "font-size", "text-size", "text-style"],
-    correctAnswer: "font-size",
-  },
-  {
-    id: "q11",
-    question: "Which part of a URL is responsible for identifying the resource path?",
-    options: ["Protocol", "Domain", "Pathname", "Query String"],
-    correctAnswer: "Pathname",
-  },
-  {
-    id: "q12",
-    question: "Which hook runs after every render by default?",
-    options: ["useState", "useEffect", "useContext", "useMemo"],
-    correctAnswer: "useEffect",
-  }
-];
-
 
 function QuizPage() {
     // Form state
@@ -197,93 +100,52 @@ function QuizPage() {
     }
 
   return (
+  
    <div className="flex justify-center items-center max-h-screen bg-linear-to-b from-blue-100 to-white dark:from-gray-900 dark:to-black p-6">
      
         {!quizStarted ? (
-          <Card className="w-full max-w-3xl shadow-2xl border border-gray-300 dark:border-gray-700 rounded-2xl p-6">
-            <CardHeader className="text-center space-y-3">
-              <CardTitle className="text-4xl font-extrabold tracking-tight">
-                <span className="text-blue-600">What are you up to?</span> 
-              </CardTitle>
-              <CardDescription className="text-lg text-gray-600 dark:text-gray-400">
-                Select a topic, choose the difficulty and the number of questions then you're all good to go
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6 text-center text-lg">
-            <Label htmlFor='topic' className='flex items-center gap-2 text-gray-700 dark:text-gray-300 font-semibold text-lg mb-2'>Topic</Label>
-            <Input
-                className="shadow-lg"
-                type="text"
-                placeholder="E.g. Art, History, Programming Languages."
-                value={topic}
-                onChange={(e) => setTopic(e.target.value)}
+          <>
+           <QuizSetup
+              topic={topic}
+              difficulty={difficulty}
+              numberOfQuestions={numOfQuestions}
+              setTopic={setTopic}
+              setDifficulty={setDifficulty}
+              setNumberOfQuestions={setNumOfQuestions}
+              handleStartQuiz={handleStartQuiz}
+              isLoading={isLoading}
             />
-            <Label htmlFor='difficulty' className='flex items-center gap-2 text-gray-700 dark:text-gray-300 font-semibold text-lg mb-2'>Difficulty</Label>
-            <Select value={difficulty} onValueChange={(difficulty) => setDifficulty(difficulty)}>
-                <SelectTrigger className="w-full shadow-lg cursor-pointer">
-                    <SelectValue placeholder="Choose your difficulty"/>
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel>Difficulty</SelectLabel>
-                        <SelectItem value="easy" className='cursor-pointer hover:font-bold hover:text-lg'>Easy</SelectItem>
-                        <SelectItem value="medium" className='cursor-pointer hover:font-bold hover:text-lg'>Medium</SelectItem>
-                        <SelectItem value="hard" className='cursor-pointer hover:font-bold hover:text-lg'>Hard</SelectItem>
-                        <SelectItem value="asian" className='cursor-pointer hover:font-bold hover:text-lg'>Asian</SelectItem>
-                    </SelectGroup>
-                </SelectContent>
-            </Select>
-
-            <Label htmlFor='numOfQuestions' className='flex items-center gap-2 text-gray-700 dark:text-gray-300 font-semibold text-lg mb-2'>Number of Questions</Label>
-            <Input 
-                className="shadow-lg"
-                type='number'
-                min={`1`}
-                max={sampleQuestions.length}
-                placeholder="Choose the number of questions"
-                value={numOfQuestions}
-                onChange={(e) => setNumOfQuestions(e.target.value)}
-            />
-            <CardFooter className="flex justify-center">
-              <Button 
-              className="cursor-pointer active:scale-90 transition-all" 
-              type='submit' 
-              onClick={handleStartQuiz}
-              disabled={isLoading}
-              >
-                {isLoading ? <> Generating Quiz<Spinner /> </> : "Generate Quiz"}
-              </Button>
-            </CardFooter>
-          </CardContent>
-          <AlertDialog open={showAsianAlert} onOpenChange={setShowAsianAlert}>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Asian Difficulty Selected</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    Yo! You've selected the <span className="text-red-600 font-semibold text-xl">"Asian"</span> difficulty level. Less time but with Asian-difficult questions. Are you sure you want to proceed?
-                  </AlertDialogDescription>
-              </AlertDialogHeader>
-                  
-                  <AlertDialogFooter>
-                    <AlertDialogCancel
-                      className='cursor-pointer'
-                      onClick={() => setShowAsianAlert(false)}
-                    >
-                      Cancel
-                    </AlertDialogCancel>
-                    <AlertDialogAction
-                      className='cursor-pointer'
-                      onClick={() => {
-                        startQuiz()
-                      }}
+            
+            <AlertDialog open={showAsianAlert} onOpenChange={setShowAsianAlert}>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Asian Difficulty Selected</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      Yo! You've selected the <span className="text-red-600 font-semibold text-xl">"Asian"</span> difficulty level. Less time but with Asian-difficult questions. Are you sure you want to proceed?
+                    </AlertDialogDescription>
+                </AlertDialogHeader>
                     
-                    > 
-                      Proceed
-                    </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
-        </Card>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel
+                        className='cursor-pointer'
+                        onClick={() => setShowAsianAlert(false)}
+                      >
+                        Cancel
+                      </AlertDialogCancel>
+                      <AlertDialogAction
+                        className='cursor-pointer'
+                        onClick={() => {
+                          startQuiz()
+                        }}
+                      
+                      > 
+                        Proceed
+                      </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+          </>
+           
         ) : 
           <Card className="w-full max-w-3xl shadow-2xl border border-gray-300 dark:border-gray-700 rounded-2xl p-6">
             {!quizFinished ? (
@@ -321,69 +183,79 @@ function QuizPage() {
                       </AlertDialogHeader>
                     </AlertDialogContent>
                 </AlertDialog>
-                <CardTitle className='className="text-5xl font-bold mt-4"'>
-                    {questions[currentQuestionIndex].question}
-                </CardTitle>
-                <CardContent className="grid gap-4 mt-4">
-                  {questions[currentQuestionIndex].options.map((option: string) => (
-                    <Button
-                      key={option}
-                      variant={optionSelected === option ? "default" : "outline"}
-                      className="w-full cursor-pointer active:scale-95 border-black transition-all"
-                      onClick={() => {
-                        setOptionSelected(option);
+                <AnimatePresence>
+                  <motion.div
+                    key={currentQuestionIndex}       // triggers animation on question change
+                    initial={{ opacity: 0, x: 100 }} // slide in from right
+                    animate={{ opacity: 1, x: 0 }} // slide out to left
+                    transition={{ duration: 0.3, ease: "easeIn" }}
+                    className="grid gap-4"
+                  >
+                     <CardTitle className='className="text-5xl font-bold mt-4"'>
+                      {questions[currentQuestionIndex].question}
+                  </CardTitle>
+                  <CardContent className="grid gap-4 mt-4">
+                    {questions[currentQuestionIndex].options.map((option: string) => (
+                      <Button
+                        key={option}
+                        variant={optionSelected === option ? "default" : "outline"}
+                        className="w-full cursor-pointer active:scale-95 border-black transition-all"
+                        onClick={() => {
+                          setOptionSelected(option);
 
-                        const updatedAnswer = [...userAnswer] 
+                          const updatedAnswer = [...userAnswer] 
 
-                        updatedAnswer[currentQuestionIndex] = option
-                        setUserAnswer(updatedAnswer)
-                        
-                        
-                      }}
-                    >
-                      {option}
-                    </Button>
-                  ))}
-                </CardContent>
-                 <CardFooter className="flex justify-center mt-4">
-                        <Button
-                            className="cursor-pointer active:scale-90 transition-all"
-                            onClick={() => {
-                                if(difficulty === "asian" && !userAnswer[currentQuestionIndex]) {
-                                  return toast.warning("Please select an option!");
-                                }
-
-
-                                if (currentQuestionIndex + 1 < questions.length) {
-                                  setCurrentQuestionIndex(currentQuestionIndex + 1);
-                                
-                                } else {
-                                  
-                                  // Map user answers to the Answer object
-                                  const savedUserAnswers: Answer[] = questions.map((question, answerIndex) => ({
-                                    question: question.question,
-                                    userAnswer: userAnswer[answerIndex] || "",
-                                    correctAnswer: question.correctAnswer
-                                  }))
-
-                                  const correctAnswersCount = savedUserAnswers.filter((answer: Answer) => answer.userAnswer === answer.correctAnswer).length
-                                  
-                                  const finalScore = score + correctAnswersCount
-                                  
-                                  localStorage.setItem("topic", topic)
-                                  localStorage.setItem("score", finalScore.toString())                                  
-                                  localStorage.setItem("total", questions.length.toString())                                  
-                                  localStorage.setItem("answers", JSON.stringify(savedUserAnswers))
-                                  
-                                  setScore(finalScore);
-                                  setQuizFinished(true);
-                                }
-                            }}
-                            disabled={difficulty === "asian" && !userAnswer[currentQuestionIndex]}
-                          >
-                            {currentQuestionIndex + 1 < questions.length ? "Next Question" : "Finish Quiz"}
+                          updatedAnswer[currentQuestionIndex] = option
+                          setUserAnswer(updatedAnswer)
+                          
+                          
+                        }}
+                      >
+                        {option}
                       </Button>
-                    </CardFooter>
+                    ))}
+                  </CardContent>
+                  <CardFooter className="flex justify-center mt-4">
+                          <Button
+                              className="cursor-pointer active:scale-90 transition-all"
+                              onClick={() => {
+                                  if(difficulty === "asian" && !userAnswer[currentQuestionIndex]) {
+                                    return toast.warning("Please select an option!");
+                                  }
+
+
+                                  if (currentQuestionIndex + 1 < questions.length) {
+                                    setCurrentQuestionIndex(currentQuestionIndex + 1);
+                                  
+                                  } else {
+                                    
+                                    // Map user answers to the Answer object
+                                    const savedUserAnswers: Answer[] = questions.map((question, answerIndex) => ({
+                                      question: question.question,
+                                      userAnswer: userAnswer[answerIndex] || "",
+                                      correctAnswer: question.correctAnswer
+                                    }))
+
+                                    const correctAnswersCount = savedUserAnswers.filter((answer: Answer) => answer.userAnswer === answer.correctAnswer).length
+                                    
+                                    const finalScore = score + correctAnswersCount
+                                    
+                                    localStorage.setItem("topic", topic)
+                                    localStorage.setItem("score", finalScore.toString())                                  
+                                    localStorage.setItem("total", questions.length.toString())                                  
+                                    localStorage.setItem("answers", JSON.stringify(savedUserAnswers))
+                                    
+                                    setScore(finalScore);
+                                    setQuizFinished(true);
+                                  }
+                              }}
+                              disabled={difficulty === "asian" && !userAnswer[currentQuestionIndex]}
+                            >
+                              {currentQuestionIndex + 1 < questions.length ? "Next Question" : "Finish Quiz"}
+                        </Button>
+                  </CardFooter>
+                </motion.div>
+              </AnimatePresence>
             </CardHeader>
             ) : (
                <div className="text-center space-y-4 mt-4">
@@ -427,7 +299,7 @@ function QuizPage() {
         }
        
     </div>
-  )
+)
 }
 
 export default QuizPage
