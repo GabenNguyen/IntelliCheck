@@ -81,7 +81,14 @@ function ResultPage() {
                   })}
 
                 </div>
-              
+               <CardFooter className="flex justify-center">
+                  <Link className="flex items-center" href={`/quiz`}> 
+                      <button className="cursor-pointer bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-3 px-2 border border-blue-500 hover:border-transparent rounded active:scale-90 transition-all flex items-center">
+                        <ArrowLeft className="w-5 h-5 active:scale-90 transition-all duration-200 mx-1"/> 
+                        Try again
+                      </button>
+                  </Link>
+                </CardFooter>
             </CardContent>
           </Card>
       </div>
