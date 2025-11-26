@@ -10,6 +10,7 @@ import { Spinner } from "@/components/ui/spinner";
 
 interface Props {
     open: boolean,
+    // “setOpen is a useState setter that accepts either a boolean or a function returning a boolean.”
     setOpen: React.Dispatch<SetStateAction<boolean>>
 }
 
