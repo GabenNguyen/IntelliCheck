@@ -10,11 +10,10 @@ import {
 } from "@/components/ui/alert-dialog";
 
 interface Props {
-    open: boolean,
+    open: boolean
     setOpen: (condition: boolean) => void
     onProceed: () => void
 }
-
 
 function AsianAlertDialog( { open, setOpen, onProceed }: Props ) {
     return (
