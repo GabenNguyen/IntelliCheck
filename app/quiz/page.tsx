@@ -9,7 +9,6 @@ import sampleQuestions from '@/utils/sample_questions';
 
 import QuizSetup from '../components/quiz_related/QuizSetup';
 import QuizQuestions from '../components/quiz_related/QuizQuestions';
-import QuizFinished from '../components/quiz_related/QuizFinished';
 
 import AsianAlertDialog from '../components/dialogs/AsianAlertDialog';
 import TimeUpDialog from '../components/dialogs/TimeUpDialog';
@@ -18,26 +17,7 @@ import ResultPageDialog from '../components/dialogs/ResultPageDialog';
 import { useState } from 'react'
 import { useRouter } from 'next/navigation';
 import { toast } from "sonner"
-import { AnimatePresence, motion } from 'framer-motion';
 
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog"
 
 function QuizPage() {
     // Form state
@@ -49,14 +29,14 @@ function QuizPage() {
     // Quiz state
     const [quizStarted, setQuizStarted] = useState(false);
     const [questions, setQuestions] = useState<Question[]>([]);
-    const [optionSelected, setOptionSelected] = useState<string | null>(null);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-    const [score, setScore] = useState(0)
+    const [score, setScore] = useState(0);
+    const [quizFinished, setQuizFinished] = useState(false);
 
     // Dialogs state
     const [showAsianAlert, setShowAsianAlert] = useState(false);
-    const [showResultDialog, setShowResultDialog] = useState(false)
-    const [showTimeUpDialog, setShowTimeUpDialog] = useState(false)
+    const [showResultDialog, setShowResultDialog] = useState(false);
+    const [showTimeUpDialog, setShowTimeUpDialog] = useState(false);
     
     // User answers state
     const [userAnswer, setUserAnswer] = useState<(string | null)[]>([])
@@ -101,6 +81,32 @@ function QuizPage() {
     }
 
     const handleFinishQuiz = () => {
+      setShowResultDialog(true);
+      
+      const savedUserAnswers: Answer[] = questions.map((question: Question, answerIndex: number) => ({
+        question: question.question,
+        userAnswer: userAnswer[answerIndex] || "",
+        correctAnswer: question.correctAnswer
+      }))
+
+      const correctAnswersCount = questions.filter((question, answerIndex) => question.correctAnswer === userAnswer[answerIndex]).length
+      const finalScore = score + correctAnswersCount;
+
+      setScore(finalScore);
+
+      localStorage.setItem("score", finalScore.toString());
+      localStorage.setItem("total", numOfQuestions.toString());
+      localStorage.setItem("topic", topic);
+      localStorage.setItem("answers", JSON.stringify(savedUserAnswers));
+
+      setTimeout(() => {
+        setQuizFinished(true);
+        setQuizStarted(false);
+        setCurrentQuestionIndex(0);
+        setScore(0);
+        setQuestions([]);
+        router.push("/results")
+      }, 1500)
     }
 
 
@@ -122,8 +128,21 @@ function QuizPage() {
           />
         )}
 
-        {}
+        {quizStarted && !quizFinished && (
+          <QuizQuestions 
+            questions={questions}
+            userAnswer={userAnswer}
+            setUserAnswer={setUserAnswer}
+            currentQuestionIndex={currentQuestionIndex}
+            setCurrentQuestionIndex={setCurrentQuestionIndex}
+            countDownBasedOnDifficulty={difficulty}
+            onFinish={handleFinishQuiz}
+          />
+        )}
 
+        <AsianAlertDialog open={showAsianAlert} setOpen={setShowAsianAlert} onProceed={startQuiz}/>
+        <TimeUpDialog open={showTimeUpDialog} setOpen={setShowTimeUpDialog} />
+        <ResultPageDialog open={showResultDialog} setOpen={setShowResultDialog}/>
     </div>
 )
 }
