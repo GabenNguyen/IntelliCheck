@@ -1,3 +1,4 @@
+import React, { SetStateAction } from "react"
 import {
   AlertDialog,
   AlertDialogContent,
@@ -8,22 +9,24 @@ import { Spinner } from "@/components/ui/spinner";
 
 interface Props {
     open: boolean
-    setOpen: () => void
+    setOpen: React.Dispatch<SetStateAction<boolean>>
 }
 
 function TimeUpDialog( { open, setOpen }: Props ) {
-    <AlertDialog open={open} onOpenChange={setOpen}>
-        <AlertDialogContent>
-            <AlertDialogHeader>
-            <AlertDialogTitle>
-                <div className="flex items-center justify-between">
-                    <span className='text-xl'>Time's up! System is cleaning up your mess</span>
-                    <Spinner className='size-8'/>
-                </div>
-            </AlertDialogTitle>
-            </AlertDialogHeader>
-        </AlertDialogContent>
-    </AlertDialog>
+    return (
+        <AlertDialog open={open} onOpenChange={setOpen}>
+            <AlertDialogContent>
+                <AlertDialogHeader>
+                <AlertDialogTitle>
+                    <div className="flex items-center justify-between">
+                        <span className='text-xl'>Time's up! System is cleaning up your mess</span>
+                        <Spinner className='size-8'/>
+                    </div>
+                </AlertDialogTitle>
+                </AlertDialogHeader>
+            </AlertDialogContent>
+        </AlertDialog>
+    )
 }
 
 export default TimeUpDialog
