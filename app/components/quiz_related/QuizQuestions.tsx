@@ -88,7 +88,7 @@ function QuizQuestions( {
               transition={{ duration: 0.3, ease: "easeIn"  }}
               className="grid gap-4"
             >
-              <CardTitle className='className="text-5xl font-bold mt-4'>{currentQuestion.question}</CardTitle>
+              <CardTitle className='text-3xl font-bold mt-3 text-center'>{currentQuestion.question}</CardTitle>
               <CardContent className="grid gap-4 mt-4">
                 {currentQuestion.options.map((option: string) => (
                   <Button 
@@ -101,9 +101,9 @@ function QuizQuestions( {
                   </Button>
                 ))}
               </CardContent>
-              <CardFooter className="flex justify-center mt-4">
+              <CardFooter className="flex justify-center mt-3">
                 <Button 
-                  className='flex justify-center mt-4'
+                  className='cursor-pointer active:scale-90 flex justify-center mt-3'
                   onClick={handleMoveNextQuestion}
                 >
                   {currentQuestionIndex + 1 < questions.length ? "Next question" : "Finish quiz"}
