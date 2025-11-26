@@ -9,9 +9,16 @@ import {
   AlertDialogCancel
 } from "@/components/ui/alert-dialog";
 
-function AsianAlertDialog( { openCondition, setOpenCondition, onProceed, onCancel }: any ) {
+interface Props {
+    open: boolean,
+    setOpen: (condition: boolean) => void
+    onProceed: () => void
+}
+
+
+function AsianAlertDialog( { open, setOpen, onProceed }: Props ) {
     return (
-        <AlertDialog open={openCondition} onOpenChange={setOpenCondition}>
+        <AlertDialog open={open} onOpenChange={setOpen}>
         <AlertDialogContent>
             <AlertDialogHeader>
                 <AlertDialogTitle>Asian Difficulty Selected</AlertDialogTitle>
@@ -22,7 +29,7 @@ function AsianAlertDialog( { openCondition, setOpenCondition, onProceed, onCance
             <AlertDialogFooter>
                 <AlertDialogCancel
                     className='cursor-pointer'
-                    onClick={onCancel}
+                    onClick={() => setOpen(false)}
                 >
                     Cancel
                 </AlertDialogCancel>
