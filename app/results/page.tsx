@@ -1,10 +1,8 @@
 "use client";
-import React from 'react'
 import { useState, useEffect} from 'react';
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import Answer from '@/type/answer';
-import { toast } from "sonner"
 import {
   Card,
   CardContent,
