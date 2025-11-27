@@ -30,7 +30,6 @@ function QuizPage() {
     const [quizStarted, setQuizStarted] = useState(false);
     const [questions, setQuestions] = useState<Question[]>([]);
     const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-    const [score, setScore] = useState(0);
     const [quizFinished, setQuizFinished] = useState(false);
 
     // Dialogs state
@@ -87,30 +86,29 @@ function QuizPage() {
         question: question.question,
         userAnswer: userAnswer[answerIndex] || "",
         correctAnswer: question.correctAnswer
-      }))
+      }));
 
-      const correctAnswersCount = questions.filter((question, answerIndex) => question.correctAnswer === userAnswer[answerIndex]).length
-      const finalScore = score + correctAnswersCount;
+      const finalScore = questions.reduce(
+        (acc: number, question: Question, answerIndex: number) => acc + (userAnswer[answerIndex] === question.correctAnswer ? 1 : 0),
+        
+        0
+      );
 
-      setScore(finalScore);
-
-      localStorage.setItem("score", finalScore.toString());
-      localStorage.setItem("total", numOfQuestions.toString());
-      localStorage.setItem("topic", topic);
-      localStorage.setItem("answers", JSON.stringify(savedUserAnswers));
+      localStorage.setItem("quizData", JSON.stringify({
+        topic,
+        finalScore,
+        "totalQuestion": numOfQuestions,
+        "userAnswers": savedUserAnswers
+      }));
 
       setTimeout(() => {
         setQuizFinished(true);
         setQuizStarted(false);
         setCurrentQuestionIndex(0);
-        setScore(0);
         setQuestions([]);
         router.push("/results")
       }, 1500)
     }
-
-
-
 
   return (
   
