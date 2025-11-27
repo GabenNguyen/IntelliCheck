@@ -4,6 +4,7 @@ import { useState, useEffect} from 'react';
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import Answer from '@/type/answer';
+import { toast } from "sonner"
 import {
   Card,
   CardContent,
@@ -14,23 +15,27 @@ import {
 } from "@/components/ui/card"
 
 function ResultPage() {
-    const [finalScore, setFinalScore] = useState<number | 0>(0);
-    const [totalQuestions, setTotalQuestions] = useState<number | 0>(0);
-    const [selectedTopic, setSelectedTopic] = useState<string | null>("")
-    const [savedUserAnswers, setSavedUserAnswers] = useState<Answer[]>([])
+    const [quizData, setQuizData] = useState<{
+        topic: string,
+        finalScore: number,
+        totalQuestion: number,
+        userAnswers: Answer[]
+    } | null>(null)
 
     useEffect(() => {
-      setFinalScore(Number(localStorage.getItem("score")));
-      setTotalQuestions(Number(localStorage.getItem("total")));
-      setSelectedTopic((localStorage.getItem("topic")));
-      setSavedUserAnswers(JSON.parse(localStorage.getItem("answers") || "[]"))
+      const storedData = localStorage.getItem("quizData");
+      if(storedData && storedData !== "{}") {
+        setQuizData(JSON.parse(storedData));
+      }
+    }, []);
 
 
-    }, [])
+    const { topic = "", finalScore = 0, totalQuestion = 0, userAnswers = []} = quizData || {};
+    const percentage = totalQuestion > 0 ? (((finalScore / totalQuestion) * 100).toFixed(2)) : "0";
 
     return (
       <>
-       {totalQuestions === 0 ? (
+       {(!quizData ||totalQuestion === 0) ? (
         <div className="flex justify-center items-center w-full bg-linear-to-b from-blue-100 to-white dark:from-gray-900 dark:to-black p-6">
           <Card className="w-full max-w-3xl shadow-2xl border border-gray-300 dark:border-gray-700 rounded-2xl p-6">
             <CardHeader className="text-center space-y-3">
@@ -59,13 +64,13 @@ function ResultPage() {
                   Your final score!
                 </CardTitle>
                 <CardDescription className="text-lg text-black dark:text-white">
-                    You have correctly answered <span className='font-bold'>{finalScore} </span> out of <span className='font-bold'>{totalQuestions}</span> question(s) <br></br>
-                    Knowledge on <span className='font-bold'>{selectedTopic?.toUpperCase()}</span>: <span className='font-bold'>{((finalScore / totalQuestions) * 100).toFixed(2)}%</span>
+                    You have correctly answered <span className='font-bold'>{finalScore} </span> out of <span className='font-bold'>{totalQuestion}</span> question(s) <br></br>
+                    Knowledge on <span className='font-bold'>{topic?.toUpperCase()}</span>: <span className='font-bold'>{percentage}</span>
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6 text-center text-lg">
                 <div className='space-y-4'>
-                  {savedUserAnswers.map((answer: Answer, answerIndex: number) => {
+                  {userAnswers?.map((answer: Answer, answerIndex: number) => {
                     const isCorrect: boolean = answer.userAnswer === answer.correctAnswer;
                     return (
                       <div
