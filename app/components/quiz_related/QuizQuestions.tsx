@@ -5,6 +5,7 @@ import { Progress } from "@/components/ui/progress"
 import { ArrowLeft } from 'lucide-react';
 import { toast } from "sonner";
 import { AnimatePresence, motion } from 'framer-motion';
+import { Spinner } from '@/components/ui/spinner';
 import {
   Card,
   CardContent,
@@ -34,11 +35,17 @@ function QuizQuestions( {
 }: Props) {
 
   const currentQuestion = questions[currentQuestionIndex];
+
+  // prevent undefined (empty questions)
+  if (!currentQuestion || !currentQuestion.options) {
+  return <div className="flex justify-center items-center"><Spinner /></div>;
+}
+
   const selectedUserAnswer = userAnswer[currentQuestionIndex];
 
   const handleSelect = (option: string) => {
     const updatedSelectedUserAnswer = [...userAnswer];
-    updatedSelectedUserAnswer[currentQuestionIndex] = option;
+    updatedSelectedUserAnswer[currentQuestionIndex] = `${option.charAt(0)}) ${option.slice(3)}`; // store full answer
     setUserAnswer(updatedSelectedUserAnswer);
   };
 
