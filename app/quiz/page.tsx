@@ -43,18 +43,34 @@ function QuizPage() {
     // navigating to results page
     const router = useRouter();
 
-    const startQuiz = () => {
+    const startQuiz = async () => {
         setIsLoading(true);
+      try {
+        
+        const res = await fetch('/api/generate-questions', {
+          method: 'POST',
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ topic, difficulty, numOfQuestions }),
+        });
 
-        // Simulate API call delay
-        setTimeout(() => {
-          // Randomise the questions
-          const selectedQuestions = shuffleQuestions([...sampleQuestions].slice(0, parseInt(numOfQuestions)));
-          setQuestions(selectedQuestions);
-          setUserAnswer(Array(selectedQuestions.length).fill(null))
-          setQuizStarted(true);
+        const outputData = await res.json();
+
+        if(!res.ok || !outputData.outputQuestion) {
           setIsLoading(false);
-        }, 2000);
+          return toast.error("Failed to generate questions!");
+        }
+
+        setIsLoading(true);
+        setQuestions(outputData.outputQuestion)
+        setUserAnswer(Array(outputData.outputQuestion.length).fill(null))
+        setQuizStarted(true);
+      
+      } catch (error) {
+        return toast.error("Failed to generate questions!")
+      
+      } finally {
+        setIsLoading(false)
+      }
     }
 
     const handleStartQuiz = () => {
@@ -66,8 +82,8 @@ function QuizPage() {
             return toast.error("Invalid topic!");
         }        
         
-        if(Number(numOfQuestions) > sampleQuestions.length || Number(numOfQuestions) < 1) {
-            return toast.error(`Please choose a number between 1 and ${sampleQuestions.length}`);
+        if(Number(numOfQuestions) < 1) {
+            return toast.error("The number of questions must be at least 1");
         }
         
         if(difficulty === "asian") {
@@ -82,14 +98,15 @@ function QuizPage() {
     const handleFinishQuiz = () => {
       setShowResultDialog(true);
       
+      // map the user answers to the Answer obj
       const savedUserAnswers: Answer[] = questions.map((question: Question, answerIndex: number) => ({
         question: question.question,
         userAnswer: userAnswer[answerIndex] || "",
-        correctAnswer: question.correctAnswer
+        correctAnswer: question.options.find((option) => option.trim().startsWith(`${question.correctAnswer}`)) || "" // store full answers
       }));
 
       const finalScore = questions.reduce(
-        (acc: number, question: Question, answerIndex: number) => acc + (userAnswer[answerIndex] === question.correctAnswer ? 1 : 0),
+        (acc: number, question: Question, answerIndex: number) => acc + (userAnswer[answerIndex]?.charAt(0) === question.correctAnswer.charAt(0) ? 1 : 0),
         
         0
       );
@@ -126,7 +143,7 @@ function QuizPage() {
           />
         )}
 
-        {quizStarted && !quizFinished && (
+        {quizStarted && !quizFinished && questions.length > 0 && (
           <QuizQuestions 
             questions={questions}
             userAnswer={userAnswer}
