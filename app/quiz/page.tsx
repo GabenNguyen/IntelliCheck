@@ -3,9 +3,7 @@ import React from 'react'
 import Question from '@/type/question'
 import Answer from '@/type/answer';
 
-import shuffleQuestions from '@/utils/shuffle';
 import validateInput from '@/utils/validate_input';
-import sampleQuestions from '@/utils/sample_questions';
 
 import QuizSetup from '../components/quiz_related/QuizSetup';
 import QuizQuestions from '../components/quiz_related/QuizQuestions';
@@ -114,8 +112,9 @@ function QuizPage() {
       localStorage.setItem("quizData", JSON.stringify({
         topic,
         finalScore,
-        "totalQuestion": numOfQuestions,
-        "userAnswers": savedUserAnswers
+        savedAt: Date.now(), // for clearing the localStorage after 24 hours
+        totalQuestion: numOfQuestions,
+        userAnswers: savedUserAnswers,
       }));
 
       setTimeout(() => {
