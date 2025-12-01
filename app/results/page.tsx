@@ -21,19 +21,32 @@ function ResultPage() {
     } | null>(null)
 
     useEffect(() => {
-      const storedData = localStorage.getItem("quizData");
-      if(storedData && storedData !== "{}") {
-        setQuizData(JSON.parse(storedData));
-      }
+      const checkExpiryInterval = setInterval(() => {
+         const storedData = localStorage.getItem("quizData");
+      
+        if(!storedData || storedData === "{}") return;
+
+        const parsedData = JSON.parse(storedData)
+
+        // save the results in the local storage for 5 minutes
+        const EXPIRY_TIME = 5 * 60 * 1000;
+
+        if(Date.now() - Number(parsedData.savedAt) > EXPIRY_TIME) {
+          localStorage.removeItem("quizData");
+          setQuizData(null);
+          window.location.reload();
+        } else {
+          setQuizData(parsedData);
+        }
+
+      }, 1000)
+      
+      return () => clearInterval(checkExpiryInterval);
+
     }, []);
 
-
-    const { topic = "", finalScore = 0, totalQuestion = 0, userAnswers = []} = quizData || {};
-    const percentage = totalQuestion > 0 ? (((finalScore / totalQuestion) * 100).toFixed(2)) : "0";
-
-    return (
-      <>
-       {(!quizData ||totalQuestion === 0) ? (
+    if(!quizData || quizData.totalQuestion === 0) {
+      return (
         <div className="flex justify-center items-center w-full bg-linear-to-b from-blue-100 to-white dark:from-gray-900 dark:to-black p-6">
           <Card className="w-full max-w-3xl shadow-2xl border border-gray-300 dark:border-gray-700 rounded-2xl p-6">
             <CardHeader className="text-center space-y-3">
@@ -54,8 +67,13 @@ function ResultPage() {
               </CardFooter> 
           </Card>
       </div>
-      ) : (
-           <div className="flex justify-center items-center max-h-screen bg-linear-to-b from-blue-100 to-white dark:from-gray-900 dark:to-black p-6">
+      )
+    }
+    const { topic = "", finalScore = 0, totalQuestion = 0, userAnswers = []} = quizData || {};
+    const percentage = totalQuestion > 0 ? (((finalScore / totalQuestion) * 100).toFixed(2)) : "0";
+
+    return (
+         <div className="flex justify-center items-center max-h-screen bg-linear-to-b from-blue-100 to-white dark:from-gray-900 dark:to-black p-6">
             <Card className="w-full max-w-3xl shadow-2xl border border-gray-300 dark:border-gray-700 rounded-2xl p-6">
               <CardHeader className="text-center space-y-3">
                 <CardTitle className="text-4xl font-extrabold tracking-tight">
@@ -95,9 +113,7 @@ function ResultPage() {
             </CardContent>
           </Card>
       </div>
-      )}
-      </>
-    );
-}
+      )
+    }
 
 export default ResultPage
