@@ -112,7 +112,7 @@ function QuizPage() {
       localStorage.setItem("quizData", JSON.stringify({
         topic,
         finalScore,
-        savedAt: Date.now(), // for clearing the localStorage after 1 minute
+        savedAt: Date.now(), // for clearing the localStorage after 5 minutes
         totalQuestion: numOfQuestions,
         userAnswers: savedUserAnswers,
       }));
