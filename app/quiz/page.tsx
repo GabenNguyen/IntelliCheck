@@ -64,7 +64,7 @@ function QuizPage() {
         setQuizStarted(true);
       
       } catch (error) {
-        return toast.error("Failed to generate questions!")
+        return toast.error(`Failed to generate questions! Error: ${error}`)
       
       } finally {
         setIsLoading(false)
