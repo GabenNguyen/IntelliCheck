@@ -63,8 +63,8 @@ function QuizPage() {
         setUserAnswer(Array(outputData.outputQuestion.length).fill(null))
         setQuizStarted(true);
       
-      } catch (error) {
-        return toast.error(`Failed to generate questions! Error: ${error}`)
+      } catch {
+        return toast.error(`Failed to generate questions!`)
       
       } finally {
         setIsLoading(false)
@@ -108,14 +108,20 @@ function QuizPage() {
         
         0
       );
-
-      localStorage.setItem("quizData", JSON.stringify({
-        topic,
-        finalScore,
-        savedAt: Date.now(), // for clearing the localStorage after 5 minutes
-        totalQuestion: numOfQuestions,
-        userAnswers: savedUserAnswers,
-      }));
+      
+      try {
+        localStorage.setItem("quizData", JSON.stringify({
+          topic,
+          finalScore,
+          savedAt: Date.now(), // for clearing the localStorage after 5 minutes
+          totalQuestion: numOfQuestions,
+          userAnswers: savedUserAnswers,
+        }));
+      } catch (error) {
+        console.error(`Failed to store the results! Error: ${error}`)
+        return toast.error("Failed to save quiz result!")
+      }
+     
 
       setTimeout(() => {
         setQuizFinished(true);
@@ -128,7 +134,7 @@ function QuizPage() {
 
   return (
   
-    <div className="flex justify-center items-center max-h-screen bg-linear-to-b from-blue-100 to-white dark:from-gray-900 dark:to-black p-6">
+    <div className="flex justify-center items-center min-h-screen bg-linear-to-b from-blue-100 to-white dark:from-gray-900 dark:to-black p-6">
         {!quizStarted && (
           <QuizSetup
               topic={topic}
