@@ -95,7 +95,7 @@ function QuizSetup({
                 <CardFooter className="flex justify-center">
                   <Button 
                   className="cursor-pointer active:scale-90 transition-all" 
-                  type='submit' 
+                  type='button' 
                   onClick={handleStartQuiz}
                   disabled={isLoading}
                   >
