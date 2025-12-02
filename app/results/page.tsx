@@ -81,7 +81,7 @@ function ResultPage() {
                 </CardTitle>
                 <CardDescription className="text-lg text-black dark:text-white">
                     You have correctly answered <span className='font-bold'>{finalScore} </span> out of <span className='font-bold'>{totalQuestion}</span> question(s) <br></br>
-                    Knowledge on <span className='font-bold'>{topic?.toUpperCase()}</span>: <span className='font-bold'>{percentage}</span>
+                    Knowledge on <span className='font-bold'>{topic?.toUpperCase()}</span>: <span className='font-bold'>{percentage}%</span>
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-6 text-center text-lg">
