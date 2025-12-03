@@ -50,7 +50,7 @@ function QuizSetup({
                 <span className="text-blue-600">What are you up to?</span> 
               </CardTitle>
               <CardDescription className="text-lg text-gray-600 dark:text-gray-400">
-                Select a topic, choose the difficulty and the number of questions then you're all good to go
+                Select a topic, choose the difficulty and the number of questions then you&apos;re all good to go
               </CardDescription>
             </CardHeader>
             <form onSubmit={handleStartQuiz}>
