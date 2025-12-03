@@ -22,7 +22,7 @@ function AsianAlertDialog( { open, setOpen, onProceed }: Props ) {
             <AlertDialogHeader>
                 <AlertDialogTitle>Asian Difficulty Selected</AlertDialogTitle>
                 <AlertDialogDescription>
-                    Yo! You've selected the <span className="text-red-600 font-semibold text-xl">"Asian"</span> difficulty level. Less time but with Asian-difficult questions. Are you sure you want to proceed?
+                    Yo! You&apos;ve selected the <span className="text-red-600 font-semibold text-xl">&quot;Asian&quot;</span> difficulty level. Less time but with Asian-difficult questions. Are you sure you want to proceed?
                 </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
