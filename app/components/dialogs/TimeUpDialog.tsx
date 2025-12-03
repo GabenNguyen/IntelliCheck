@@ -19,7 +19,7 @@ function TimeUpDialog( { open, setOpen }: Props ) {
                 <AlertDialogHeader>
                 <AlertDialogTitle>
                     <div className="flex items-center justify-between">
-                        <span className='text-xl'>Time's up! System is cleaning up your mess</span>
+                        <span className='text-xl'>Time&apos;s up! System is cleaning up your mess</span>
                         <Spinner className='size-8'/>
                     </div>
                 </AlertDialogTitle>
