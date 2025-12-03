@@ -1,4 +1,3 @@
-import React from 'react'
 import {
   Card,
   CardContent,
@@ -29,7 +28,7 @@ function About() {
             explanations, so you don&apos;t just memorize the answers but truly understand them.
           </p>
           <p className="text-gray-700 dark:text-gray-300">
-            Whether you’re preparing for exams, sharpening your skills, or exploring new 
+            Whether you&apos;re preparing for exams, sharpening your skills, or exploring new 
             topics out of curiosity, this application is designed to keep you engaged and motivated.
             <br></br> I&apos;m passionate about using technology to make education interactive and 
             accessible for everyone.
