@@ -43,8 +43,8 @@ function ResultPage() {
     if (!quizData) return;
 
     const wrongAnswers = quizData.userAnswers
-      .map((answer, originalIndex) => ({ ...answer, originalIndex }))
-      .filter((answer) => answer.userAnswer !== answer.correctAnswer && !answer.explanation);
+      .map((answer, originalIndex) => ({ ...answer, originalIndex })) // keepttrack of the original index
+      .filter((answer) => answer.userAnswer !== answer.correctAnswer && !answer.explanation); // filtering out wrong answers and those already have an explanation
 
     wrongAnswers.forEach(async (wrongAnswer) => {
       try {
@@ -60,14 +60,18 @@ function ResultPage() {
 
         const outputData = await response.json();
 
-        setQuizData((prev) => {
-          if (!prev) return prev;
-          const updatedAnswers = [...prev.userAnswers];
+        setQuizData((previousUserQuizData) => {
+          if (!previousUserQuizData) return previousUserQuizData;
+          
+          const updatedAnswers = [...previousUserQuizData.userAnswers]; // make a copy of the original array
+          
+          // add explanation
           updatedAnswers[wrongAnswer.originalIndex] = {
             ...updatedAnswers[wrongAnswer.originalIndex],
             explanation: outputData.outputExplanation,
           };
-          return { ...prev, userAnswers: updatedAnswers };
+          
+          return { ...previousUserQuizData, userAnswers: updatedAnswers }; // return other fields and overwrite the userAnswers field with the updatedAnswers
         });
       } catch {
         toast.error("Failed to generate explanation!");
@@ -118,14 +122,14 @@ function ResultPage() {
 
         {/* Scrollable content for long questions */}
         <CardContent className="space-y-6 text-left max-h-[70vh] overflow-auto">
-          {userAnswers.map((answer: Answer, idx: number) => {
+          {userAnswers.map((answer: Answer, answerIndex: number) => {
             const isCorrect = answer.userAnswer === answer.correctAnswer;
             return (
               <div
-                key={idx}
+                key={answerIndex}
                 className={`p-4 space-y-3 rounded-lg border ${isCorrect ? "bg-green-500 text-white" : "bg-red-700 text-white"}`}
               >
-                <p className='font-semibold'>Question {idx + 1}: {answer.question}</p>
+                <p className='font-semibold'>Question {answerIndex + 1}: {answer.question}</p>
                 <p className='font-semibold'>Your answer: {answer.userAnswer}</p>
                 {!isCorrect && (
                   <div className='mt-2 space-y-3'>
