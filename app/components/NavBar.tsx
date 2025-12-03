@@ -24,7 +24,7 @@ function NavBar() {
         <nav className="bg-blue-200 dark:bg-black dark:text-white shadow-md">
             <div className="max-w-5xl mx-auto flex items-center justify-between p-4" >
                 <Link href="/" className="text-4xl md:text-5xl font-extrabold text-blue-600 dark:text-blue-400">
-                    🧞 QuizGenie
+                   🧐 IntelliCheck
                 </Link>
 
                 <NavigationMenu className="flex-1 -m-px flex justify-center">
