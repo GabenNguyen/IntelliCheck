@@ -23,7 +23,7 @@ function NavBar() {
     return (
         <nav className="bg-blue-200 dark:bg-black dark:text-white shadow-md">
             <div className="max-w-5xl mx-auto flex items-center justify-between p-4" >
-                <Link href="/" className="text-5xl text-blue-600 font-bold mt-3">
+                <Link href="/" className="text-4xl md:text-5xl font-extrabold text-blue-600 dark:text-blue-400">
                     🧞 QuizGenie
                 </Link>
 
@@ -33,7 +33,7 @@ function NavBar() {
                             <NavigationMenuItem key={label}>
                                 <NavigationMenuLink asChild>
                                     <Link href={href} 
-                                    className={cn(pathname === href && 'text-lg! font-semibold underline bg-white ')}
+                                    className={cn("relative text-lg md:text-xl px-2 py-1 rounded-md transition-colors hover:bg-blue-100 dark:hover:bg-blue-800 dark:hover:text-blue-200", pathname === href && 'font-bold underline dark:text-blue-300')}
                                     >
                                         {label}
                                     </Link>
