@@ -42,13 +42,10 @@ function QuizSetup({
   isLoading 
 }: Props ) {
   return (
-        <Card className="w-full max-w-3xl shadow-[0_20px_70px_-15px_rgba(0,0,0,0.3)] dark:shadow-[0_20px_70px_-15px_rgba(0,0,0,0.8)] border-0 rounded-[2rem] overflow-hidden backdrop-blur-xl bg-white/95 dark:bg-slate-900/95 relative">
-            {/* Subtle top accent */}
-            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500"></div>
-            
+        <Card className="w-full max-w-3xl shadow-[0_20px_70px_-15px_rgba(0,0,0,0.3)] dark:shadow-[0_20px_70px_-15px_rgba(0,0,0,0.8)] border-0 rounded-4xl overflow-hidden backdrop-blur-xl bg-white/95 dark:bg-slate-900/95 relative">
             <CardHeader className="text-center space-y-6 pt-12 pb-8 px-6 md:px-12">
               <CardTitle className="text-3xl md:text-4xl font-bold tracking-tight text-slate-900 dark:text-white">
-                <span className="bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 dark:from-blue-400 dark:via-purple-400 dark:to-pink-400 bg-clip-text text-transparent">What are you up to?</span> 
+                <span className="bg-linear-to-r from-blue-600 via-purple-600 to-pink-600 dark:from-blue-400 dark:via-purple-400 dark:to-pink-400 bg-clip-text text-transparent">What are you up to?</span> 
               </CardTitle>
               <CardDescription className="text-base md:text-lg text-slate-600 dark:text-slate-300 leading-relaxed max-w-2xl mx-auto">
                 Select a topic, choose the difficulty and the number of questions then you&apos;re all good to go
@@ -123,7 +120,7 @@ function QuizSetup({
 
               <CardFooter className="flex justify-center px-6 md:px-12 pb-12">
                 <Button 
-                  className="w-full md:w-auto px-8 py-6 text-base md:text-lg font-semibold rounded-xl bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 hover:from-blue-700 hover:via-purple-700 hover:to-pink-700 text-white shadow-lg hover:shadow-xl active:scale-95 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100" 
+                  className="cursor-pointer w-full md:w-auto px-8 py-6 text-base md:text-lg font-semibold rounded-xl bg-linear-to-r from-blue-600 via-purple-600 to-pink-600 hover:from-blue-700 hover:via-purple-700 hover:to-pink-700 text-white shadow-lg hover:shadow-xl active:scale-95 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100" 
                   type='button' 
                   onClick={handleStartQuiz}
                   disabled={isLoading}
