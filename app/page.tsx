@@ -6,13 +6,20 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import { currentUser } from "@clerk/nextjs/server";
 
 import { ArrowRight } from "lucide-react";
 
 import Link from "next/link";
 
+export default async function Home() {
 
-export default function Home() {
+  // display user name when signing in
+  const user = await currentUser();
+  
+  const userName = user?.username || user?.firstName|| "";
+
+
   return (
     <div className="min-h-screen flex justify-center items-center bg-linear-to-br from-blue-50 via-purple-50 to-white dark:from-gray-950 dark:via-blue-950 dark:to-gray-900 p-6 relative overflow-hidden">
       {/* Decorative background elements */}
@@ -24,7 +31,7 @@ export default function Home() {
       <Card className="w-full max-w-3xl shadow-2xl border-2 border-blue-100 dark:border-gray-700 rounded-3xl p-8 backdrop-blur-sm bg-white/80 dark:bg-gray-900/80 relative z-10 hover:shadow-blue-200/50 dark:hover:shadow-blue-900/50 transition-all duration-300">
         <CardHeader className="text-center space-y-4 pb-6">
           <CardTitle className="text-5xl md:text-6xl font-extrabold tracking-tight bg-linear-to-r from-blue-600 via-purple-600 to-blue-600 dark:from-blue-400 dark:via-purple-400 dark:to-blue-400 bg-clip-text text-transparent animate-gradient">
-            Welcome to <span className="block mt-2">IntelliCheck</span>
+            {userName ? `Welcome, ${userName}!` : "Welcome to IntelliCheck!" }
           </CardTitle>
           <CardDescription className="text-xl text-gray-600 dark:text-gray-300 font-medium max-w-2xl mx-auto">
             Generate AI-powered quizzes on any topic. Learn faster, test smarter.
