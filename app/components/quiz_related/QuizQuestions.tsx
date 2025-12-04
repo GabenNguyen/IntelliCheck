@@ -67,8 +67,6 @@ function QuizQuestions( {
   
   return (
     <Card className="w-full max-w-4xl shadow-[0_20px_70px_-15px_rgba(0,0,0,0.3)] dark:shadow-[0_20px_70px_-15px_rgba(0,0,0,0.8)] border-0 rounded-4xl overflow-hidden backdrop-blur-xl bg-white/95 dark:bg-slate-900/95 relative">
-        <div className="absolute top-0 left-0 right-0 h-1 bg-linear-to-r from-blue-500 via-purple-500 to-pink-500"></div>
-        
         <CardHeader className='space-y-4 pt-8 pb-4 px-6 md:px-12'>
           {/* Question Counter & Timer */}
           <div className='flex items-center justify-between'>
