@@ -161,7 +161,7 @@ function QuizQuestions( {
                 onClick={handleMoveNextQuestion}
               >
                 {currentQuestionIndex + 1 < questions.length ? (
-                  <span className="flex items-center gap-2">
+                  <span className="cursor-pointer flex items-center gap-2">
                     Next Question <ArrowRight className="w-5 h-5" />
                   </span>
                 ) : (
