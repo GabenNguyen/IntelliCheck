@@ -48,10 +48,10 @@ function NavBar() {
                                         <Link 
                                             href={href} 
                                             className={cn(
-                                                "relative px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200",
+                                                "relative px-4 py-2 text-lg! font-medium rounded-lg transition-all duration-200",
                                                 "text-gray-700 dark:text-gray-300",
                                                 "hover:bg-blue-100 dark:hover:bg-gray-800",
-                                                pathname === href && "bg-blue-100 dark:bg-gray-800 text-blue-600 dark:text-blue-400 font-semibold shadow-sm"
+                                                pathname === href && "bg-blue-100 dark:bg-gray-800 text-blue-600 dark:text-blue-400 font-bold shadow-sm"
                                             )}
                                         >
                                             {label}
