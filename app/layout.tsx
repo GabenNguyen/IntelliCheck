@@ -5,6 +5,7 @@ import NavBar from "./components/NavBar";
 import ThemeProvider  from "./components/ThemeProvider";
 import AnimatedTransition from "./components/AnimatedTransition";
 import { Toaster } from "sonner";
+import { ClerkProvider } from '@clerk/nextjs'
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,26 +28,28 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-            <NavBar />
-            <Toaster position="top-center" />
-          <AnimatedTransition>
-            {children}
-          </AnimatedTransition>
+    <ClerkProvider>
+        <html lang="en" suppressHydrationWarning>
+          <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+                <NavBar />
+                <Toaster position="top-center" />
+              <AnimatedTransition>
+                {children}
+              </AnimatedTransition>
 
-          <footer className="text-center py-6 text-gray-600 dark:text-gray-400 border-t border-gray-200 dark:border-gray-700 mt-10">
-            © {new Date().getFullYear()} <span className="font-semibold text-blue-600">QuizGenie</span> - <span className="font-semibold">Ba Hoa NGUYEN</span>
-          </footer>
-        
-        </ThemeProvider>
-      </body>
-    </html>
+              <footer className="text-center py-6 text-gray-600 dark:text-gray-400 border-t border-gray-200 dark:border-gray-700 mt-10">
+                © {new Date().getFullYear()} <span className="font-semibold text-blue-600">QuizGenie</span> - <span className="font-semibold">Ba Hoa NGUYEN</span>
+              </footer>
+            
+            </ThemeProvider>
+          </body>
+        </html>
+    </ClerkProvider>
   );
 }
