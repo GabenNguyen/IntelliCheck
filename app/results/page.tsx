@@ -82,10 +82,10 @@ function ResultPage() {
   if (!quizData || quizData.totalQuestion === 0) {
     return (
       <div className="flex justify-center items-start min-h-screen bg-linear-to-b from-blue-100 to-white dark:from-gray-900 dark:to-black p-6">
-        <Card className="w-full max-w-lg shadow-2xl border border-gray-300 dark:border-gray-700 rounded-2xl p-6">
+        <Card className="w-full max-w-3xl shadow-[0_20px_70px_-15px_rgba(0,0,0,0.3)] dark:shadow-[0_20px_70px_-15px_rgba(0,0,0,0.8)] border-0 rounded-4xl overflow-hidden backdrop-blur-xl bg-white/95 dark:bg-slate-900/95 relative">
           <CardHeader className="text-center space-y-3">
             <CardTitle className="text-4xl font-extrabold tracking-tight">
-              You have not taken a quiz yet!
+              No attempts recorded yet!
             </CardTitle>
             <CardDescription className="text-lg text-black dark:text-white">
               Please attend a quiz first and see your results here.
@@ -93,7 +93,7 @@ function ResultPage() {
           </CardHeader>
           <CardFooter className="flex justify-center">
             <Link href="/quiz" className="flex items-center">
-              <button className="group cursor-pointer bg-transparent hover:bg-blue-500 text-blue-700 font-semibold hover:text-white py-3 px-2 border border-blue-500 hover:border-transparent rounded active:scale-90 transition-all flex items-center gap-2">
+              <button className="group relative cursor-pointer bg-linear-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold py-4 px-8 rounded-xl shadow-lg hover:shadow-2xl active:scale-95 transition-all duration-200 flex items-center overflow-hidden">
                 <ArrowLeft className="w-5 h-5 mt-1 transition-transform duration-200 group-hover:-translate-x-1 mx-1" />
                 Return to Quiz Page
               </button>
