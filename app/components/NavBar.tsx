@@ -98,7 +98,7 @@ function NavBar() {
 
                         <SignedIn>
                             <div className="flex items-center">
-                                <UserButton />
+                                <UserButton showName />
                             </div>
                         </SignedIn>
                     </div>
