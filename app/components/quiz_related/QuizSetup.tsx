@@ -66,6 +66,7 @@ function QuizSetup({
                       placeholder="E.g. Art, History, Programming Languages"
                       value={topic}
                       onChange={(e) => setTopic(e.target.value)}
+                      required
                   />
                 </div>
 
