@@ -98,7 +98,14 @@ function NavBar() {
 
                         <SignedIn>
                             <div className="flex items-center">
-                                <UserButton showName />
+                                <UserButton 
+                                    showName
+                                    appearance={{
+                                        elements: {
+                                            userButtonBox: "text-black dark:text-white"
+                                        }
+                                    }} 
+                                />
                             </div>
                         </SignedIn>
                     </div>
