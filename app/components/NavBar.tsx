@@ -17,6 +17,8 @@ import {
   SignedOut,
   UserButton,
 } from '@clerk/nextjs'
+import { Sparkle } from "lucide-react";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 
 const navItems = [
     {label: "Home", href: '/' },
@@ -33,7 +35,8 @@ function NavBar() {
                 <div className="flex items-center justify-between h-20">
                     {/* Logo */}
                     <Link href="/" className="flex items-center space-x-2 group">
-                        <span className="text-4xl transition-transform group-hover:scale-110 duration-300">🧐</span>
+                        <SidebarTrigger className="cursor-pointer"/>
+                        <span className="text-4xl transition-transform group-hover:scale-110 duration-300"><Sparkle /></span>
                         <span className="text-2xl md:text-3xl font-bold bg-linear-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400 bg-clip-text text-transparent">
                             IntelliCheck
                         </span>
