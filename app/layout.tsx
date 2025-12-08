@@ -57,7 +57,7 @@ export default async function RootLayout({
                   </AnimatedTransition>
                   
                   <footer className="w-full mt-10 border-t border-gray-200 dark:border-gray-700">
-                    <div className="py-6 px-4 text-center text-gray-600 dark:text-gray-400 text-sm">
+                    <div className="py-6 px-4 text-center text-gray-600 dark:text-gray-400 text-base">
                       © {new Date().getFullYear()}{" "}
                       <span className="font-semibold text-blue-600">IntelliCheck</span>{" "}
                       — <span className="font-semibold">Ba Hoa NGUYEN</span>
