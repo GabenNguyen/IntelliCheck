@@ -1,5 +1,12 @@
-import { LayoutDashboard, Plus, BarChart3, Star, Settings, HelpCircle, Sparkles, Zap } from "lucide-react"
+"use client"
+
+import { LayoutDashboard, Plus, BarChart3, Star, Sparkles, Zap, LogOut, Settings, ChevronDown } from "lucide-react"
+
 import Link from "next/link"
+import { useState } from "react"
+
+import { useAuth, useUser, SignOutButton, UserAvatar } from "@clerk/nextjs"
+
 import {
   Sidebar,
   SidebarContent,
@@ -12,6 +19,13 @@ import {
   SidebarFooter,
   SidebarHeader,
 } from "@/components/ui/sidebar"
+
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible"
+
 
 const mainItems = [
   {
@@ -44,20 +58,12 @@ const progressItems = [
   },
 ]
 
-const bottomItems = [
-  {
-    title: "Settings",
-    url: "/settings",
-    icon: Settings,
-  },
-  {
-    title: "Help",
-    url: "/help",
-    icon: HelpCircle,
-  },
-]
-
 function AppSideBar() {
+  const [open, setOpen] = useState(false);
+
+  const { isSignedIn, userId} = useAuth(); // check if user is signed in
+  const { user } = useUser(); // display user first name
+
   return (
     <Sidebar className="border-r-0">
       <SidebarHeader className="border-b border-gray-200 dark:border-gray-800 pb-6 pt-8 px-6">
@@ -138,24 +144,66 @@ function AppSideBar() {
         </SidebarGroup>
 
       </SidebarContent>
+      
+      {isSignedIn && userId && (
+        <SidebarFooter className="border-t border-gray-200 dark:border-gray-800 p-3">
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <Collapsible open={open} onOpenChange={setOpen}>
+                <CollapsibleTrigger asChild>
+                  <SidebarMenuButton className=" cursor-pointer w-full flex items-center justify-between px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-700 dark:text-gray-300 text-sm transition-colors duration-200">
+                    <div className="flex items-center gap-2">
+                      <UserAvatar />
+                      <span className="font-medium">{user?.firstName || user?.username}</span>
+                    </div>
+                    <span className={`transition-transform duration-300 ease-in-out ${
+                      open ? "rotate-180" : "rotate-0"
+                    }`}>
+                      <ChevronDown />
+                    </span>
+                  </SidebarMenuButton>
+                </CollapsibleTrigger>
 
-      <SidebarFooter className="border-t border-gray-200 dark:border-gray-800 p-3">
-        <SidebarMenu className="space-y-1">
-          {bottomItems.map((item) => (
-            <SidebarMenuItem key={item.title}>
-              <SidebarMenuButton asChild>
-                <Link 
-                  href={item.url}
-                  className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-400 text-sm transition-colors duration-200"
-                >
-                  <item.icon className="w-4 h-4" />
-                  <span>{item.title}</span>
-                </Link>
-              </SidebarMenuButton>
+                <CollapsibleContent className="space-y-1 mt-1 pl-2 transition-all duration-300 ease-in-out 
+                      overflow-hidden
+                      data-[state=closed]:opacity-0
+                      data-[state=open]:opacity-100
+                      data-[state=closed]:max-h-0 
+                      data-[state=open]:max-h-40"
+                  >
+                    <ul className="space-y-1" >
+                      <SidebarMenuItem>
+                        
+                          <Link
+                            href="/user-profile"
+                            className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-400 text-sm transition-colors duration-200"
+                          >
+                          <Settings /> Settings
+                          </Link>
+                        
+                      </SidebarMenuItem>
+
+                      <SidebarMenuItem>
+                        
+                          <SignOutButton>
+                            <button 
+                              className="w-full text-left px-3 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-400 text-sm transition-colors duration-200 cursor-pointer flex items-center gap-2"
+                            >
+                              <LogOut /> Log Out 
+                            </button>
+                          </SignOutButton>
+                        
+                      </SidebarMenuItem>
+
+                    </ul>
+                </CollapsibleContent>
+              </Collapsible>
             </SidebarMenuItem>
-          ))}
-        </SidebarMenu>
-      </SidebarFooter>
+          </SidebarMenu>
+        </SidebarFooter>
+      )}
+
+      
     </Sidebar>
   )
 }
