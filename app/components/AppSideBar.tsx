@@ -137,18 +137,6 @@ function AppSideBar() {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        {/* Stats Card */}
-        <div className="mx-3 mt-6 p-4 rounded-2xl bg-linear-to-br from-blue-50 to-purple-50 dark:from-blue-950/30 dark:to-purple-950/30 border border-blue-200 dark:border-blue-900">
-          <div className="flex items-center gap-2 mb-2">
-            <Zap className="w-4 h-4 text-orange-500" />
-            <span className="text-sm font-bold text-gray-900 dark:text-white">5 Day Streak! 🔥</span>
-          </div>
-          <p className="text-xs text-gray-600 dark:text-gray-400 mb-3">Keep going to unlock rewards</p>
-          <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-            <div className="bg-linear-to-r from-orange-500 to-pink-500 h-2 rounded-full" style={{width: '70%'}}></div>
-          </div>
-          <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">7/10 quizzes this week</p>
-        </div>
       </SidebarContent>
 
       <SidebarFooter className="border-t border-gray-200 dark:border-gray-800 p-3">
