@@ -16,7 +16,7 @@ import {
 const mainItems = [
   {
     title: "Dashboard",
-    url: "/",
+    url: "/dashboard",
     icon: LayoutDashboard,
     gradient: "from-blue-500 to-cyan-500",
   },
