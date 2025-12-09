@@ -13,31 +13,54 @@ export async function POST(req: Request) {
         const ai = new GoogleGenAI({apiKey: GEMINI_AI_KEY});
         
         const prompt = `
-            Generate ${numOfQuestions} questions about ${topic}
-            Difficulty: ${difficultyRules}
-            Strictly format the response in JSON like this:
+            You are a professional exam generator AI.
 
+            Generate exactly ${numOfQuestions} multiple-choice questions about **${topic}**.
+            Difficulty level: **${difficultyRules}**.
+
+            Your mission:
+            ⚡ Create highly diverse and non-repetitive question types.
+
+            You MUST include a balanced mix of these MCQ *question styles*:
+            1. Definition-based
+            2. Scenario-based (realistic situations)
+            3. Cause–effect or “why does this happen?”
+            4. Fill-in-the-blank
+            5. Misconception correction (identify the incorrect belief)
+            6. Data- or chart-interpretation (describe data verbally)
+            7. Analogy-based (A is to B as X is to ___)
+            8. Error analysis (what mistake happened?)
+            9. “What would happen if…” hypothetical reasoning
+            10. Compare-and-contrast
+            11. Principle/application (applying a rule to a new situation)
+            12. Classification/grouping logic
+
+            Rules for variety:
+            - No two questions may share the same structure or question opening.
+            - No duplicate concepts.
+            - Ensure option diversity — not too similar.
+            - Only one correct answer per question.
+
+            STRICT JSON FORMAT ONLY:
             [
-                {
-                    "question": "...",
-                      "options": [
-                        "A) option text 1",
-                        "B) option text 2",
-                        "C) option text 3",
-                        "D) option text 4"
-                        ],
-                    "correctAnswer": "A",
-                    "explanation": "..."
-                
-                }
-            
+            {
+                "question": "Fully written question text.",
+                "options": [
+                "A) option text",
+                "B) option text",
+                "C) option text",
+                "D) option text"
+                ],
+                "correctAnswer": "A",
+                "explanation": "..."
+            }
             ]
-            
-            Rules:
-            - Always include full-text options.
-            - Options must begin with "A)", "B)", "C)", "D)" exactly.
-            - "correctAnswer" must be only one letter (A–D).
-        `;
+
+            JSON rules:
+            - Options MUST start with “A)”, “B)”, “C)”, “D)” exactly.
+            - No markdown, no commentary, no extra text.
+            - Output valid JSON only.
+            `;
 
         const response = await ai.models.generateContent({
             model: "gemini-2.5-flash",
