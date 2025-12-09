@@ -118,6 +118,8 @@ function AppSideBar() {
         </SidebarGroup>
 
         {/* Progress Section */}
+        {isSignedIn && userId && (
+
         <SidebarGroup className="mt-6">
           <SidebarGroupLabel className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider px-3 mb-2">
             Your Progress
@@ -142,6 +144,7 @@ function AppSideBar() {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+        )}
 
       </SidebarContent>
       
