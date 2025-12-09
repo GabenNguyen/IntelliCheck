@@ -19,6 +19,8 @@ export async function POST(req: Request) {
             The explanation should be clear, concise and simple so that even a middle-school student
             can understand.
 
+            Clear explanation referencing topic facts and why the answer is correct.
+
             Ideal explanation length should be 2-3 sentences.
         `;
 
