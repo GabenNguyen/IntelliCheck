@@ -1,10 +1,10 @@
 // Utility function to format a date string into a relative time description
 
 function formatRelativeTime(dateString: string): string {
-  const date = new Date(dateString);
+  const date = new Date(dateString); // convert string to Date object
   const now = new Date();
   const differentInMilliSec = now.getTime() - date.getTime(); // difference in milliseconds
-  const differentInDays = Math.floor(differentInMilliSec / (1000 * 60 * 60 * 24));
+  const differentInDays = Math.floor(differentInMilliSec / (1000 * 60 * 60 * 24)); // convert to days
 
   if (differentInDays === 0) return "today";
   if (differentInDays === 1) return "yesterday";
