@@ -1,5 +1,7 @@
 "use client";
-import React from 'react'
+
+import saveQuizToDB from '@/lib/quiz-action';
+
 import Question from '@/type/question'
 import Answer from '@/type/answer';
 
@@ -38,6 +40,8 @@ function QuizPage() {
     // User answers state
     const [userAnswer, setUserAnswer] = useState<(string | null)[]>([])
 
+    const [saveQuizId, setSaveQuizId] = useState<(string | null)>(null);
+
     // navigating to results page
     const router = useRouter();
 
@@ -57,6 +61,14 @@ function QuizPage() {
           setIsLoading(false);
           return toast.error("Failed to generate questions!");
         }
+
+        // save the generated quiz to the db
+        const saveResult = await saveQuizToDB(topic, difficulty, outputData.outputQuestion);
+
+        if(saveResult.success) {
+          setSaveQuizId(saveResult.quizId || null);
+          console.log("Quiz saved with ID:", saveResult.quizId);
+        };
 
         setIsLoading(true);
         setQuestions(outputData.outputQuestion)
@@ -114,6 +126,7 @@ function QuizPage() {
           topic,
           finalScore,
           savedAt: Date.now(), // for clearing the localStorage after 5 minutes
+          quizId: saveQuizId,
           totalQuestion: numOfQuestions,
           userAnswers: savedUserAnswers,
         }));
