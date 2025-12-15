@@ -2,9 +2,17 @@
 
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
-import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, CartesianGrid, Tooltip, TooltipContentProps } from "recharts";
-import { Activity } from "lucide-react";
+import { Plus, Activity, Sparkles, Clock, Layers } from "lucide-react";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  ResponsiveContainer,
+  CartesianGrid,
+  Tooltip,
+  TooltipContentProps,
+} from "recharts";
 import Link from "next/link";
 import formatRelativeTime from "@/utils/format_time";
 
@@ -20,140 +28,118 @@ interface DashboardData {
     questionCount: number;
     createdAt: string;
   }[];
-  
 }
 
-// custom tooltip for the activity chart, from Recharts
-const CustomTooltip = ({ active, payload }: TooltipContentProps<string | number, string>) => {
-  if (active && payload && payload.length) {
-    return (
-      <div className="rounded-lg border bg-white px-3 py-2 shadow-md dark:bg-gray-950 dark:border-gray-800">
-        <p className="text-sm font-semibold text-gray-900 dark:text-white">
-          {payload[0].payload.name}
-        </p>
-        <p className="text-sm text-blue-600 dark:text-blue-400 font-medium">
-          {payload[0].value} {payload[0].value === 1 ? 'quiz' : 'quizzes'}
-        </p>
-      </div>
-    );
-  }
-  return null;
+const CustomTooltip = ({
+  active,
+  payload,
+}: TooltipContentProps<string | number, string>) => {
+  if (!active || !payload?.length) return null;
+
+  return (
+    <div className="rounded-xl border border-gray-200 bg-white/90 px-4 py-2 shadow-xl backdrop-blur dark:border-gray-800 dark:bg-gray-950/90">
+      <p className="text-sm font-semibold text-gray-900 dark:text-white">
+        {payload[0].payload.name}
+      </p>
+      <p className="text-sm font-medium text-blue-600 dark:text-blue-400">
+        {payload[0].value} quizzes
+      </p>
+    </div>
+  );
 };
 
-function Dashboard( {userName, dashboardData } : {userName: string, dashboardData: DashboardData} ) {
+function Dashboard({
+  userName,
+  dashboardData,
+}: {
+  userName: string;
+  dashboardData: DashboardData;
+}) {
   return (
-    <div className="w-full p-6 space-y-8">
-      {/* HEADER */}
-      <section>
-        <h1 className="text-3xl font-bold mb-4">
-            {`Welcome, ${userName}!`}
-
-        </h1>
-
-        <div className="max-w-xs">
-          <Link href="/quiz">
-            <Button className="w-full h-20 text-lg gap-2 cursor-pointer">
-              <Plus size={20} />
-              Create Quiz
-            </Button>
-          </Link>
+    <div className="relative w-full space-y-12 p-8">
+      {/* PAGE HEADER */}
+      <section className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+        <div>
+          <h1 className="text-4xl font-extrabold tracking-tight bg-clip-text text-primary">
+            Welcome back, {userName}!
+          </h1>
+          <p className="mt-2 text-gray-600 dark:text-gray-400">
+            Here&apos;s your learning progress so far
+          </p>
         </div>
+
+        <Link href="/quiz">
+          <Button className="cursor-pointer h-14 gap-2 rounded-xl px-8 text-lg font-bold shadow-lg active:scale-95 hover:bg-gray-400">
+            <Plus className="h-5 w-5" />
+            Create Quiz
+          </Button>
+        </Link>
       </section>
 
-      {/* ANALYTICS */}
-      <section className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        <Card>
-          <CardHeader>
-            <CardTitle>Total Quizzes</CardTitle>
-          </CardHeader>
-          <CardContent className="text-3xl font-bold">{dashboardData.totalQuizzes}</CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Questions Generated</CardTitle>
-          </CardHeader>
-          <CardContent className="text-3xl font-bold">{dashboardData.totalQuestions}</CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Time Saved</CardTitle>
-          </CardHeader>
-          <CardContent className="text-3xl font-bold">{dashboardData.totalTimeSaved} minutes</CardContent>
-        </Card>
-      </section>
-
-      {/* ACTIVITY CHART */}
-     <section>
-        <Card className="overflow-hidden border-gray-200 dark:border-gray-800 shadow-sm hover:shadow-md transition-shadow duration-200">
-          
-          <CardHeader className="bg-linear-to-r from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-900 pb-4">
-            <div className="flex items-center gap-3">
-              {/* Icon badge */}
-              <div className="p-2 bg-blue-100 dark:bg-blue-900 rounded-lg">
-                <Activity className="h-5 w-5 text-blue-600 dark:text-blue-400" />
-              </div>
-              <div>
-                <CardTitle className="text-lg font-semibold">
-                  This Week&apos;s Activity
-                </CardTitle>
-                <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
-                  Your quiz creation journey
-                </p>
-              </div>
+      {/* STATS */}
+      <section className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <Card className="rounded-2xl bg-white/80 backdrop-blur shadow-lg dark:bg-gray-900/70">
+          <CardContent className="flex items-center gap-4 p-6">
+            <div className="rounded-xl bg-blue-500/10 p-3 text-blue-600 dark:text-blue-400">
+              <Sparkles />
             </div>
-          </CardHeader>
-          
-          <CardContent className="pt-6">
-            
-            <ResponsiveContainer width="100%" height={240}>
-              <BarChart 
-                data={dashboardData.weeklyActivities}
-                margin={{ top: 10, right: 10, left: -10, bottom: 0 }}
-              >
-                {/* Grid lines for readability */}
-                <CartesianGrid 
-                  strokeDasharray="3 3" 
-                  stroke="#e5e7eb" 
-                  className="dark:stroke-gray-700"
-                  vertical={false}
-                />
-                
-                
-                <XAxis 
-                  dataKey="name"
-                  tick={{ fill: '#6b7280', fontSize: 12 }}
-                  axisLine={{ stroke: '#e5e7eb' }}
-                  tickLine={false}
-                />
-                
-                <YAxis 
-                  allowDecimals={false}
-                  tick={{ fill: '#6b7280', fontSize: 12 }}
-                  axisLine={{ stroke: '#e5e7eb' }}
-                  tickLine={false}
-                />
-                
-                <Tooltip 
-                  content={<CustomTooltip active={false} payload={[]} coordinate={undefined} accessibilityLayer={false} activeIndex={undefined} />} 
-                  cursor={{ fill: 'rgba(59, 130, 246, 0.1)' }}
-                />
+            <div>
+              <p className="text-sm text-gray-500">Total Quizzes</p>
+              <p className="text-3xl font-bold">{dashboardData.totalQuizzes}</p>
+            </div>
+          </CardContent>
+        </Card>
 
-                <Bar 
-                  dataKey="quizzes"
-                  fill="url(#colorGradient)"
-                  radius={[8, 8, 0, 0]}
-                  maxBarSize={50}
+        <Card className="rounded-2xl bg-white/80 backdrop-blur shadow-lg dark:bg-gray-900/70">
+          <CardContent className="flex items-center gap-4 p-6">
+            <div className="rounded-xl bg-purple-500/10 p-3 text-purple-600 dark:text-purple-400">
+              <Layers />
+            </div>
+            <div>
+              <p className="text-sm text-gray-500">Questions Generated</p>
+              <p className="text-3xl font-bold">
+                {dashboardData.totalQuestions}
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="rounded-2xl bg-white/80 backdrop-blur shadow-lg dark:bg-gray-900/70">
+          <CardContent className="flex items-center gap-4 p-6">
+            <div className="rounded-xl bg-pink-500/10 p-3 text-pink-600 dark:text-pink-400">
+              <Clock />
+            </div>
+            <div>
+              <p className="text-sm text-gray-500">Time Saved</p>
+              <p className="text-3xl font-bold">
+                {dashboardData.totalTimeSaved} min
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      </section>
+
+      {/* ACTIVITY */}
+      <section>
+        <Card className="rounded-3xl bg-white/80 backdrop-blur shadow-xl dark:bg-gray-900/70">
+          <CardHeader className="flex flex-row items-center gap-3 border-b border-gray-200 dark:border-gray-800">
+            <div className="rounded-xl bg-blue-600/10 p-2 text-blue-600 dark:text-blue-400">
+              <Activity />
+            </div>
+            <CardTitle>This Week’s Activity</CardTitle>
+          </CardHeader>
+          <CardContent className="h-[260px] pt-6">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={dashboardData.weeklyActivities}>
+                <CartesianGrid vertical={false} strokeDasharray="3 3" />
+                <XAxis dataKey="name" tickLine={false} axisLine={false} />
+                <YAxis
+                  allowDecimals={false}
+                  tickLine={false}
+                  axisLine={false}
                 />
-                
-                {/* Gradient definition */}
-                <defs>
-                  <linearGradient id="colorGradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#3b82f6" stopOpacity={1} />
-                    <stop offset="100%" stopColor="#60a5fa" stopOpacity={0.8} />
-                  </linearGradient>
-                </defs>
+                <Tooltip content={CustomTooltip} />
+                <Bar dataKey="quizzes" radius={[10, 10, 0, 0]} fill="#6366f1" />
               </BarChart>
             </ResponsiveContainer>
           </CardContent>
@@ -162,21 +148,26 @@ function Dashboard( {userName, dashboardData } : {userName: string, dashboardDat
 
       {/* RECENT QUIZZES */}
       <section>
-        <h2 className="text-xl font-semibold mb-3">Recent Quizzes</h2>
+        <h2 className="mb-4 text-2xl font-bold">Recent Quizzes</h2>
         {dashboardData.recentGeneratedQuizzes.length === 0 ? (
-          <Card className="p-6 text-center text-gray-500">
-            No quizzes yet. Create your first quiz to get started!
+          <Card className="rounded-2xl p-10 text-center text-gray-500">
+            No quizzes yet. Create your first one 🚀
           </Card>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid gap-6 md:grid-cols-3">
             {dashboardData.recentGeneratedQuizzes.map((quiz) => (
-              <Card key={quiz.id} className="hover:shadow-lg transition">
+              <Card
+                key={quiz.id}
+                className="group rounded-2xl bg-white/80 backdrop-blur shadow-md transition hover:-translate-y-1 hover:shadow-xl dark:bg-gray-900/70"
+              >
                 <CardHeader>
-                  <CardTitle className="text-lg">{quiz.title}</CardTitle>
+                  <CardTitle className="text-lg group-hover:text-blue-600 transition-colors">
+                    {quiz.title}
+                  </CardTitle>
                 </CardHeader>
                 <CardContent className="text-sm text-gray-600 dark:text-gray-400">
-                  {quiz.questionCount} questions • Created {formatRelativeTime(quiz.createdAt)}
-                  
+                  {quiz.questionCount} questions ·{" "}
+                  {formatRelativeTime(quiz.createdAt)}
                 </CardContent>
               </Card>
             ))}
@@ -187,4 +178,4 @@ function Dashboard( {userName, dashboardData } : {userName: string, dashboardDat
   );
 }
 
-export default Dashboard
+export default Dashboard;
