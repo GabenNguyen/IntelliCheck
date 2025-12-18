@@ -3,8 +3,6 @@ import * as React from "react";
 import {
   LayoutDashboard,
   Plus,
-  BarChart3,
-  Star,
   Sparkles,
   Zap,
   LogOut,
