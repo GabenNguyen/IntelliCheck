@@ -45,7 +45,7 @@ export async function POST(req: NextRequest) {
                 subject: body.subject,
                 description: body.description || "",
                 questionCount: body.questions.length,
-                timeSaved: body.questions.length * 5, // 5 minutes saved per question
+                timeSaved: Math.round(body.questions.length * 5 * (0.8 + Math.random() * 0.4)), // estimated time saved for auto-generated questions
                 questions: {
                     create: body.questions.map((question) => ({
                         question: question.question,
