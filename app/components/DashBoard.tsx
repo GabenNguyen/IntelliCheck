@@ -28,6 +28,14 @@ interface DashboardData {
     questionCount: number;
     createdAt: string;
   }[];
+  subjectSummary: {
+    subject: string;
+    count: number;
+    quizzes: number;
+    questions: number;
+    timeSaved: number;
+    color: string;
+  }[];
 }
 
 const CustomTooltip = ({
@@ -110,10 +118,61 @@ function Dashboard({
               <Clock />
             </div>
             <div>
-              <p className="text-sm text-gray-500">Time Saved</p>
-              <p className="text-3xl font-bold">
-                {dashboardData.totalTimeSaved} min
+              <p className="text-sm text-gray-500">
+                Est. Total Time Saved From Auto-Generated
               </p>
+              <p className="text-3xl font-bold">
+                {dashboardData.totalTimeSaved} min(s)
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      </section>
+
+      {/* TOP SUBJECTS TABLE */}
+      <section>
+        <Card className="rounded-2xl bg-white/80 dark:bg-gray-900/70 shadow-lg">
+          <CardHeader>
+            <CardTitle>Top Subjects</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {dashboardData.subjectSummary.map((item, index) => (
+                <div key={index} className="flex items-center justify-between">
+                  {/* Subject Name */}
+                  <div className="flex items-center gap-3">
+                    <div
+                      className="w-3 h-3 rounded-full"
+                      style={{ backgroundColor: item.color }}
+                    />
+                    <span className="font-medium">{item.subject}</span>
+                  </div>
+
+                  {/* Count + progress bar */}
+                  <div className="flex items-center gap-4">
+                    <span className="text-sm text-gray-600 dark:text-gray-400">
+                      {item.count} quizzes
+                    </span>
+                    <div className="w-32 bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                      <div
+                        className="h-2 rounded-full"
+                        style={{
+                          width: `${
+                            (item.count /
+                              Math.max(
+                                ...dashboardData.subjectSummary.map(
+                                  (s) => s.count
+                                )
+                              )) *
+                            100
+                          }%`,
+                          backgroundColor: item.color,
+                        }}
+                      />
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
           </CardContent>
         </Card>
