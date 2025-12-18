@@ -5,7 +5,7 @@ import prisma from "@/lib/db";
 export async function fetchDashboardData() {
     try {
 
-        await new Promise((res) => setTimeout(res, 2000))
+        await new Promise((res) => setTimeout(res, 2000)) // loading animation
 
         const clerkUser = await currentUser();
 
