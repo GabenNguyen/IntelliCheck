@@ -48,19 +48,6 @@ const mainItems = [
   },
 ];
 
-const progressItems = [
-  {
-    title: "Analytics",
-    url: "/analytics",
-    icon: BarChart3,
-  },
-  {
-    title: "Favorites",
-    url: "/favorites",
-    icon: Star,
-  },
-];
-
 export default function AppSideBar() {
   const [open, setOpen] = useState(false);
   const auth = useAuth();
