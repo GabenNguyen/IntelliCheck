@@ -31,6 +31,13 @@ interface Props {
   isLoading: boolean;
 }
 
+const difficulties = [
+  { value: "easy", color: "green" },
+  { value: "medium", color: "yellow" },
+  { value: "hard", color: "orange" },
+  { value: "asian", color: "red" },
+];
+
 function QuizSetup({
   topic,
   difficulty,
@@ -42,43 +49,53 @@ function QuizSetup({
   isLoading,
 }: Props) {
   return (
-    <>
-      {/* Decorative background elements */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-blue-200 dark:bg-blue-900 rounded-full mix-blend-multiply dark:mix-blend-lighten filter blur-3xl opacity-30 animate-pulse"></div>
-        <div className="absolute bottom-20 right-10 w-96 h-96 bg-purple-200 dark:bg-purple-900 rounded-full mix-blend-multiply dark:mix-blend-lighten filter blur-3xl opacity-30 animate-pulse delay-1000"></div>
+    <div className="relative flex flex-col min-h-screen w-full items-center justify-center p-6 bg-zinc-50 dark:bg-zinc-950 overflow-hidden">
+      {/* Subtle background blobs */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-20 left-10 w-72 h-72 bg-blue-200/20 dark:bg-blue-900/20 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-20 right-10 w-96 h-96 bg-purple-200/20 dark:bg-purple-900/20 rounded-full blur-3xl animate-pulse delay-1000" />
       </div>
-      <Card className="w-full max-w-3xl shadow-[0_20px_70px_-15px_rgba(0,0,0,0.3)] dark:shadow-[0_20px_70px_-15px_rgba(0,0,0,0.8)] border-0 rounded-4xl overflow-hidden backdrop-blur-xl bg-white/95 dark:bg-slate-900/95 relative">
-        <CardHeader className="text-center space-y-6 pt-12 pb-8 px-6 md:px-12">
-          <CardTitle className="text-3xl md:text-4xl font-bold tracking-tight text-slate-900 dark:text-white">
-            <span className="bg-linear-to-r from-blue-600 via-purple-600 to-pink-600 dark:from-blue-400 dark:via-purple-400 dark:to-pink-400 bg-clip-text text-transparent">
+
+      {/* Main Card */}
+      <Card
+        className="
+        relative z-10 w-full max-w-4xl min-w-[360px] min-h-[70vh] rounded-3xl
+        border border-zinc-200/50 dark:border-zinc-800/50
+        bg-white/90 dark:bg-zinc-900/80 backdrop-blur-xl
+        shadow-md"
+      >
+        {/* Header */}
+        <CardHeader className="text-center space-y-4 pt-12 pb-8 px-6 md:px-12">
+          <CardTitle className="text-5xl font-bold tracking-tight text-slate-900 dark:text-white">
+            <span className="text-black dark:text-white">
               What are you up to?
             </span>
           </CardTitle>
-          <CardDescription className="text-base md:text-lg text-slate-600 dark:text-slate-300 leading-relaxed max-w-2xl mx-auto">
-            Select a topic, choose the difficulty and the number of questions
-            then you&apos;re all good to go
+          <CardDescription className="text-base md:text-lg text-zinc-600 dark:text-zinc-300 leading-relaxed max-w-2xl mx-auto">
+            Choose your topic, difficulty, and number of questions to get
+            started.
           </CardDescription>
         </CardHeader>
 
+        {/* Form */}
         <form onSubmit={handleStartQuiz}>
-          <CardContent className="space-y-6 px-6 md:px-12 pb-8">
+          <CardContent className="flex flex-col justify-between space-y-6 px-6 md:px-12 py-8">
             {/* Topic Input */}
             <div className="space-y-2">
               <Label
                 htmlFor="topic"
-                className="flex items-center gap-2 text-slate-700 dark:text-slate-300 font-semibold text-base"
+                className="flex items-center gap-2 font-semibold text-slate-700 dark:text-slate-300 text-base"
               >
-                <span className="text-lg">📚</span> Topic
+                📚 Topic
               </Label>
               <Input
                 id="topic"
-                className="h-12 border-2 border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-slate-50 dark:bg-slate-800/50 text-slate-900 dark:text-white placeholder:text-slate-400"
                 type="text"
-                placeholder="E.g. Art, History, Programming Languages"
+                placeholder="E.g. History, Art, Programming"
                 value={topic}
                 onChange={(e) => setTopic(e.target.value)}
                 required
+                className="h-12 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800/50 text-slate-900 dark:text-white placeholder:text-zinc-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 w-full"
               />
             </div>
 
@@ -86,132 +103,128 @@ function QuizSetup({
             <div className="space-y-2">
               <Label
                 htmlFor="difficulty"
-                className="flex items-center gap-2 text-slate-700 dark:text-slate-300 font-semibold text-base"
+                className="flex items-center gap-2 font-semibold text-slate-700 dark:text-slate-300 text-base"
               >
-                <span className="text-lg">🎯</span> Difficulty
+                🎯 Difficulty
               </Label>
-              <Select
-                value={difficulty}
-                onValueChange={(difficulty) => setDifficulty(difficulty)}
-              >
+              <Select value={difficulty} onValueChange={setDifficulty}>
                 <SelectTrigger
                   id="difficulty"
-                  className="h-12 border-2 border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-slate-50 dark:bg-slate-800/50 cursor-pointer hover:border-slate-300 dark:hover:border-slate-600"
+                  className="h-12 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800/50 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 cursor-pointer hover:border-zinc-300 dark:hover:border-zinc-600 w-full"
                 >
-                  <SelectValue placeholder="Choose your difficulty" />
+                  <SelectValue placeholder="Select difficulty" />
                 </SelectTrigger>
-                <SelectContent className="rounded-xl border-2 border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800">
+                <SelectContent className="rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800">
                   <SelectGroup>
-                    <SelectLabel className="text-slate-500 dark:text-slate-400 font-semibold">
-                      Difficulty Level
+                    <SelectLabel className="text-zinc-500 dark:text-zinc-400 font-semibold">
+                      Levels
                     </SelectLabel>
-                    <SelectItem
-                      value="easy"
-                      className="cursor-pointer hover:bg-green-50 dark:hover:bg-green-950/20 rounded-lg my-1 focus:bg-green-100 dark:focus:bg-green-900/30"
-                    >
-                      <span className="flex items-center gap-2">
-                        <span className="text-green-600 dark:text-green-400">
-                          ●
-                        </span>{" "}
-                        Easy
-                      </span>
-                    </SelectItem>
-                    <SelectItem
-                      value="medium"
-                      className="cursor-pointer hover:bg-yellow-50 dark:hover:bg-yellow-950/20 rounded-lg my-1 focus:bg-yellow-100 dark:focus:bg-yellow-900/30"
-                    >
-                      <span className="flex items-center gap-2">
-                        <span className="text-yellow-600 dark:text-yellow-400">
-                          ●
-                        </span>{" "}
-                        Medium
-                      </span>
-                    </SelectItem>
-                    <SelectItem
-                      value="hard"
-                      className="cursor-pointer hover:bg-orange-50 dark:hover:bg-orange-950/20 rounded-lg my-1 focus:bg-orange-100 dark:focus:bg-orange-900/30"
-                    >
-                      <span className="flex items-center gap-2">
-                        <span className="text-orange-600 dark:text-orange-400">
-                          ●
-                        </span>{" "}
-                        Hard
-                      </span>
-                    </SelectItem>
-                    <SelectItem
-                      value="asian"
-                      className="cursor-pointer hover:bg-red-50 dark:hover:bg-red-950/20 rounded-lg my-1 focus:bg-red-100 dark:focus:bg-red-900/30"
-                    >
-                      <span className="flex items-center gap-2">
-                        <span className="text-red-600 dark:text-red-400">
-                          ●
-                        </span>{" "}
-                        Asian
-                      </span>
-                    </SelectItem>
+                    {difficulties.map((level) => (
+                      <SelectItem
+                        key={level.value}
+                        value={level.value}
+                        className={`rounded-lg my-1 cursor-pointer
+                          ${
+                            level.value === "easy"
+                              ? "hover:bg-green-50 dark:hover:bg-green-950/20 focus:bg-green-100 dark:focus:bg-green-900/30"
+                              : ""
+                          }
+                          ${
+                            level.value === "medium"
+                              ? "hover:bg-yellow-50 dark:hover:bg-yellow-950/20 focus:bg-yellow-100 dark:focus:bg-yellow-900/30"
+                              : ""
+                          }
+                          ${
+                            level.value === "hard"
+                              ? "hover:bg-orange-50 dark:hover:bg-orange-950/20 focus:bg-orange-100 dark:focus:bg-orange-900/30"
+                              : ""
+                          }
+                          ${
+                            level.value === "asian"
+                              ? "hover:bg-red-50 dark:hover:bg-red-950/20 focus:bg-red-100 dark:focus:bg-red-900/30"
+                              : ""
+                          }
+                        `}
+                      >
+                        <span className="flex items-center gap-2">
+                          {/* Colored Dot */}
+                          <span
+                            className={
+                              level.value === "easy"
+                                ? "h-3 w-3 rounded-full bg-green-600 dark:bg-green-400 inline-block"
+                                : level.value === "medium"
+                                ? "h-3 w-3 rounded-full bg-yellow-600 dark:bg-yellow-400 inline-block"
+                                : level.value === "hard"
+                                ? "h-3 w-3 rounded-full bg-orange-600 dark:bg-orange-400 inline-block"
+                                : "h-3 w-3 rounded-full bg-red-600 dark:bg-red-400 inline-block"
+                            }
+                          />
+                          {level.value.charAt(0).toUpperCase() +
+                            level.value.slice(1)}
+                        </span>
+                      </SelectItem>
+                    ))}
                   </SelectGroup>
                 </SelectContent>
               </Select>
             </div>
 
-            {/* Number of Questions Input */}
+            {/* Number of Questions */}
             <div className="space-y-2">
               <Label
                 htmlFor="numOfQuestions"
-                className="flex items-center gap-2 text-slate-700 dark:text-slate-300 font-semibold text-base"
+                className="flex items-center gap-2 font-semibold text-slate-700 dark:text-slate-300 text-base"
               >
-                <span className="text-lg">🔢</span> Number of Questions
+                🔢 Number of Questions
               </Label>
               <Input
                 id="numOfQuestions"
-                className="h-12 border-2 border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 bg-slate-50 dark:bg-slate-800/50 text-slate-900 dark:text-white placeholder:text-slate-400"
                 type="number"
                 min={1}
                 max={50}
-                placeholder="Choose the number of questions"
+                placeholder="1-50 questions"
                 value={numberOfQuestions}
                 onChange={(e) => setNumberOfQuestions(e.target.value)}
                 required
+                className="h-12 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800/50 text-slate-900 dark:text-white placeholder:text-zinc-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 w-full"
               />
-              <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 ml-1">
-                Choose between 1-50 questions
+              <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1 ml-1">
+                Choose between 1–50 questions
               </p>
             </div>
           </CardContent>
 
+          {/* Start Quiz Button */}
           <CardFooter className="flex justify-center px-6 md:px-12 pb-12">
             <Button
-              className="
-              cursor-pointer w-full md:w-auto px-8 py-6 text-base md:text-lg font-semibold
-              rounded-xl text-white
-              bg-linear-to-r from-blue-600 via-purple-600 to-pink-600
-              hover:from-blue-700 hover:via-purple-700 hover:to-pink-700
-              shadow-lg shadow-purple-500/30
-              hover:shadow-xl hover:shadow-purple-500/40
-              active:scale-95
-              transition-all duration-200
-              disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100
-            "
               type="button"
               onClick={handleStartQuiz}
               disabled={isLoading}
+              className="
+                cursor-pointer w-full md:w-auto px-8 py-4 font-semibold rounded-xl
+                text-white bg-linear-to-r from-blue-600 to-purple-600
+                hover:from-blue-700 hover:to-purple-700
+                shadow-lg shadow-purple-400/30 hover:shadow-xl
+                active:scale-95 transition-all duration-200
+                disabled:opacity-50 disabled:cursor-not-allowed
+              "
             >
               {isLoading ? (
                 <span className="flex items-center gap-3">
                   <Spinner />
-                  <span>Generating Quiz...</span>
+                  Generating Quiz...
                 </span>
               ) : (
                 <span className="flex items-center gap-2">
-                  <span>Generate Quiz</span>
-                  <span className="text-xl">✨</span>
+                  Generate Quiz ✨
                 </span>
               )}
             </Button>
           </CardFooter>
         </form>
       </Card>
-    </>
+    </div>
   );
 }
+
 export default QuizSetup;
