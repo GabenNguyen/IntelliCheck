@@ -118,9 +118,11 @@ function Dashboard({
               <Clock />
             </div>
             <div>
-              <p className="text-sm text-gray-500">Est. Time Saved</p>
+              <p className="text-sm text-gray-500">
+                Est. Time Saved From Auto-Generation
+              </p>
               <p className="text-3xl font-bold">
-                {dashboardData.totalTimeSaved} min
+                {dashboardData.totalTimeSaved} min(s)
               </p>
             </div>
           </CardContent>
