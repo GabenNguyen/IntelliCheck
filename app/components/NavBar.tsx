@@ -81,13 +81,13 @@ function NavBar() {
             <SignedOut>
               <div className="hidden items-center gap-2 sm:flex">
                 <SignInButton>
-                  <button className="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition hover:border-gray-400 hover:shadow-sm dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300">
+                  <button className="cursor-pointer active:scale-95 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition hover:border-gray-400 hover:shadow-sm dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300">
                     Sign In
                   </button>
                 </SignInButton>
 
                 <SignUpButton>
-                  <button className="rounded-lg bg-linear-to-r from-gray-800 to-gray-900 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:from-gray-900 hover:to-black hover:shadow-md">
+                  <button className="cursor-pointer active:scale-95 rounded-lg bg-linear-to-r from-gray-800 to-gray-900 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:from-gray-900 hover:to-black hover:shadow-md">
                     Sign Up
                   </button>
                 </SignUpButton>
