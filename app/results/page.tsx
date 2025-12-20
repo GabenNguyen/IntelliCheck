@@ -1,9 +1,9 @@
 "use client";
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 import { ArrowLeft } from "lucide-react";
-import { toast } from 'sonner';
+import { toast } from "sonner";
 import Link from "next/link";
-import Answer from '@/type/answer';
+import Answer from "@/type/answer";
 import {
   Card,
   CardContent,
@@ -14,28 +14,25 @@ import {
 } from "@/components/ui/card";
 
 function ResultPage() {
-
   const EXPIRY_TIME = 5 * 60 * 1000;
 
   const [quizData, setQuizData] = useState<{
-    topic: string,
-    finalScore: number,
-    totalQuestion: number,
-    userAnswers: Answer[]
+    topic: string;
+    finalScore: number;
+    totalQuestion: number;
+    userAnswers: Answer[];
   } | null>(() => {
-      
     const storedData = localStorage.getItem("quizData");
-    if(!storedData || storedData === "{}") return null;
+    if (!storedData || storedData === "{}") return null;
 
     const parsedData = JSON.parse(storedData);
 
-    if(Date.now() - parsedData.savedAt > EXPIRY_TIME) {
+    if (Date.now() - parsedData.savedAt > EXPIRY_TIME) {
       localStorage.removeItem("quizData");
       return null;
     }
 
-    return parsedData
-      
+    return parsedData;
   });
 
   // Fetch explanations for wrong answers (only once)
@@ -44,7 +41,10 @@ function ResultPage() {
 
     const wrongAnswers = quizData.userAnswers
       .map((answer, originalIndex) => ({ ...answer, originalIndex })) // keepttrack of the original index
-      .filter((answer) => answer.userAnswer !== answer.correctAnswer && !answer.explanation); // filtering out wrong answers and those already have an explanation
+      .filter(
+        (answer) =>
+          answer.userAnswer !== answer.correctAnswer && !answer.explanation
+      ); // filtering out wrong answers and those already have an explanation
 
     wrongAnswers.forEach(async (wrongAnswer) => {
       try {
@@ -62,15 +62,15 @@ function ResultPage() {
 
         setQuizData((previousUserQuizData) => {
           if (!previousUserQuizData) return previousUserQuizData;
-          
+
           const updatedAnswers = [...previousUserQuizData.userAnswers]; // make a copy of the original array
-          
+
           // add explanation
           updatedAnswers[wrongAnswer.originalIndex] = {
             ...updatedAnswers[wrongAnswer.originalIndex],
             explanation: outputData.outputExplanation,
           };
-          
+
           return { ...previousUserQuizData, userAnswers: updatedAnswers }; // return other fields and overwrite the userAnswers field with the updatedAnswers
         });
       } catch {
@@ -81,12 +81,12 @@ function ResultPage() {
 
   if (!quizData || quizData.totalQuestion === 0) {
     return (
-      <div className="flex justify-center items-start min-h-screen bg-linear-to-b from-blue-100 to-white dark:from-gray-900 dark:to-black p-6">
-          {/* Decorative background elements */}
-          <div className="absolute inset-0 overflow-hidden pointer-events-none">
-              <div className="absolute top-20 left-10 w-72 h-72 bg-blue-200 dark:bg-blue-900 rounded-full mix-blend-multiply dark:mix-blend-lighten filter blur-3xl opacity-30 animate-pulse"></div>
-              <div className="absolute bottom-20 right-10 w-96 h-96 bg-purple-200 dark:bg-purple-900 rounded-full mix-blend-multiply dark:mix-blend-lighten filter blur-3xl opacity-30 animate-pulse delay-1000"></div>
-          </div>
+      <div className="flex justify-center items-start min-h-screen p-6">
+        {/* Decorative background elements */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-20 left-10 w-72 h-72 bg-blue-200 dark:bg-blue-900 rounded-full mix-blend-multiply dark:mix-blend-lighten filter blur-3xl opacity-30 animate-pulse"></div>
+          <div className="absolute bottom-20 right-10 w-96 h-96 bg-purple-200 dark:bg-purple-900 rounded-full mix-blend-multiply dark:mix-blend-lighten filter blur-3xl opacity-30 animate-pulse delay-1000"></div>
+        </div>
         <Card className="w-full max-w-3xl shadow-[0_20px_70px_-15px_rgba(0,0,0,0.3)] dark:shadow-[0_20px_70px_-15px_rgba(0,0,0,0.8)] border-0 rounded-4xl overflow-hidden backdrop-blur-xl bg-white/95 dark:bg-slate-900/95 relative">
           <CardHeader className="text-center space-y-3">
             <CardTitle className="text-4xl font-extrabold tracking-tight">
@@ -109,8 +109,14 @@ function ResultPage() {
     );
   }
 
-  const { topic = "", finalScore = 0, totalQuestion = 0, userAnswers = [] } = quizData;
-  const percentage = totalQuestion > 0 ? ((finalScore / totalQuestion) * 100).toFixed(2) : "0";
+  const {
+    topic = "",
+    finalScore = 0,
+    totalQuestion = 0,
+    userAnswers = [],
+  } = quizData;
+  const percentage =
+    totalQuestion > 0 ? ((finalScore / totalQuestion) * 100).toFixed(2) : "0";
 
   return (
     <div className="flex justify-center items-start min-h-screen bg-linear-to-b from-blue-100 to-white dark:from-gray-900 dark:to-black p-6">
@@ -120,8 +126,13 @@ function ResultPage() {
             Your final score!
           </CardTitle>
           <CardDescription className="text-lg text-black dark:text-white">
-            You have correctly answered <span className='font-bold'>{finalScore}</span> out of <span className='font-bold'>{totalQuestion}</span> question(s) <br />
-            Knowledge on <span className='font-bold'>{topic.toUpperCase()}</span>: <span className='font-bold'>{percentage}%</span>
+            You have correctly answered{" "}
+            <span className="font-bold">{finalScore}</span> out of{" "}
+            <span className="font-bold">{totalQuestion}</span> question(s){" "}
+            <br />
+            Knowledge on{" "}
+            <span className="font-bold">{topic.toUpperCase()}</span>:{" "}
+            <span className="font-bold">{percentage}%</span>
           </CardDescription>
         </CardHeader>
 
@@ -132,14 +143,28 @@ function ResultPage() {
             return (
               <div
                 key={answerIndex}
-                className={`p-4 space-y-3 rounded-lg border ${isCorrect ? "bg-green-500 text-white" : "bg-red-700 text-white"}`}
+                className={`p-4 space-y-3 rounded-lg border ${
+                  isCorrect
+                    ? "bg-green-500 text-white"
+                    : "bg-red-700 text-white"
+                }`}
               >
-                <p className='font-semibold'>Question {answerIndex + 1}: {answer.question}</p>
-                <p className='font-semibold'>Your answer: {answer.userAnswer}</p>
+                <p className="font-semibold">
+                  Question {answerIndex + 1}: {answer.question}
+                </p>
+                <p className="font-semibold">
+                  Your answer: {answer.userAnswer}
+                </p>
                 {!isCorrect && (
-                  <div className='mt-2 space-y-3'>
-                    <p className='font-semibold'>Correct Answer: {answer.correctAnswer}</p> <br></br>
-                    <p className='font-semibold'>Explanation: {answer.explanation || "Loading explanation..."}</p>
+                  <div className="mt-2 space-y-3">
+                    <p className="font-semibold">
+                      Correct Answer: {answer.correctAnswer}
+                    </p>{" "}
+                    <br></br>
+                    <p className="font-semibold">
+                      Explanation:{" "}
+                      {answer.explanation || "Loading explanation..."}
+                    </p>
                   </div>
                 )}
               </div>
