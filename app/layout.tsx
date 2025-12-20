@@ -2,12 +2,12 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "sonner";
-import { ClerkProvider } from '@clerk/nextjs'
-import { SidebarProvider} from "@/components/ui/sidebar";
+import { ClerkProvider } from "@clerk/nextjs";
+import { SidebarProvider } from "@/components/ui/sidebar";
 import { cookies } from "next/headers";
 import AppSideBar from "./components/AppSideBar";
 import NavBar from "./components/NavBar";
-import ThemeProvider  from "./components/ThemeProvider";
+import ThemeProvider from "./components/ThemeProvider";
 import AnimatedTransition from "./components/AnimatedTransition";
 
 const geistSans = Geist({
@@ -30,47 +30,47 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
   const cookieStore = await cookies();
   const defaultSideBarOpen = cookieStore.get("sidebar_state")?.value === "true";
 
-
   return (
     <ClerkProvider>
-        <html lang="en" suppressHydrationWarning>
-          <body className={`${geistSans.variable} ${geistMono.variable} antialiased `} suppressHydrationWarning>
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="system"
-              enableSystem
-              disableTransitionOnChange
-            >
-              <SidebarProvider defaultOpen={defaultSideBarOpen}>
-                <AppSideBar />
-                <main className="w-full">
-                  
-                  <NavBar />          
-                  <Toaster position="top-center" />
-                  
-                  <AnimatedTransition>
-                    {children}
-                  </AnimatedTransition>
-                  
-                  <footer className="w-full mt-10 border-t border-gray-200 dark:border-gray-700" suppressHydrationWarning>
-                    <div className="py-6 px-4 text-center text-gray-600 dark:text-gray-400 text-base">
-                      © {new Date().getFullYear()}{" "}
-                      <span className="font-semibold text-blue-600">IntelliCheck</span>{" "}
-                      — <span className="font-semibold">Ba Hoa NGUYEN</span>
-                    </div>
-                  </footer>
-                </main>
-          
-              </SidebarProvider>              
-          
-            </ThemeProvider>
-          
-          </body>
-        </html>
+      <html lang="en" suppressHydrationWarning>
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} antialiased `}
+          suppressHydrationWarning
+        >
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <SidebarProvider defaultOpen={defaultSideBarOpen}>
+              <AppSideBar />
+              <main className="w-full">
+                <NavBar />
+                <Toaster position="top-center" />
+
+                <AnimatedTransition>{children}</AnimatedTransition>
+
+                <footer
+                  className="w-full mt-10 border-t border-gray-200 dark:border-gray-700"
+                  suppressHydrationWarning
+                >
+                  <div className="py-6 px-4 text-center text-gray-600 dark:text-gray-400 text-base">
+                    © {new Date().getFullYear()}{" "}
+                    <span className="font-semibold text-blue-600">
+                      IntelliCheck
+                    </span>{" "}
+                    — <span className="font-semibold">Ba Hoa NGUYEN</span>
+                  </div>
+                </footer>
+              </main>
+            </SidebarProvider>
+          </ThemeProvider>
+        </body>
+      </html>
     </ClerkProvider>
   );
 }
