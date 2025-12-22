@@ -20,15 +20,13 @@ function About() {
           rounded-3xl border border-zinc-200/60
           bg-white/70 backdrop-blur
           shadow-sm
-          transition-all duration-300
-          hover:-translate-y-1 hover:shadow-md
           dark:border-zinc-800 dark:bg-zinc-900/70
         "
       >
         {/* HEADER */}
         <CardHeader className="space-y-6 pb-6 text-center">
-          <CardTitle className="text-4xl font-semibold tracking-tight md:text-6xl">
-            Hi there 👋
+          <CardTitle className="flex justify-center text-4xl gap-2 font-semibold tracking-tight md:text-6xl">
+            Hi there <div className="motion-rotate-loop-6 ">👋</div>
           </CardTitle>
 
           <CardDescription className="mx-auto max-w-2xl text-lg leading-relaxed text-zinc-600 dark:text-zinc-400">
