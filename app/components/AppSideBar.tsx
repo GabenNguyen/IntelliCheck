@@ -8,6 +8,7 @@ import {
   LogOut,
   Settings,
   ChevronDown,
+  Clock,
 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
@@ -32,9 +33,11 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 
+// MAIN NAV ITEMS
 const mainItems = [
-  { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
   { title: "Create Quiz", url: "/quiz", icon: Plus, primary: true },
+  { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
+  { title: "Quiz History", url: "/quiz-history", icon: Clock },
 ];
 
 export default function AppSideBar() {
@@ -52,7 +55,6 @@ export default function AppSideBar() {
           <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-gray-700 to-gray-900 shadow-md transition-transform group-hover:scale-105">
             <Sparkles className="h-5 w-5 text-white" />
           </div>
-
           <div className="leading-tight">
             <h2 className="text-lg font-extrabold text-black dark:text-white">
               IntelliCheck
@@ -71,7 +73,7 @@ export default function AppSideBar() {
             Menu
           </SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenu className="space-y-1">
+            <SidebarMenu className="space-y-2">
               {mainItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
