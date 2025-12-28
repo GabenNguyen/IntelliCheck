@@ -59,7 +59,7 @@ function QuizSetup({
       {/* Main Card */}
       <Card
         className="
-        relative z-10 w-full max-w-4xl min-w-[360px] min-h-[70vh] rounded-3xl
+        relative z-10 w-full max-w-4xl min-w-90 min-h-[70vh] rounded-3xl
         border border-zinc-200/50 dark:border-zinc-800/50
         bg-white/90 dark:bg-zinc-900/80 backdrop-blur-xl
         shadow-md"
