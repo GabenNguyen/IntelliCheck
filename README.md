@@ -42,6 +42,10 @@ For those who wants to challenge themselves, Asian difficulty provides ___extrem
 ### Authentication
 - **Clerk**
 
+## 🎯 Purpose of this project
+As an university student, I always find that the material provided on the university course website is not enough when it comes to the exam period. I always have to look up for extra information on either the Internet or ChatGPT. However, ChatGPT sometimes gives me too many irrelevant questions to the topic that I provided. As a result, I decided to make this AI Quiz Generation project to help me generate questions for my studies during the exam period.
+
+
 ## 🔎 Use case
 1. User signs in securely.
 2. System redirects authenticated user to the dashboard.
