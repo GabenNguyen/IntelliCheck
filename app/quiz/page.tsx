@@ -9,6 +9,7 @@ import validateInput from "@/utils/validate_input";
 
 import QuizSetup from "../components/quiz_related/QuizSetup";
 import QuizQuestions from "../components/quiz_related/QuizQuestions";
+import PdfUpload from "../components/quiz_related/PdfUpload";
 
 import AsianAlertDialog from "../components/dialogs/AsianAlertDialog";
 import TimeUpDialog from "../components/dialogs/TimeUpDialog";
@@ -24,6 +25,7 @@ function QuizPage() {
   const [difficulty, setDifficulty] = useState("");
   const [numOfQuestions, setNumOfQuestions] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [pdfFile, setPdfFile] = useState<File | null>(null);
 
   // Quiz state
   const [quizStarted, setQuizStarted] = useState(false);
@@ -64,7 +66,7 @@ function QuizPage() {
       const saveResult = await saveQuizToDB(
         topic,
         difficulty,
-        outputData.outputQuestion
+        outputData.outputQuestion,
       );
 
       if (saveResult.success) {
@@ -114,9 +116,9 @@ function QuizPage() {
         userAnswer: userAnswer[answerIndex] || "",
         correctAnswer:
           question.options.find((option) =>
-            option.trim().startsWith(`${question.correctAnswer}`)
+            option.trim().startsWith(`${question.correctAnswer}`),
           ) || "", // store full answers
-      })
+      }),
     );
 
     const finalScore = questions.reduce(
@@ -126,7 +128,7 @@ function QuizPage() {
           ? 1
           : 0),
 
-      0
+      0,
     );
 
     try {
@@ -139,7 +141,7 @@ function QuizPage() {
           quizId: saveQuizId,
           totalQuestion: numOfQuestions,
           userAnswers: savedUserAnswers,
-        })
+        }),
       );
     } catch (error) {
       console.error(`Failed to store the results! Error: ${error}`);
@@ -156,18 +158,57 @@ function QuizPage() {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen ">
+    <div className="min-h-screen px-8 py-12 bg-gray-50">
       {!quizStarted && (
-        <QuizSetup
-          topic={topic}
-          difficulty={difficulty}
-          numberOfQuestions={numOfQuestions}
-          setTopic={setTopic}
-          setDifficulty={setDifficulty}
-          setNumberOfQuestions={setNumOfQuestions}
-          handleStartQuiz={handleStartQuiz}
-          isLoading={isLoading}
-        />
+        <div className="flex justify-center min-h-screen px-6 py-6">
+          <div className="w-full max-w-4xl bg-white shadow-xl rounded-2xl p-10 border">
+            {/* Title */}
+            <div className="text-center mb-10">
+              <h1 className="text-3xl font-semibold">Create Your Quiz</h1>
+              <p className="text-gray-500 mt-2">
+                Upload a PDF or generate questions from a topic
+              </p>
+            </div>
+
+            <div className="space-y-8">
+              {/* PDF Upload */}
+              <div className="bg-gray-50 border rounded-xl p-6">
+                <h2 className="font-semibold mb-3 text-xl">Upload a PDF</h2>
+                <p className="text-md text-gray-500 mb-4">
+                  Generate quiz questions from your document.
+                </p>
+
+                <PdfUpload pdfFile={pdfFile} setPdfFile={setPdfFile} />
+              </div>
+
+              {/* Divider */}
+              <div className="flex items-center gap-4">
+                <div className="flex-1 h-px bg-gray-300"></div>
+                <span className="text-sm font-medium text-gray-500">OR</span>
+                <div className="flex-1 h-px bg-gray-300"></div>
+              </div>
+
+              {/* Manual Setup */}
+              <div className="bg-gray-50 border rounded-xl p-6">
+                <h2 className="font-semibold mb-3 text-xl">Manual Setup</h2>
+                <p className="text-md text-gray-500 mb-4">
+                  Generate questions from a topic instead.
+                </p>
+
+                <QuizSetup
+                  topic={topic}
+                  difficulty={difficulty}
+                  numberOfQuestions={numOfQuestions}
+                  setTopic={setTopic}
+                  setDifficulty={setDifficulty}
+                  setNumberOfQuestions={setNumOfQuestions}
+                  handleStartQuiz={handleStartQuiz}
+                  isLoading={isLoading}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
       )}
 
       {quizStarted && !quizFinished && questions.length > 0 && (
