@@ -10,7 +10,8 @@ interface PdfUploadProps {
 
 export default function PdfUpload({ pdfFile, setPdfFile }: PdfUploadProps) {
   const fileUploadRef = useRef<HTMLInputElement>(null);
-  const [isUploadSuccessful, setIsUploadSuccessful] = useState(false); // false at the beginning
+  const [isUploadSuccessful, setIsUploadSuccessful] = useState(false);
+
   const handleUploadPdf = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -26,31 +27,33 @@ export default function PdfUpload({ pdfFile, setPdfFile }: PdfUploadProps) {
 
   return (
     <div className="mb-4">
-      <UploadCloud className="h-10 w-10 text-primary" />
-      <label className="block mb-2 font-medium">Upload PDF (optional)</label>
+      <UploadCloud className="h-10 w-10 text-primary dark:text-yellow-400" />
+      <label className="block mb-2 font-medium text-gray-800 dark:text-gray-200">
+        Upload PDF (optional)
+      </label>
 
       <input
         ref={fileUploadRef}
         type="file"
         accept="application/pdf"
         onChange={handleUploadPdf}
-        className="border p-2 rounded w-full cursor-pointer"
+        className="border border-gray-300 dark:border-gray-600 p-2 rounded w-full cursor-pointer bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
       />
 
       {isUploadSuccessful && (
         <div>
-          <p className="text-sm text-green-600 mt-1">
-            ✅Uploaded: {pdfFile?.name}
+          <p className="text-sm text-green-600 dark:text-green-400 mt-1">
+            ✅ Uploaded: {pdfFile?.name}
           </p>
           <button
             onClick={() => {
               setPdfFile(null);
               setIsUploadSuccessful(false);
               if (fileUploadRef.current) {
-                fileUploadRef.current.value = ""; //clear uploaded file from input field
+                fileUploadRef.current.value = "";
               }
             }}
-            className="mt-2 inline-flex items-center gap-2 text-sm font-medium text-white bg-red-500 px-3 py-1.5 rounded-md hover:bg-red-900 active:scale-95 transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-red-200 focus:ring-offset-1 cursor-pointer"
+            className="mt-2 inline-flex items-center gap-2 text-sm font-medium text-white bg-red-500 dark:bg-red-600 px-3 py-1.5 rounded-md hover:bg-red-900 dark:hover:bg-red-700 active:scale-95 transition-all duration-150 focus:outline-none focus:ring-2 focus:ring-red-200 dark:focus:ring-red-400 focus:ring-offset-1 cursor-pointer"
           >
             Remove
           </button>

@@ -1,5 +1,4 @@
 "use client";
-
 import saveQuizToDB from "@/lib/quiz-action";
 
 import Question from "@/type/question";
@@ -43,7 +42,6 @@ function QuizPage() {
 
   const [saveQuizId, setSaveQuizId] = useState<string | null>(null);
 
-  // navigating to results page
   const router = useRouter();
 
   const startQuiz = async () => {
@@ -62,7 +60,6 @@ function QuizPage() {
         return toast.error("Failed to generate questions!");
       }
 
-      // save the generated quiz to the db
       const saveResult = await saveQuizToDB(
         topic,
         difficulty,
@@ -74,7 +71,6 @@ function QuizPage() {
         console.log("Quiz saved with ID:", saveResult.quizId);
       }
 
-      setIsLoading(true);
       setQuestions(outputData.outputQuestion);
       setUserAnswer(Array(outputData.outputQuestion.length).fill(null));
       setQuizStarted(true);
@@ -109,7 +105,6 @@ function QuizPage() {
   const handleFinishQuiz = () => {
     setShowResultDialog(true);
 
-    // map the user answers to the Answer obj
     const savedUserAnswers: Answer[] = questions.map(
       (question: Question, answerIndex: number) => ({
         question: question.question,
@@ -117,7 +112,7 @@ function QuizPage() {
         correctAnswer:
           question.options.find((option) =>
             option.trim().startsWith(`${question.correctAnswer}`),
-          ) || "", // store full answers
+          ) || "",
       }),
     );
 
@@ -127,7 +122,6 @@ function QuizPage() {
         (userAnswer[answerIndex]?.charAt(0) === question.correctAnswer.charAt(0)
           ? 1
           : 0),
-
       0,
     );
 
@@ -137,7 +131,7 @@ function QuizPage() {
         JSON.stringify({
           topic,
           finalScore,
-          savedAt: Date.now(), // for clearing the localStorage after 5 minutes
+          savedAt: Date.now(),
           quizId: saveQuizId,
           totalQuestion: numOfQuestions,
           userAnswers: savedUserAnswers,
@@ -158,54 +152,58 @@ function QuizPage() {
   };
 
   return (
-    <div className="min-h-screen px-8 py-12 bg-gray-50">
+    <div className="min-h-screen px-6 py-12 bg-gray-50 dark:bg-gray-900 flex justify-center items-start">
       {!quizStarted && (
-        <div className="flex justify-center min-h-screen px-6 py-6">
-          <div className="w-full max-w-4xl bg-white shadow-xl rounded-2xl p-10 border">
-            {/* Title */}
-            <div className="text-center mb-10">
-              <h1 className="text-3xl font-semibold">Create Your Quiz</h1>
-              <p className="text-gray-500 mt-2">
-                Upload a PDF or generate questions from a topic
+        <div className="w-full max-w-5xl bg-white dark:bg-gray-800 shadow-xl rounded-2xl p-10 border dark:border-gray-700">
+          {/* Page Title */}
+          <div className="text-center mb-10">
+            <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100">
+              Create Your Quiz
+            </h1>
+            <p className="text-gray-500 dark:text-gray-300 mt-2">
+              Upload a PDF or generate questions from a topic
+            </p>
+          </div>
+
+          <div className="space-y-10">
+            {/* PDF Upload */}
+            <div className="bg-gray-50 dark:bg-gray-700 border dark:border-gray-600 rounded-xl p-6">
+              <h2 className="font-semibold mb-3 text-xl text-gray-800 dark:text-gray-100">
+                Upload a PDF
+              </h2>
+              <p className="text-sm text-gray-500 dark:text-gray-300 mb-4">
+                Generate quiz questions from your document.
               </p>
+              <PdfUpload pdfFile={pdfFile} setPdfFile={setPdfFile} />
             </div>
 
-            <div className="space-y-8">
-              {/* PDF Upload */}
-              <div className="bg-gray-50 border rounded-xl p-6">
-                <h2 className="font-semibold mb-3 text-xl">Upload a PDF</h2>
-                <p className="text-md text-gray-500 mb-4">
-                  Generate quiz questions from your document.
-                </p>
+            {/* Divider */}
+            <div className="flex items-center gap-4">
+              <div className="flex-1 h-px bg-gray-300 dark:bg-gray-600"></div>
+              <span className="text-sm font-medium text-gray-500 dark:text-gray-300">
+                OR
+              </span>
+              <div className="flex-1 h-px bg-gray-300 dark:bg-gray-600"></div>
+            </div>
 
-                <PdfUpload pdfFile={pdfFile} setPdfFile={setPdfFile} />
-              </div>
-
-              {/* Divider */}
-              <div className="flex items-center gap-4">
-                <div className="flex-1 h-px bg-gray-300"></div>
-                <span className="text-sm font-medium text-gray-500">OR</span>
-                <div className="flex-1 h-px bg-gray-300"></div>
-              </div>
-
-              {/* Manual Setup */}
-              <div className="bg-gray-50 border rounded-xl p-6">
-                <h2 className="font-semibold mb-3 text-xl">Manual Setup</h2>
-                <p className="text-md text-gray-500 mb-4">
-                  Generate questions from a topic instead.
-                </p>
-
-                <QuizSetup
-                  topic={topic}
-                  difficulty={difficulty}
-                  numberOfQuestions={numOfQuestions}
-                  setTopic={setTopic}
-                  setDifficulty={setDifficulty}
-                  setNumberOfQuestions={setNumOfQuestions}
-                  handleStartQuiz={handleStartQuiz}
-                  isLoading={isLoading}
-                />
-              </div>
+            {/* Manual Setup */}
+            <div className="bg-gray-50 dark:bg-gray-700 border dark:border-gray-600 rounded-xl p-6">
+              <h2 className="font-semibold mb-3 text-xl text-gray-800 dark:text-gray-100">
+                Manual Setup
+              </h2>
+              <p className="text-sm text-gray-500 dark:text-gray-300 mb-4">
+                Generate questions from a topic instead.
+              </p>
+              <QuizSetup
+                topic={topic}
+                difficulty={difficulty}
+                numberOfQuestions={numOfQuestions}
+                setTopic={setTopic}
+                setDifficulty={setDifficulty}
+                setNumberOfQuestions={setNumOfQuestions}
+                handleStartQuiz={handleStartQuiz}
+                isLoading={isLoading}
+              />
             </div>
           </div>
         </div>

@@ -1,3 +1,5 @@
+"use client";
+
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
@@ -49,7 +51,7 @@ function QuizSetup({
   isLoading,
 }: Props) {
   return (
-    <div className="relative flex flex-col min-h-screen w-full items-center justify-center p-6 bg-zinc-50 dark:bg-zinc-950 overflow-hidden">
+    <div className="relative flex flex-col min-h-screen w-full items-center justify-center p-6 bg-gray-50 dark:bg-gray-900 overflow-hidden rounded-3xl">
       {/* Subtle background blobs */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-20 left-10 w-72 h-72 bg-blue-200/20 dark:bg-blue-900/20 rounded-full blur-3xl animate-pulse" />
@@ -59,32 +61,36 @@ function QuizSetup({
       {/* Main Card */}
       <Card
         className="
-        relative z-10 w-full max-w-4xl min-w-90 min-h-[70vh] rounded-3xl
-        border border-zinc-200/50 dark:border-zinc-800/50
-        bg-white/90 dark:bg-zinc-900/80 backdrop-blur-xl
-        shadow-md"
+        relative z-10 w-full max-w-4xl min-h-[70vh] rounded-3xl
+        border border-gray-200/50 dark:border-gray-700/50
+        bg-white/90 dark:bg-gray-800/80 backdrop-blur-xl
+        shadow-md
+        "
       >
         {/* Header */}
         <CardHeader className="text-center space-y-4 pt-12 pb-8 px-6 md:px-12">
-          <CardTitle className="text-5xl font-bold tracking-tight text-slate-900 dark:text-white">
-            <span className="text-black dark:text-white">
-              What are you up to?
-            </span>
+          <CardTitle className="text-5xl font-bold tracking-tight text-gray-900 dark:text-gray-100">
+            What are you up to?
           </CardTitle>
-          <CardDescription className="text-base md:text-lg text-zinc-600 dark:text-zinc-300 leading-relaxed max-w-2xl mx-auto">
+          <CardDescription className="text-base md:text-lg text-gray-600 dark:text-gray-300 leading-relaxed max-w-2xl mx-auto">
             Choose your topic, difficulty, and number of questions to get
             started.
           </CardDescription>
         </CardHeader>
 
         {/* Form */}
-        <form onSubmit={handleStartQuiz}>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleStartQuiz();
+          }}
+        >
           <CardContent className="flex flex-col justify-between space-y-6 px-6 md:px-12 py-8">
             {/* Topic Input */}
             <div className="space-y-2">
               <Label
                 htmlFor="topic"
-                className="flex items-center gap-2 font-semibold text-slate-700 dark:text-slate-300 text-base"
+                className="flex items-center gap-2 font-semibold text-gray-700 dark:text-gray-300 text-base"
               >
                 📚 Topic
               </Label>
@@ -95,7 +101,7 @@ function QuizSetup({
                 value={topic}
                 onChange={(e) => setTopic(e.target.value)}
                 required
-                className="h-12 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800/50 text-slate-900 dark:text-white placeholder:text-zinc-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 w-full"
+                className="h-12 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 w-full"
               />
             </div>
 
@@ -103,20 +109,20 @@ function QuizSetup({
             <div className="space-y-2">
               <Label
                 htmlFor="difficulty"
-                className="flex items-center gap-2 font-semibold text-slate-700 dark:text-slate-300 text-base"
+                className="flex items-center gap-2 font-semibold text-gray-700 dark:text-gray-300 text-base"
               >
                 🎯 Difficulty
               </Label>
               <Select value={difficulty} onValueChange={setDifficulty}>
                 <SelectTrigger
                   id="difficulty"
-                  className="h-12 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800/50 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 cursor-pointer hover:border-zinc-300 dark:hover:border-zinc-600 w-full"
+                  className="h-12 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 cursor-pointer hover:border-gray-300 dark:hover:border-gray-600 w-full"
                 >
                   <SelectValue placeholder="Select difficulty" />
                 </SelectTrigger>
-                <SelectContent className="rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800">
+                <SelectContent className="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
                   <SelectGroup>
-                    <SelectLabel className="text-zinc-500 dark:text-zinc-400 font-semibold">
+                    <SelectLabel className="text-gray-500 dark:text-gray-400 font-semibold">
                       Levels
                     </SelectLabel>
                     {difficulties.map((level) => (
@@ -124,30 +130,13 @@ function QuizSetup({
                         key={level.value}
                         value={level.value}
                         className={`rounded-lg my-1 cursor-pointer
-                          ${
-                            level.value === "easy"
-                              ? "hover:bg-green-50 dark:hover:bg-green-950/20 focus:bg-green-100 dark:focus:bg-green-900/30"
-                              : ""
-                          }
-                          ${
-                            level.value === "medium"
-                              ? "hover:bg-yellow-50 dark:hover:bg-yellow-950/20 focus:bg-yellow-100 dark:focus:bg-yellow-900/30"
-                              : ""
-                          }
-                          ${
-                            level.value === "hard"
-                              ? "hover:bg-orange-50 dark:hover:bg-orange-950/20 focus:bg-orange-100 dark:focus:bg-orange-900/30"
-                              : ""
-                          }
-                          ${
-                            level.value === "asian"
-                              ? "hover:bg-red-50 dark:hover:bg-red-950/20 focus:bg-red-100 dark:focus:bg-red-900/30"
-                              : ""
-                          }
+                          ${level.value === "easy" ? "hover:bg-green-50 dark:hover:bg-green-900/20 focus:bg-green-100 dark:focus:bg-green-900/30" : ""}
+                          ${level.value === "medium" ? "hover:bg-yellow-50 dark:hover:bg-yellow-900/20 focus:bg-yellow-100 dark:focus:bg-yellow-900/30" : ""}
+                          ${level.value === "hard" ? "hover:bg-orange-50 dark:hover:bg-orange-900/20 focus:bg-orange-100 dark:focus:bg-orange-900/30" : ""}
+                          ${level.value === "asian" ? "hover:bg-red-50 dark:hover:bg-red-900/20 focus:bg-red-100 dark:focus:bg-red-900/30" : ""}
                         `}
                       >
                         <span className="flex items-center gap-2">
-                          {/* Colored Dot */}
                           <span
                             className={
                               level.value === "easy"
@@ -173,7 +162,7 @@ function QuizSetup({
             <div className="space-y-2">
               <Label
                 htmlFor="numOfQuestions"
-                className="flex items-center gap-2 font-semibold text-slate-700 dark:text-slate-300 text-base"
+                className="flex items-center gap-2 font-semibold text-gray-700 dark:text-gray-300 text-base"
               >
                 🔢 Number of Questions
               </Label>
@@ -186,9 +175,9 @@ function QuizSetup({
                 value={numberOfQuestions}
                 onChange={(e) => setNumberOfQuestions(e.target.value)}
                 required
-                className="h-12 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800/50 text-slate-900 dark:text-white placeholder:text-zinc-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 w-full"
+                className="h-12 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 w-full"
               />
-              <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1 ml-1">
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 ml-1">
                 Choose between 1–50 questions
               </p>
             </div>
