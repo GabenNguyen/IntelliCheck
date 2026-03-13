@@ -153,10 +153,10 @@ function QuizSetup({
                               level.value === "easy"
                                 ? "h-3 w-3 rounded-full bg-green-600 dark:bg-green-400 inline-block"
                                 : level.value === "medium"
-                                ? "h-3 w-3 rounded-full bg-yellow-600 dark:bg-yellow-400 inline-block"
-                                : level.value === "hard"
-                                ? "h-3 w-3 rounded-full bg-orange-600 dark:bg-orange-400 inline-block"
-                                : "h-3 w-3 rounded-full bg-red-600 dark:bg-red-400 inline-block"
+                                  ? "h-3 w-3 rounded-full bg-yellow-600 dark:bg-yellow-400 inline-block"
+                                  : level.value === "hard"
+                                    ? "h-3 w-3 rounded-full bg-orange-600 dark:bg-orange-400 inline-block"
+                                    : "h-3 w-3 rounded-full bg-red-600 dark:bg-red-400 inline-block"
                             }
                           />
                           {level.value.charAt(0).toUpperCase() +
