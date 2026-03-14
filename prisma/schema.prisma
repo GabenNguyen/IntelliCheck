@@ -8,11 +8,11 @@ datasource db {
 }
 
 model User {
-  id          String        @id // Clerk ID
-  email       String        @unique
-  name        String 
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
+  id        String   @id // Clerk ID
+  email     String   @unique
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   quizzes Quiz[]
 
@@ -20,43 +20,45 @@ model User {
 }
 
 model Quiz {
-  id          String    @id @default(cuid())
+  id          String  @id @default(cuid())
   title       String
   subject     String
   description String?
 
   // metadata for analytics page
-  questionCount   Int       @default(0)
-  timeSaved       Int       @default(0)
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
+  questionCount Int      @default(0)
+  timeSaved     Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  // New field
+  source String? @default("manual") // "manual" or "pdf"
 
   // Relations
-  userId String
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
   questions Question[]
 
   @@index([userId])
   @@index([createdAt])
   @@index([subject])
   @@map("quizzes")
-
 }
 
 model Question {
-  id              String        @id   @default(cuid())
-  question        String
-  correctAnswer   String // Correct options like A, B, C or D
-  optionA         String
-  optionB         String
-  optionC         String
-  optionD         String
+  id            String @id @default(cuid())
+  question      String
+  correctAnswer String // Correct options like A, B, C or D
+  optionA       String
+  optionB       String
+  optionC       String
+  optionD       String
 
   // Relations
-  quizId    String
-  quiz      Quiz      @relation(fields: [quizId], references: [id], onDelete: Cascade) 
+  quizId String
+  quiz   Quiz   @relation(fields: [quizId], references: [id], onDelete: Cascade)
 
-  createdAt DateTime  @default(now())
+  createdAt DateTime @default(now())
 
   @@index([quizId])
   @@map("questions")
