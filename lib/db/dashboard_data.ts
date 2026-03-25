@@ -10,13 +10,13 @@ export async function fetchDashboardData() {
         const clerkUser = await currentUser();
 
         // if the user is not logged in, redirect to the sign-in page
-        if(!clerkUser) {
+        if (!clerkUser) {
             redirect("/sign-in")
         }
 
         // automatically save the user to the db if they dont exist
         const user = await prisma.user.upsert({
-            where: {id: clerkUser.id},
+            where: { id: clerkUser.id },
             update: {},
             create: {
                 id: clerkUser.id,
@@ -27,12 +27,12 @@ export async function fetchDashboardData() {
 
         // total quizzes created by the user
         const totalQuizzes = await prisma.quiz.count({
-            where: { userId: clerkUser.id}
+            where: { userId: clerkUser.id }
         })
 
         // total questions across all quizzes 
         const totalQuestions = await prisma.quiz.aggregate({
-            where: {userId: clerkUser.id},
+            where: { userId: clerkUser.id },
             _sum: {
                 questionCount: true
             }
@@ -40,7 +40,7 @@ export async function fetchDashboardData() {
 
         // total time saved across all quizzes
         const totalTimeSaved = await prisma.quiz.aggregate({
-            where: {userId: clerkUser.id},
+            where: { userId: clerkUser.id },
             _sum: {
                 timeSaved: true
             }
@@ -49,7 +49,7 @@ export async function fetchDashboardData() {
         // get weekly activities from the past 7 days
         const today = new Date();
         const sevenDaysAgo = new Date(today);
-        
+
         sevenDaysAgo.setDate(today.getDate() - 6); // go back 6 days
         sevenDaysAgo.setHours(0, 0, 0, 0); // Start at midnight
 
@@ -63,9 +63,9 @@ export async function fetchDashboardData() {
             select: {
                 createdAt: true
             }
-            
+
         })
-        
+
         // prepare data 
         const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
@@ -91,8 +91,8 @@ export async function fetchDashboardData() {
 
         // Get 3 recent quizzes
         const recentGeneratedQuizzes = await prisma.quiz.findMany({
-            where: { userId: clerkUser.id},
-            orderBy: { createdAt: "desc"},
+            where: { userId: clerkUser.id },
+            orderBy: { createdAt: "desc" },
             take: 3, // get the latest 3 quizzes
             select: {
                 id: true,
@@ -120,7 +120,7 @@ export async function fetchDashboardData() {
             timeSaved: item._sum.timeSaved ?? 0,
             color: colors[index % colors.length]
         }))
-        
+
         return {
             userName: user.name,
             dashboardData: {
@@ -137,14 +137,13 @@ export async function fetchDashboardData() {
                         createdAt: quiz.createdAt.toISOString(),
                     })
                 ),
-                subjectSummary: formatedSubjectSummary 
+                subjectSummary: formatedSubjectSummary
+            }
         }
-    } 
-} catch (error) {
+    } catch (error) {
         console.error(error)
         throw new Error("Failed to fetch data!")
     }
 }
 
 
-        

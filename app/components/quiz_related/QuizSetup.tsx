@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
@@ -15,10 +16,10 @@ import {
   SelectContent,
   SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Sparkles, BookOpen, Target, Hash } from "lucide-react";
 
 interface Props {
   topic: string;
@@ -32,10 +33,10 @@ interface Props {
 }
 
 const difficulties = [
-  { value: "easy", color: "green" },
-  { value: "medium", color: "yellow" },
-  { value: "hard", color: "orange" },
-  { value: "asian", color: "red" },
+  { value: "easy", color: "bg-emerald-500", label: "Easy" },
+  { value: "medium", color: "bg-amber-500", label: "Medium" },
+  { value: "hard", color: "bg-orange-500", label: "Hard" },
+  { value: "asian", color: "bg-red-600", label: "Asian" },
 ];
 
 function QuizSetup({
@@ -49,180 +50,125 @@ function QuizSetup({
   isLoading,
 }: Props) {
   return (
-    <div className="relative flex flex-col min-h-screen w-full items-center justify-center p-6 bg-zinc-50 dark:bg-zinc-950 overflow-hidden">
-      {/* Subtle background blobs */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-blue-200/20 dark:bg-blue-900/20 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-20 right-10 w-96 h-96 bg-purple-200/20 dark:bg-purple-900/20 rounded-full blur-3xl animate-pulse delay-1000" />
-      </div>
-
-      {/* Main Card */}
-      <Card
-        className="
-        relative z-10 w-full max-w-4xl min-w-90 min-h-[70vh] rounded-3xl
-        border border-zinc-200/50 dark:border-zinc-800/50
-        bg-white/90 dark:bg-zinc-900/80 backdrop-blur-xl
-        shadow-md"
+    <div className="min-h-screen w-full flex items-center justify-center p-4 md:p-8 bg-zinc-50 dark:bg-zinc-950 font-sans">
+      <motion.div
+        initial={{ opacity: 0, y: 20, scale: 0.98 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ duration: 0.4, ease: "easeOut" }}
+        className="w-full max-w-xl"
       >
-        {/* Header */}
-        <CardHeader className="text-center space-y-4 pt-12 pb-8 px-6 md:px-12">
-          <CardTitle className="text-5xl font-bold tracking-tight text-slate-900 dark:text-white">
-            <span className="text-black dark:text-white">
-              What are you up to?
-            </span>
-          </CardTitle>
-          <CardDescription className="text-base md:text-lg text-zinc-600 dark:text-zinc-300 leading-relaxed max-w-2xl mx-auto">
-            Choose your topic, difficulty, and number of questions to get
-            started.
-          </CardDescription>
-        </CardHeader>
-
-        {/* Form */}
-        <form onSubmit={handleStartQuiz}>
-          <CardContent className="flex flex-col justify-between space-y-6 px-6 md:px-12 py-8">
-            {/* Topic Input */}
-            <div className="space-y-2">
-              <Label
-                htmlFor="topic"
-                className="flex items-center gap-2 font-semibold text-slate-700 dark:text-slate-300 text-base"
+        <Card className="border border-zinc-200/80 dark:border-zinc-800/80 shadow-xl shadow-zinc-200/50 dark:shadow-black/50 bg-white dark:bg-zinc-900 rounded-[2rem] overflow-hidden">
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleStartQuiz();
+            }}
+          >
+            <CardHeader className="text-center pt-10 pb-6 px-8">
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ type: "spring", stiffness: 200, damping: 15, delay: 0.1 }}
+                className="w-16 h-16 mx-auto bg-blue-50 dark:bg-blue-500/10 rounded-2xl flex items-center justify-center mb-6"
               >
-                📚 Topic
-              </Label>
-              <Input
-                id="topic"
-                type="text"
-                placeholder="E.g. History, Art, Programming"
-                value={topic}
-                onChange={(e) => setTopic(e.target.value)}
-                required
-                className="h-12 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800/50 text-slate-900 dark:text-white placeholder:text-zinc-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 w-full"
-              />
-            </div>
+                <Sparkles className="w-8 h-8 text-blue-500" />
+              </motion.div>
+              <CardTitle className="text-2xl md:text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 mb-2">
+                Configure Your Quiz
+              </CardTitle>
+              <CardDescription className="text-zinc-500 dark:text-zinc-400 text-sm md:text-base">
+                Customize the parameters below to generate a tailored testing experience.
+              </CardDescription>
+            </CardHeader>
 
-            {/* Difficulty Select */}
-            <div className="space-y-2">
-              <Label
-                htmlFor="difficulty"
-                className="flex items-center gap-2 font-semibold text-slate-700 dark:text-slate-300 text-base"
+            <CardContent className="space-y-8 px-8 pb-8">
+              {/* Topic */}
+              <div className="space-y-3">
+                <Label htmlFor="topic" className="flex items-center gap-2 text-sm font-semibold text-zinc-700 dark:text-zinc-300">
+                  <BookOpen className="w-4 h-4 text-zinc-400" /> Topic
+                </Label>
+                <div className="relative">
+                  <Input
+                    id="topic"
+                    type="text"
+                    placeholder="e.g. React Native, European History..."
+                    value={topic}
+                    onChange={(e) => setTopic(e.target.value)}
+                    required
+                    className="h-14 pl-4 rounded-xl border-zinc-200 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/50 hover:bg-zinc-100 hover:dark:bg-zinc-800 focus-visible:ring-blue-500 transition-all text-base file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-zinc-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-950 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-zinc-800 dark:bg-zinc-950 dark:ring-offset-zinc-950 dark:placeholder:text-zinc-400 dark:focus-visible:ring-zinc-300"
+                  />
+                </div>
+              </div>
+
+              {/* Difficulty */}
+              <div className="space-y-3">
+                <Label htmlFor="difficulty" className="flex items-center gap-2 text-sm font-semibold text-zinc-700 dark:text-zinc-300">
+                  <Target className="w-4 h-4 text-zinc-400" /> Difficulty Level
+                </Label>
+                <Select value={difficulty} onValueChange={setDifficulty}>
+                  <SelectTrigger className="h-14 px-4 text-base rounded-xl border-zinc-200 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/50 hover:bg-zinc-100 dark:hover:bg-zinc-800/50 focus:ring-blue-500 transition-all focus:outline-none focus:ring-2 focus:ring-zinc-950 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-zinc-800 dark:bg-zinc-950 dark:ring-offset-zinc-950 dark:focus:ring-zinc-300">
+                    <SelectValue placeholder="Select a level" />
+                  </SelectTrigger>
+                  <SelectContent className="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 shadow-xl">
+                    <SelectGroup>
+                      {difficulties.map((level) => (
+                        <SelectItem
+                          key={level.value}
+                          value={level.value}
+                          className="rounded-lg my-1 cursor-pointer focus:bg-zinc-100 dark:focus:bg-zinc-800 transition-colors py-3"
+                        >
+                          <div className="flex items-center gap-3">
+                            <span className={`w-2 h-2 rounded-full ${level.color}`} />
+                            <span className="font-medium text-base text-zinc-700 dark:text-zinc-200">{level.label}</span>
+                          </div>
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Number of Questions */}
+              <div className="space-y-3">
+                <Label htmlFor="numOfQuestions" className="flex items-center gap-2 text-sm font-semibold text-zinc-700 dark:text-zinc-300">
+                  <Hash className="w-4 h-4 text-zinc-400" /> Question Count
+                </Label>
+                <div className="relative">
+                  <Input
+                    id="numOfQuestions"
+                    type="number"
+                    min={1}
+                    max={50}
+                    placeholder="Between 1 and 50"
+                    value={numberOfQuestions}
+                    onChange={(e) => setNumberOfQuestions(e.target.value)}
+                    required
+                    className="h-14 pl-4 rounded-xl border-zinc-200 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/50 hover:bg-zinc-100 hover:dark:bg-zinc-800 focus-visible:ring-blue-500 transition-all text-base file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-zinc-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-zinc-950 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:border-zinc-800 dark:bg-zinc-950 dark:ring-offset-zinc-950 dark:placeholder:text-zinc-400 dark:focus-visible:ring-zinc-300"
+                  />
+                </div>
+              </div>
+            </CardContent>
+
+            <CardFooter className="px-8 pb-10 pt-2">
+              <Button
+                type="submit"
+                disabled={isLoading}
+                className="w-full h-14 text-base font-semibold rounded-xl bg-zinc-900 hover:bg-zinc-800 dark:bg-zinc-50 dark:hover:bg-zinc-200 text-white dark:text-zinc-900 transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70 disabled:hover:scale-100 shadow-lg shadow-zinc-900/20 dark:shadow-white/10"
               >
-                🎯 Difficulty
-              </Label>
-              <Select value={difficulty} onValueChange={setDifficulty}>
-                <SelectTrigger
-                  id="difficulty"
-                  className="h-12 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800/50 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 cursor-pointer hover:border-zinc-300 dark:hover:border-zinc-600 w-full"
-                >
-                  <SelectValue placeholder="Select difficulty" />
-                </SelectTrigger>
-                <SelectContent className="rounded-xl border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800">
-                  <SelectGroup>
-                    <SelectLabel className="text-zinc-500 dark:text-zinc-400 font-semibold">
-                      Levels
-                    </SelectLabel>
-                    {difficulties.map((level) => (
-                      <SelectItem
-                        key={level.value}
-                        value={level.value}
-                        className={`rounded-lg my-1 cursor-pointer
-                          ${
-                            level.value === "easy"
-                              ? "hover:bg-green-50 dark:hover:bg-green-950/20 focus:bg-green-100 dark:focus:bg-green-900/30"
-                              : ""
-                          }
-                          ${
-                            level.value === "medium"
-                              ? "hover:bg-yellow-50 dark:hover:bg-yellow-950/20 focus:bg-yellow-100 dark:focus:bg-yellow-900/30"
-                              : ""
-                          }
-                          ${
-                            level.value === "hard"
-                              ? "hover:bg-orange-50 dark:hover:bg-orange-950/20 focus:bg-orange-100 dark:focus:bg-orange-900/30"
-                              : ""
-                          }
-                          ${
-                            level.value === "asian"
-                              ? "hover:bg-red-50 dark:hover:bg-red-950/20 focus:bg-red-100 dark:focus:bg-red-900/30"
-                              : ""
-                          }
-                        `}
-                      >
-                        <span className="flex items-center gap-2">
-                          {/* Colored Dot */}
-                          <span
-                            className={
-                              level.value === "easy"
-                                ? "h-3 w-3 rounded-full bg-green-600 dark:bg-green-400 inline-block"
-                                : level.value === "medium"
-                                  ? "h-3 w-3 rounded-full bg-yellow-600 dark:bg-yellow-400 inline-block"
-                                  : level.value === "hard"
-                                    ? "h-3 w-3 rounded-full bg-orange-600 dark:bg-orange-400 inline-block"
-                                    : "h-3 w-3 rounded-full bg-red-600 dark:bg-red-400 inline-block"
-                            }
-                          />
-                          {level.value.charAt(0).toUpperCase() +
-                            level.value.slice(1)}
-                        </span>
-                      </SelectItem>
-                    ))}
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-            </div>
-
-            {/* Number of Questions */}
-            <div className="space-y-2">
-              <Label
-                htmlFor="numOfQuestions"
-                className="flex items-center gap-2 font-semibold text-slate-700 dark:text-slate-300 text-base"
-              >
-                🔢 Number of Questions
-              </Label>
-              <Input
-                id="numOfQuestions"
-                type="number"
-                min={1}
-                max={50}
-                placeholder="1-50 questions"
-                value={numberOfQuestions}
-                onChange={(e) => setNumberOfQuestions(e.target.value)}
-                required
-                className="h-12 rounded-xl border border-zinc-200 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-800/50 text-slate-900 dark:text-white placeholder:text-zinc-400 focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 w-full"
-              />
-              <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1 ml-1">
-                Choose between 1–50 questions
-              </p>
-            </div>
-          </CardContent>
-
-          {/* Start Quiz Button */}
-          <CardFooter className="flex justify-center px-6 md:px-12 pb-12">
-            <Button
-              type="button"
-              onClick={handleStartQuiz}
-              disabled={isLoading}
-              className="
-                cursor-pointer w-full md:w-auto px-8 py-4 font-semibold rounded-xl
-                text-white bg-linear-to-r from-blue-600 to-purple-600
-                hover:from-blue-700 hover:to-purple-700
-                shadow-lg shadow-purple-400/30 hover:shadow-xl
-                active:scale-95 transition-all duration-200
-                disabled:opacity-50 disabled:cursor-not-allowed
-              "
-            >
-              {isLoading ? (
-                <span className="flex items-center gap-3">
-                  <Spinner />
-                  Generating Quiz...
-                </span>
-              ) : (
-                <span className="flex items-center gap-2">
-                  Generate Quiz ✨
-                </span>
-              )}
-            </Button>
-          </CardFooter>
-        </form>
-      </Card>
+                {isLoading ? (
+                  <span className="flex items-center gap-2">
+                    <Spinner /> Creating Session...
+                  </span>
+                ) : (
+                  <span className="flex items-center gap-2">
+                    Generate Quiz
+                  </span>
+                )}
+              </Button>
+            </CardFooter>
+          </form>
+        </Card>
+      </motion.div>
     </div>
   );
 }

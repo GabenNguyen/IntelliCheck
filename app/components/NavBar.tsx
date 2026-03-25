@@ -33,57 +33,50 @@ function NavBar() {
 
   return (
     <motion.nav
-      initial={{ y: -50, opacity: 0 }}
+      initial={{ y: -20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      transition={{
-        duration: 0.3,
-        ease: "linear",
-      }}
-      className="sticky top-0 z-50 w-full border-b border-gray-200/30 dark:border-gray-800/30 bg-white/60 dark:bg-gray-950/60 backdrop-blur-lg shadow-sm"
+      transition={{ duration: 0.4, ease: "easeOut" }}
+      className="sticky top-0 z-50 w-full border-b border-zinc-200/50 dark:border-zinc-800/50 bg-white/80 dark:bg-zinc-950/80 backdrop-blur-xl shadow-xs font-sans"
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid h-20 grid-cols-[minmax(200px,auto)_1fr_minmax(200px,auto)] items-center">
+        <div className="grid h-16 md:h-20 grid-cols-[minmax(200px,auto)_1fr_minmax(200px,auto)] items-center">
           {/* LEFT */}
           <div className="flex items-center gap-4">
-            <SidebarTrigger className="cursor-pointer rounded-lg p-2 transition hover:bg-gray-100 dark:hover:bg-gray-800" />
+            <SidebarTrigger className="cursor-pointer rounded-xl p-2.5 transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-900 text-zinc-600 dark:text-zinc-400" />
 
-            <Link href="/" className="group flex items-center gap-2">
+            <Link href="/" className="group flex items-center gap-3 outline-none rounded-xl">
               <motion.div
-                whileHover={{ scale: 1.04 }}
-                transition={{ duration: 0.25, ease: "easeOut" }}
-                className="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-gray-700 to-gray-900 shadow-md"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="flex h-10 w-10 items-center justify-center rounded-xl bg-zinc-900 dark:bg-zinc-100 shadow-sm transition-colors"
               >
-                <Sparkles className="h-5 w-5 text-white" />
+                <Sparkles className="h-5 w-5 text-zinc-50 dark:text-zinc-900" />
               </motion.div>
 
-              <span className="hidden text-2xl font-extrabold tracking-tight bg-linear-to-r from-gray-700 to-gray-900 bg-clip-text text-transparent sm:block">
+              <span className="hidden text-xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 sm:block">
                 IntelliCheck
               </span>
             </Link>
           </div>
 
           {/* CENTER NAV */}
-          <div className="hidden md:flex justify-center min-h-10">
+          <div className="hidden md:flex justify-center flex-1">
             <NavigationMenu>
-              <NavigationMenuList className="flex items-center gap-2">
+              <NavigationMenuList className="flex items-center gap-1">
                 {navItems.map(({ label, href }) => {
                   const active = pathname === href;
 
                   return (
                     <NavigationMenuItem key={label}>
                       <NavigationMenuLink asChild>
-                        <motion.div
-                          whileHover={{ scale: 1.05 }}
-                          transition={{ duration: 0.2, ease: "easeIn" }}
-                          className="relative"
-                        >
+                        <div className="relative group">
                           <Link
                             href={href}
                             className={cn(
-                              "relative rounded-lg px-4 py-2 text-sm font-semibold transition-colors",
+                              "relative flex items-center rounded-xl px-4 py-2 text-sm font-semibold transition-all duration-200 outline-none",
                               active
-                                ? "text-gray-900 dark:text-white"
-                                : "text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
+                                ? "text-zinc-900 dark:text-zinc-50"
+                                : "text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-50 hover:bg-zinc-100/50 dark:hover:bg-zinc-800/50"
                             )}
                           >
                             {label}
@@ -92,17 +85,15 @@ function NavBar() {
                           {active && (
                             <motion.span
                               layoutId="nav-underline"
-                              initial={false}
-                              className="absolute left-3 right-3 -bottom-1 h-0.5 rounded-full bg-gray-900 dark:bg-white"
+                              className="absolute left-4 right-4 -bottom-[1px] h-[2px] rounded-t-full bg-zinc-900 dark:bg-zinc-100"
                               transition={{
-                                type: "tween",
-                                stiffness: 260,
-                                damping: 32,
-                                mass: 0.6,
+                                type: "spring",
+                                stiffness: 350,
+                                damping: 30,
                               }}
                             />
                           )}
-                        </motion.div>
+                        </div>
                       </NavigationMenuLink>
                     </NavigationMenuItem>
                   );
@@ -112,17 +103,16 @@ function NavBar() {
           </div>
 
           {/* RIGHT */}
-          <div className="flex items-center gap-3 justify-end min-w-[140px]">
+          <div className="flex items-center justify-end gap-3 min-w-[140px]">
             <ModeToggle />
 
             <SignedOut>
-              <div className="hidden items-center gap-2 sm:flex">
+              <div className="hidden items-center gap-3 sm:flex ml-1">
                 <SignInButton>
                   <motion.button
-                    whileHover={{ scale: 1.04 }}
-                    whileTap={{ scale: 0.97 }}
-                    transition={{ duration: 0.2, ease: "easeOut" }}
-                    className="cursor-pointer rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition hover:border-gray-400 hover:shadow-sm dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="cursor-pointer rounded-xl px-4 py-2 text-sm font-semibold text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-zinc-50 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
                   >
                     Sign In
                   </motion.button>
@@ -130,10 +120,9 @@ function NavBar() {
 
                 <SignUpButton>
                   <motion.button
-                    whileHover={{ scale: 1.04 }}
-                    whileTap={{ scale: 0.97 }}
-                    transition={{ duration: 0.2, ease: "easeOut" }}
-                    className="cursor-pointer rounded-lg bg-linear-to-r from-gray-800 to-gray-900 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:from-gray-900 hover:to-black hover:shadow-md"
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="cursor-pointer rounded-xl bg-zinc-900 dark:bg-zinc-100 px-5 py-2 text-sm font-semibold text-white dark:text-zinc-900 shadow-sm hover:bg-zinc-800 dark:hover:bg-zinc-200 transition-colors"
                   >
                     Sign Up
                   </motion.button>
@@ -143,15 +132,17 @@ function NavBar() {
 
             <SignedIn>
               <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
+                initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.3, ease: "easeOut" }}
+                transition={{ duration: 0.3 }}
+                className="ml-2"
               >
                 <UserButton
                   showName
                   appearance={{
                     elements: {
-                      userButtonBox: "text-gray-900 dark:text-white",
+                      userButtonBox: "text-zinc-900 dark:text-zinc-50 font-medium",
+                      userButtonOuterIdentifier: "text-zinc-900 dark:text-zinc-50 font-medium",
                     },
                   }}
                 />
