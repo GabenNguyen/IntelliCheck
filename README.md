@@ -43,7 +43,9 @@ For those who wants to challenge themselves, Asian difficulty provides ___extrem
 - **Clerk**
 
 ## 🎯 Purpose of this project
-As an university student, I always find that the material provided on the university course website is not enough when it comes to the exam period. I always have to look up for extra information on either the Internet or ChatGPT. However, ChatGPT sometimes gives me too many irrelevant questions to the topic that I provided. As a result, I decided to make this AI Quiz Generation project to help me generate questions for my studies during the exam period.
+As a university student, I identified a common gap in exam preparation: course materials alone are often insufficient for effective revision, while general AI tools can produce overly broad or unfocused content.
+
+To address this, I built an AI-powered quiz generation system that creates targeted, high-quality practice questions tailored to specific topics. The goal is to streamline revision by delivering relevant, concise, and exam-focused content—helping students study more efficiently and with greater confidence.
 
 
 ## 🔎 Use case
@@ -56,7 +58,7 @@ As an university student, I always find that the material provided on the univer
 7. User goes through all the question(s).
 8. System calculates score based on the correct answer(s) and redirects the user to the result page.
 9. User sees the answers to the questions, with the wrong one(s) accompanied by an explanation.
-10. System persists the quiz data into the database so that the user can revisits the quizz history anytime.
+10. System persists the quiz data into the database so that the user can revisits the quiz history anytime.
 
 ## ⚙️ Environment Variables
 
@@ -79,6 +81,9 @@ git clone https://github.com/GabenNguyen/IntelliCheck.git
 npm install
 or
 yarn install
+
+# Generate Prisma client
+npx prisma generate
 
 # Run database migration
 npx prisma migrate dev
