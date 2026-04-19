@@ -18,8 +18,9 @@ import {
   SignedOut,
   UserButton,
 } from "@clerk/nextjs";
-import { Sparkles } from "lucide-react";
+import { Sparkles, Cpu, Menu } from "lucide-react";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import { useState } from "react";
 
 const navItems = [
   { label: "Home", href: "/" },
@@ -30,36 +31,35 @@ const navItems = [
 
 function NavBar() {
   const pathname = usePathname();
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
     <motion.nav
       initial={{ y: -20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.4, ease: "easeOut" }}
-      className="sticky top-0 z-50 w-full border-b border-zinc-200/50 dark:border-zinc-800/50 bg-white/80 dark:bg-zinc-950/80 backdrop-blur-xl shadow-xs font-sans"
+      className="sticky top-0 z-50 w-full border-b border-violet-500/20 dark:border-violet-500/20 bg-white/80 dark:bg-slate-950/80 backdrop-blur-xl shadow-xs font-sans"
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid h-16 md:h-20 grid-cols-[minmax(200px,auto)_1fr_minmax(200px,auto)] items-center">
-          {/* LEFT */}
           <div className="flex items-center gap-4">
-            <SidebarTrigger className="cursor-pointer rounded-xl p-2.5 transition-colors hover:bg-zinc-100 dark:hover:bg-zinc-900 text-zinc-600 dark:text-zinc-400" />
+            <SidebarTrigger className="cursor-pointer rounded-xl p-2.5 transition-colors hover:bg-violet-100 dark:hover:bg-violet-900/30 text-slate-600 dark:text-slate-400" />
 
-            <Link href="/" className="group flex items-center gap-3 outline-none rounded-xl">
+            <Link href="/" className="group flex items-center gap-3 outline-none">
               <motion.div
-                whileHover={{ scale: 1.05 }}
+                whileHover={{ scale: 1.05, rotate: 3 }}
                 whileTap={{ scale: 0.95 }}
-                className="flex h-10 w-10 items-center justify-center rounded-xl bg-zinc-900 dark:bg-zinc-100 shadow-sm transition-colors"
+                className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-violet-600 to-indigo-600 shadow-lg shadow-violet-500/30 transition-colors"
               >
-                <Sparkles className="h-5 w-5 text-zinc-50 dark:text-zinc-900" />
+                <Sparkles className="h-5 w-5 text-white" />
               </motion.div>
 
-              <span className="hidden text-xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 sm:block">
+              <span className="hidden text-xl font-bold tracking-tight text-slate-900 dark:text-white sm:block">
                 IntelliCheck
               </span>
             </Link>
           </div>
 
-          {/* CENTER NAV */}
           <div className="hidden md:flex justify-center flex-1">
             <NavigationMenu>
               <NavigationMenuList className="flex items-center gap-1">
@@ -75,24 +75,23 @@ function NavBar() {
                             className={cn(
                               "relative flex items-center rounded-xl px-4 py-2 text-sm font-semibold transition-all duration-200 outline-none",
                               active
-                                ? "text-zinc-900 dark:text-zinc-50"
-                                : "text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-50 hover:bg-zinc-100/50 dark:hover:bg-zinc-800/50"
+                                ? "text-violet-700 dark:text-violet-300"
+                                : "text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100 hover:bg-violet-50 dark:hover:bg-violet-900/20"
                             )}
                           >
                             {label}
+                            {active && (
+                              <motion.span
+                                layoutId="nav-underline"
+                                className="absolute left-4 right-4 -bottom-[1px] h-[2px] rounded-t-full bg-violet-600 dark:bg-violet-400"
+                                transition={{
+                                  type: "spring",
+                                  stiffness: 350,
+                                  damping: 30,
+                                }}
+                              />
+                            )}
                           </Link>
-
-                          {active && (
-                            <motion.span
-                              layoutId="nav-underline"
-                              className="absolute left-4 right-4 -bottom-[1px] h-[2px] rounded-t-full bg-zinc-900 dark:bg-zinc-100"
-                              transition={{
-                                type: "spring",
-                                stiffness: 350,
-                                damping: 30,
-                              }}
-                            />
-                          )}
                         </div>
                       </NavigationMenuLink>
                     </NavigationMenuItem>
@@ -102,7 +101,6 @@ function NavBar() {
             </NavigationMenu>
           </div>
 
-          {/* RIGHT */}
           <div className="flex items-center justify-end gap-3 min-w-[140px]">
             <ModeToggle />
 
@@ -112,7 +110,7 @@ function NavBar() {
                   <motion.button
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    className="cursor-pointer rounded-xl px-4 py-2 text-sm font-semibold text-zinc-600 dark:text-zinc-300 hover:text-zinc-900 dark:hover:text-zinc-50 hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors"
+                    className="cursor-pointer rounded-xl px-4 py-2 text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-violet-700 dark:hover:text-violet-300 hover:bg-violet-50 dark:hover:bg-violet-900/20 transition-colors"
                   >
                     Sign In
                   </motion.button>
@@ -122,7 +120,7 @@ function NavBar() {
                   <motion.button
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    className="cursor-pointer rounded-xl bg-zinc-900 dark:bg-zinc-100 px-5 py-2 text-sm font-semibold text-white dark:text-zinc-900 shadow-sm hover:bg-zinc-800 dark:hover:bg-zinc-200 transition-colors"
+                    className="cursor-pointer rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 px-5 py-2 text-sm font-semibold text-white shadow-lg shadow-violet-500/30 hover:shadow-violet-500/50 transition-all"
                   >
                     Sign Up
                   </motion.button>
@@ -141,8 +139,8 @@ function NavBar() {
                   showName
                   appearance={{
                     elements: {
-                      userButtonBox: "text-zinc-900 dark:text-zinc-50 font-medium",
-                      userButtonOuterIdentifier: "text-zinc-900 dark:text-zinc-50 font-medium",
+                      userButtonBox: "text-slate-900 dark:text-slate-50 font-medium",
+                      userButtonOuterIdentifier: "text-slate-900 dark:text-slate-50 font-medium",
                     },
                   }}
                 />

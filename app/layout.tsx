@@ -40,6 +40,8 @@ export default async function RootLayout({
           className={`${geistSans.variable} ${geistMono.variable} antialiased `}
           suppressHydrationWarning
         >
+          {/* Neon IT vibe backdrop */}
+          <div className="neon-bg" aria-hidden="true" />
           <ThemeProvider
             attribute="class"
             defaultTheme="system"
