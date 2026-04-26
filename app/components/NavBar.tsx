@@ -14,8 +14,7 @@ import { cn } from "@/lib/utils";
 import {
   SignInButton,
   SignUpButton,
-  SignedIn,
-  SignedOut,
+  Show,
   UserButton,
 } from "@clerk/nextjs";
 import { Sparkles, Cpu, Menu } from "lucide-react";
@@ -49,7 +48,7 @@ function NavBar() {
               <motion.div
                 whileHover={{ scale: 1.05, rotate: 3 }}
                 whileTap={{ scale: 0.95 }}
-                className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-violet-600 to-indigo-600 shadow-lg shadow-violet-500/30 transition-colors"
+                className="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-violet-600 to-indigo-600 shadow-lg shadow-violet-500/30 transition-colors"
               >
                 <Sparkles className="h-5 w-5 text-white" />
               </motion.div>
@@ -83,7 +82,7 @@ function NavBar() {
                             {active && (
                               <motion.span
                                 layoutId="nav-underline"
-                                className="absolute left-4 right-4 -bottom-[1px] h-[2px] rounded-t-full bg-violet-600 dark:bg-violet-400"
+                                className="absolute left-4 right-4 -bottom-px h-0.5 rounded-t-full bg-violet-600 dark:bg-violet-400"
                                 transition={{
                                   type: "spring",
                                   stiffness: 350,
@@ -101,10 +100,10 @@ function NavBar() {
             </NavigationMenu>
           </div>
 
-          <div className="flex items-center justify-end gap-3 min-w-[140px]">
+          <div className="flex items-center justify-end gap-3 min-w-35">
             <ModeToggle />
 
-            <SignedOut>
+            <Show when={"signed-out"}>
               <div className="hidden items-center gap-3 sm:flex ml-1">
                 <SignInButton>
                   <motion.button
@@ -120,15 +119,15 @@ function NavBar() {
                   <motion.button
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
-                    className="cursor-pointer rounded-xl bg-gradient-to-r from-violet-600 to-indigo-600 px-5 py-2 text-sm font-semibold text-white shadow-lg shadow-violet-500/30 hover:shadow-violet-500/50 transition-all"
+                    className="cursor-pointer rounded-xl bg-linear-to-r from-violet-600 to-indigo-600 px-5 py-2 text-sm font-semibold text-white shadow-lg shadow-violet-500/30 hover:shadow-violet-500/50 transition-all"
                   >
                     Sign Up
                   </motion.button>
                 </SignUpButton>
               </div>
-            </SignedOut>
+            </Show>
 
-            <SignedIn>
+            <Show when={"signed-in"}>
               <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
@@ -145,7 +144,7 @@ function NavBar() {
                   }}
                 />
               </motion.div>
-            </SignedIn>
+            </Show>
           </div>
         </div>
       </div>
