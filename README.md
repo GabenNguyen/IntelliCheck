@@ -11,7 +11,6 @@ An AI quiz generation web application powered by **Google Gemini AI** that creat
         └── 📁.tmp
             ├── keyless.json
             ├── README.md
-            ├── telemetry.json
     └── 📁app
         └── 📁about
             ├── page.tsx
@@ -124,8 +123,8 @@ An AI quiz generation web application powered by **Google Gemini AI** that creat
     └── 📁utils
         ├── difficulty_rules.tsx
         ├── format_time.tsx
+        ├── it-facts.tsx
         ├── sample_questions.tsx
-        ├── shuffle.tsx
         ├── validate_input.tsx
     ├── .env
     ├── .gitignore
@@ -140,12 +139,13 @@ An AI quiz generation web application powered by **Google Gemini AI** that creat
     ├── prisma.config.ts
     ├── proxy.ts
     ├── README.md
-    └── tsconfig.json
+    ├── tsconfig.json
+    └── tsconfig.tsbuildinfo
 ```
 
 ## ✨ Key Features
 - 🤖 **AI Generated Quizzes** <br>
-Leveraged ___Google Gemini AI___ for instant quiz generation on any user-provided topic.
+Leveraged __OpenAI GPT Models (20B and 120B)__ for quiz generation on any user-provided topic and concise explanation for wrong answers.
 
 - 🔐 **Secure Authentication and User Account** <br>
 Secure sign-in and user management powered by ___Clerk___.
@@ -160,7 +160,7 @@ Clean, responsive design built with ___Tailwind CSS___ and ___Framer Motion___ f
 Built on ___Next.js App Router___ with ___TypeScript___ for maintainability and performance.
 
 - 💀 **Asian difficulty** <br>
-For those who wants to challenge themselves, Asian difficulty provides ___extremely hard question(s)___, all of which may look similar to the others, requiring exceptional logical thinking skills and well-rounded knowledge of the chosen topic. In addition, the given time for this mode is short (around 45 seconds), imitating "real Asian" learning style.
+For those who wants to challenge themselves, Asian difficulty provides ___extremely hard question(s)___, all of which may look similar to the others, requiring exceptional logical thinking skills and well-rounded knowledge of the chosen topic. In addition, the given time for this mode is short (around 45 seconds), imitating **"real Asian"** learning style.
 
 **(Note: Please be advised that the Asian difficulty mode was initially made for fun, and for those who want to have some challenges. No offense to anyone if NO correct answers were made!!!)**
 
@@ -174,7 +174,7 @@ For those who wants to challenge themselves, Asian difficulty provides ___extrem
 
 ### Back-end
 - **Next.js API Routes**
-- **Google Gemini AI****
+- **OpenRouter AI Model (GPT 20B and 120B)****
 - **Prisma ORM**
 - **Neon (PostgreSQL)**
 
@@ -182,9 +182,7 @@ For those who wants to challenge themselves, Asian difficulty provides ___extrem
 - **Clerk**
 
 ## 🎯 Purpose of this project
-As a university student, I identified a common gap in exam preparation: course materials alone are often insufficient for effective revision, while general AI tools can produce overly broad or unfocused content.
-
-To address this, I built an AI-powered quiz generation system that creates targeted, high-quality practice questions tailored to specific topics. The goal is to streamline revision by delivering relevant, concise, and exam-focused content—helping students study more efficiently and with greater confidence.
+Exam success often hinges on high-quality practice, yet students are frequently stuck between dense course manuals and generic AI that lacks focus. I developed a specialized quiz generation system to bridge this gap. By engineering targeted prompts and leveraging the AI models from **OpenRouter** such as **OpenAI GPT 20B** and **OpenAI GPT 120B** for better question generation and explanations, I built a tool that transforms broad topics into exam-ready questions, allowing students to move past passive reading and into active, evidence-based revision.
 
 
 ## 🔎 Use case
@@ -204,12 +202,12 @@ To address this, I built an AI-powered quiz generation system that creates targe
 To run this platform on your local host, please create an `.env` file with the following ___APIs___:
 
 ``` env
-GEMINI_API_KEY=
-NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=
-CLERK_SECRET_KEY=
-NEXT_PUBLIC_CLERK_SIGN_IN_URL=
-NEXT_PUBLIC_CLERK_SIGN_UP_URL=
-DATABASE_URL=
+OPENROUTER_API_KEY=<your OpenRouter API>
+NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY= <your Clerk API>
+CLERK_SECRET_KEY= <your Clerk API>
+NEXT_PUBLIC_CLERK_SIGN_IN_URL=/sign_in
+NEXT_PUBLIC_CLERK_SIGN_UP_URL=/sign_up
+DATABASE_URL=<your Neon API>
 ```
 ## 🚀 Getting Started
 ```bash
@@ -221,10 +219,12 @@ npm install
 or
 yarn install
 
-# Generate Prisma client
+# Sync your local code with the Prisma schema
+# (This ensures TypeScript knows your database structure)
 npx prisma generate
 
-# Run database migration
+# Apply the schema to your database
+# (This creates the actual tables in Neon/Postgres)
 npx prisma migrate dev
 
 # Start the development server
@@ -233,10 +233,11 @@ npm run dev
 
 ## 📚 What I have learnt after this project
 After this project, here are the things that I have learnt:
-- **Real-world full-stack development process**: This project is a great way for me to learn the complete process of a full-stack web development.
+- **Real-world full-stack development process**: This project is a great way for me to learn the complete process of a full-stack web development. Although it might not the same as the way tech industries usually do in their development process
+this project has given me a clear understanding of how a web is developed from scratch.
 - **Secure authentication**: I learnt how to secure user sign-in and sign-up process using ___Clerk___
 - **Database design with Prisma**: This project taught me how to design the database and how to use Prisma ORM effectively.
-- **Practical AI Integration**: Initially, I intended to make several question sets with specific topics like History, Art, Computer Science, etc. However, I found that it was static and boring so I decided to integrate Google Gemini AI into this project. This allows the website question setup process more dynamic as users can choose any topics they want, making it more engaging.
+- **Practical AI Integration**: Initially, I intended to make several question sets with specific topics like History, Art, Computer Science, etc. However, I found that it was static and boring so I decided to integrate OpenRouter AI model into this project. This allows the website question setup process more dynamic as users can choose any topics they want, making it more engaging.
 - **Modern UI/UX design**: The website pages at first were boring with simple design. Due to this issue, I started to learn some modern UI/UX design such as glassmorphism to make the pages more beautiful and attractive.
 
 ## 📈 Future Improvements
