@@ -160,7 +160,7 @@ function QuizSetup({
                     value={numberOfQuestions}
                     onChange={(e) => setNumberOfQuestions(e.target.value)}
                     required
-                    className="input-tech h-14 pl-4 rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/50 hover:bg-slate-100 hover:dark:bg-slate-800 focus-visible:ring-violet-500 transition-all text-base file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-slate-800 dark:ring-offset-slate-900 dark:placeholder:text-slate-500 dark:focus-visible:ring-violet-400"
+                    className="input-tech h-14 pl-4 rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/50 hover:bg-slate-100 hover:dark:bg-slate-800 focus-visible:ring-violet-500 transition-all text-base file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:ring-offset-slate-900 dark:placeholder:text-slate-500 dark:focus-visible:ring-violet-400"
                   />
                 </div>
               </div>

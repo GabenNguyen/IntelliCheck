@@ -1,4 +1,4 @@
-import { createOpenRouter, openrouter } from "@openrouter/ai-sdk-provider";
+import { createOpenRouter } from "@openrouter/ai-sdk-provider";
 import { streamText } from 'ai';
 import { NextResponse } from "next/server";
 import DifficultyRules from "@/utils/difficulty_rules";
@@ -11,7 +11,7 @@ export async function POST(req: Request) {
         const { topic, difficulty, numOfQuestions } = await req.json();
         const difficultyRules = DifficultyRules(difficulty)
 
-        const model = createOpenRouter({
+        const openrouter = createOpenRouter({
             apiKey: OPENROUTER_API_KEY,
         })
 
