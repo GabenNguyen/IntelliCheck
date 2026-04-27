@@ -1,36 +1,31 @@
-import { GoogleGenAI } from "@google/genai";
+import { createOpenRouter } from "@openrouter/ai-sdk-provider";
+import { streamText } from "ai";
 import { NextResponse } from "next/server";
 
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY
+const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
 
 export async function POST(req: Request) {
     try {
 
         const { question, userSelectedAnswer, correctAnswer } = await req.json();
 
-        const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
-
-        const prompt = `
-            Explain why ${userSelectedAnswer} is wrong and why ${correctAnswer} is correct for the 
-            following question: 
-
-            Question: ${question}
-
-            The explanation should be clear, concise and simple so that even a middle-school student
-            can understand.
-
-            Clear explanation referencing topic facts and why the answer is correct.
-
-            Ideal explanation length should be 2-3 sentences.
-        `;
-
-        const response = await ai.models.generateContent({
-            model: "gemini-2.5-flash",
-            contents: prompt,
+        const openrouter = createOpenRouter({
+            apiKey: OPENROUTER_API_KEY,
         })
 
-        const outputExplanation = response.text ?? "";
+        const prompt = `
+            Act as a friendly tutor. In 2-3 short sentences, explain why "${correctAnswer}" is the right answer to: "${question}". 
+            Briefly clarify why "${userSelectedAnswer}" is a common mistake by showing the logical difference between the two. 
+            Use simple language a 12-year-old would understand and avoid technical jargon.
+        `;
 
+
+        const response = streamText({
+            model: openrouter("openai/gpt-oss-20b:free"),
+            prompt: prompt,
+        })
+
+        const outputExplanation = await response?.text ?? "";
 
         return NextResponse.json({ outputExplanation }, { status: 200 })
 
