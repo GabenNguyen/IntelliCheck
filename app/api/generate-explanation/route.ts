@@ -24,7 +24,7 @@ export async function POST(req: Request) {
             Ideal explanation length should be 2-3 sentences.
         `;
 
-        const response = await ai.models.generateContent( {
+        const response = await ai.models.generateContent({
             model: "gemini-2.5-flash",
             contents: prompt,
         })
@@ -32,11 +32,11 @@ export async function POST(req: Request) {
         const outputExplanation = response.text ?? "";
 
 
-       return NextResponse.json({ outputExplanation }, {status: 200})
-    
+        return NextResponse.json({ outputExplanation }, { status: 200 })
+
     } catch (error) {
         console.error(error)
 
-        return NextResponse.json({ error: "Failed to generate explanations! "}, { status: 500 })
+        return NextResponse.json({ error: "Failed to generate explanations! " }, { status: 500 })
     }
 }

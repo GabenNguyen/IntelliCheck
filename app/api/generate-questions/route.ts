@@ -1,17 +1,20 @@
-import { GoogleGenAI } from "@google/genai";
+import { createOpenRouter, openrouter } from "@openrouter/ai-sdk-provider";
+import { streamText } from 'ai';
 import { NextResponse } from "next/server";
 import DifficultyRules from "@/utils/difficulty_rules";
 
-const GEMINI_AI_KEY = process.env.GEMINI_API_KEY;
+const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
 
 export async function POST(req: Request) {
     try {
         // wait for the user input
-        const { topic, difficulty, numOfQuestions} = await req.json();
+        const { topic, difficulty, numOfQuestions } = await req.json();
         const difficultyRules = DifficultyRules(difficulty)
-        
-        const ai = new GoogleGenAI({apiKey: GEMINI_AI_KEY});
-        
+
+        const model = createOpenRouter({
+            apiKey: OPENROUTER_API_KEY,
+        })
+
         const prompt = `
             You are a professional exam generator AI.
 
@@ -62,12 +65,12 @@ export async function POST(req: Request) {
             - Output valid JSON only.
             `;
 
-        const response = await ai.models.generateContent({
-            model: "gemini-2.5-flash",
-            contents: prompt,
-        });
-        
-        const text = response.text ?? "";
+        const response = streamText({
+            model: openrouter('openai/gpt-oss-120b:free'),
+            prompt: prompt,
+        })
+
+        const text = await response.text ?? "";
 
         // Remove code fences if present
         const cleanText = text.replace(/```json|```/g, "").trim();
@@ -76,11 +79,11 @@ export async function POST(req: Request) {
         const outputQuestion = JSON.parse(cleanText);
 
 
-       return NextResponse.json({ outputQuestion }, {status: 200})
+        return NextResponse.json({ outputQuestion }, { status: 200 })
 
     } catch (error) {
         console.error(`AI error: ${error}`)
-        
-        return NextResponse.json( { error: "AI Generation Failed!" }, { status: 500 } )
+
+        return NextResponse.json({ error: "AI Generation Failed!" }, { status: 500 })
     }
 }

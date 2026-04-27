@@ -66,7 +66,7 @@ export default function QuizHistoryPage() {
     return (
       <div className="min-h-screen bg-zinc-50 dark:bg-zinc-950 p-6 md:p-12 font-sans flex items-center justify-center">
         <div className="text-center">
-          <span className="block inline-block text-4xl mb-4 opacity-50">⚠️</span>
+          <span className="inline-block text-4xl mb-4 opacity-50">⚠️</span>
           <p className="text-zinc-500 dark:text-zinc-400">Error loading quiz history</p>
           <p className="text-zinc-400 dark:text-zinc-500 mt-2 max-w-xl">{error}</p>
         </div>
@@ -89,7 +89,7 @@ export default function QuizHistoryPage() {
 
         {/* Empty State */}
         {quizData.totalCount === 0 ? (
-          <div className="flex items-center justify-center p-12 border-2 border-dashed border-zinc-200 dark:border-zinc-800 rounded-[2rem] bg-zinc-50/50 dark:bg-zinc-900/50 h-[400px]">
+          <div className="flex items-center justify-center p-12 border-2 border-dashed border-zinc-200 dark:border-zinc-800 rounded-4xl bg-zinc-50/50 dark:bg-zinc-900/50 h-100">
             <div className="text-center flex flex-col items-center">
               <span className="text-4xl mb-4 opacity-50">📚</span>
               <p className="text-zinc-500 text-xl font-semibold dark:text-zinc-400">
