@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 function About() {
   return (
     <div className="min-h-screen w-full flex justify-center py-20 px-6 md:px-12 bg-zinc-50 dark:bg-zinc-950 font-sans">
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, ease: "easeOut" }}
@@ -17,28 +17,44 @@ function About() {
             Hi there <span className="ml-3 motion-rotate-loop-6">👋</span>
           </h1>
           <p className="text-lg md:text-xl leading-relaxed text-zinc-600 dark:text-zinc-400">
-            Preparing for exams or simply testing your knowledge?{" "}
+            IntelliCheck was born from a simple observation:{" "}
             <span className="font-semibold text-zinc-900 dark:text-zinc-100">
-              IntelliCheck helps you learn smarter with AI-generated quizzes.
+              traditional learning is often static, while the human brain is dynamic.
             </span>
           </p>
         </div>
 
         {/* CONTENT */}
         <div className="space-y-10 py-12 text-base md:text-lg">
-          <p className="leading-relaxed text-zinc-700 dark:text-zinc-300">
-            I built IntelliCheck to make learning more effective and engaging.
-            Instead of static question banks, the app uses artificial
-            intelligence to generate quizzes that adapt to your level. Each
-            question includes explanations so you understand the concept — not
-            just the answer.
-          </p>
+          <section className="space-y-4">
+            <h2 className="text-xl font-bold text-zinc-900 dark:text-zinc-100">Beyond the Question Bank</h2>
+            <p className="leading-relaxed text-zinc-700 dark:text-zinc-300">
+              Most study platforms rely on fixed question banks that eventually become predictable,
+              leading to memorization rather than true mastery. At the core of IntelliCheck is a
+              sophisticated AI engine designed to understand your unique learning curve. Instead
+              of following a linear path, the platform generates adaptive quizzes that evolve alongside you.
+            </p>
+          </section>
 
-          <p className="leading-relaxed text-zinc-700 dark:text-zinc-300">
-            Whether you&apos;re studying for exams, improving your skills, or
-            exploring new topics out of curiosity, IntelliCheck is designed to
-            keep you motivated and focused.
-          </p>
+          <section className="space-y-4">
+            <h2 className="text-xl font-bold text-zinc-900 dark:text-zinc-100">Understanding the &quot;Why&quot;</h2>
+            <p className="leading-relaxed text-zinc-700 dark:text-zinc-300">
+              We believe that a correct answer is only half the victory. Every question includes
+              deep-dive explanations so you understand the underlying concept—not just the answer.
+              If you hit a roadblock, the system intelligently pivots to reinforce the fundamentals,
+              turning every quiz into a conversation between you and the material.
+            </p>
+          </section>
+
+          <section className="space-y-4">
+            <h2 className="text-xl font-bold text-zinc-900 dark:text-zinc-100">Designed for Every Journey</h2>
+            <p className="leading-relaxed text-zinc-700 dark:text-zinc-300">
+              Whether you&apos;re studying for high-stakes exams, upskilling in a competitive market,
+              or exploring new topics out of curiosity, IntelliCheck is designed to remove the
+              friction of finding study materials. We provide the instant, tailored content you
+              need to stay motivated and focused.
+            </p>
+          </section>
 
           {/* Warning */}
           <div className="rounded-[1.5rem] border border-amber-200/50 dark:border-amber-900/50 bg-amber-50/50 dark:bg-amber-900/10 p-8 shadow-sm">
