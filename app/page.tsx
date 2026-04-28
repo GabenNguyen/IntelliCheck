@@ -5,8 +5,6 @@ import Link from "next/link";
 import {
   ArrowRight,
   Brain,
-  Target,
-  Cpu,
   Zap,
   Sparkles,
   BarChart3,
@@ -65,8 +63,8 @@ export default function LandingPage() {
     <main className="min-h-screen bg-[#EEF2FF] dark:bg-slate-950 selection:bg-indigo-200 dark:selection:bg-indigo-900">
       {/* Background Pattern */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-indigo-300/20 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 right-1/4 w-[500px] h-[500px] bg-violet-300/20 rounded-full blur-3xl" />
+        <div className="absolute top-0 left-1/4 w-150 h-150 bg-indigo-300/20 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 right-1/4 w-125 h-125 bg-violet-300/20 rounded-full blur-3xl" />
         <div className="absolute inset-0 bg-[linear-gradient(to_right,#6366f11a_1px,transparent_1px),linear-gradient(to_bottom,#6366f11a_1px,transparent_1px)] bg-size-[40px_40px]" />
       </div>
 
@@ -155,8 +153,8 @@ export default function LandingPage() {
                 transition={{ delay: i * 0.1 }}
                 className={`group relative p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-1 cursor-pointer ${feature.colSpan}`}
               >
-                <div className={`absolute inset-0 rounded-3xl bg-gradient-to-br ${feature.gradient} opacity-0 group-hover:opacity-5 transition-opacity duration-300`} />
-                <div className={`inline-flex h-14 w-14 rounded-2xl bg-gradient-to-br ${feature.gradient} items-center justify-center mb-6 shadow-lg`}>
+                <div className={`absolute inset-0 rounded-3xl bg-linear-to-br ${feature.gradient} opacity-0 group-hover:opacity-5 transition-opacity duration-300`} />
+                <div className={`inline-flex h-14 w-14 rounded-2xl bg-linear-to-br ${feature.gradient} items-center justify-center mb-6 shadow-lg`}>
                   <feature.icon className="h-7 w-7 text-white" />
                 </div>
                 <h3 className="text-xl font-semibold text-slate-900 dark:text-white mb-3">{feature.title}</h3>
@@ -196,7 +194,7 @@ export default function LandingPage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
-                className="relative p-8 rounded-3xl bg-gradient-to-br from-indigo-50 to-violet-50 dark:from-slate-800 dark:to-slate-900 border border-indigo-100 dark:border-indigo-900/50"
+                className="relative p-8 rounded-3xl bg-linear-to-br from-indigo-50 to-violet-50 dark:from-slate-800 dark:to-slate-900 border border-indigo-100 dark:border-indigo-900/50"
               >
                 <span className="text-6xl font-bold text-indigo-200 dark:text-indigo-800">{item.step}</span>
                 <h3 className="text-xl font-semibold text-slate-900 dark:text-white mt-4 mb-2">{item.title}</h3>
@@ -213,7 +211,7 @@ export default function LandingPage() {
           initial={{ opacity: 0, scale: 0.95 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
-          className="max-w-4xl mx-auto rounded-[3rem] bg-gradient-to-br from-indigo-600 via-violet-600 to-indigo-800 p-12 md:p-20 text-center relative overflow-hidden shadow-2xl shadow-indigo-500/25"
+          className="max-w-4xl mx-auto rounded-[3rem] bg-linear-to-br from-indigo-600 via-violet-600 to-indigo-800 p-12 md:p-20 text-center relative overflow-hidden shadow-2xl shadow-indigo-500/25"
         >
           <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxwYXRoIGQ9Ik0zNiAxOGMtOS45NDEgMC0xOCA4LjA1OS0xOCAxOHM4LjA1OSAxOCAxOCAxOCAxOC04LjA1OSAxOC0xOC04LjA1OS0xOC0xOC0xOHptMCAzMmMtNy43MzIgMC0xNC02LjI2OC0xNC0xNHM2LjI2OC0xNCAxNC0xNCAxNCA2LjI2OCAxNCAxNC02LjI2OCAxNC0xNCAxNHoiIGZpbGw9IiNmZmZmZmYiIGZpbGwtb3BhY2l0eT0iLjA1Ii8+PC9nPjwvc3ZnPg==')] opacity-30" />
 
@@ -237,7 +235,7 @@ export default function LandingPage() {
       <footer className="py-12 px-6 max-w-6xl mx-auto border-t border-indigo-200 dark:border-indigo-800/50">
         <div className="flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="flex items-center gap-2 cursor-pointer">
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-600 to-violet-600">
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-linear-to-br from-indigo-600 to-violet-600">
               <Brain className="h-4 w-4 text-white" />
             </div>
             <span className="font-bold text-lg text-slate-900 dark:text-white">IntelliCheck</span>

@@ -117,12 +117,13 @@
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }
 
   .neon-bg {
-    background: 
+    background:
       radial-gradient(ellipse 80% 80% at 50% -20%, rgba(99, 102, 241, 0.15), transparent),
       radial-gradient(ellipse 60% 60% at 80% 50%, rgba(139, 92, 246, 0.1), transparent),
       radial-gradient(ellipse 50% 50% at 20% 80%, rgba(6, 182, 212, 0.1), transparent);
@@ -133,21 +134,21 @@
   }
 
   .grid-pattern {
-    background-image: 
+    background-image:
       linear-gradient(rgba(99, 102, 241, 0.06) 1px, transparent 1px),
       linear-gradient(90deg, rgba(99, 102, 241, 0.06) 1px, transparent 1px);
     background-size: 40px 40px;
   }
 
   .tech-glow {
-    box-shadow: 
+    box-shadow:
       0 0 20px rgba(99, 102, 241, 0.3),
       0 0 40px rgba(99, 102, 241, 0.1),
       inset 0 1px 0 rgba(255, 255, 255, 0.1);
   }
 
   .tech-glow-hover:hover {
-    box-shadow: 
+    box-shadow:
       0 0 25px rgba(99, 102, 241, 0.4),
       0 0 50px rgba(99, 102, 241, 0.15);
   }
@@ -179,7 +180,7 @@
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
     transition: left 0.5s ease;
   }
 
@@ -189,23 +190,23 @@
 
   .btn-tech:hover {
     transform: translateY(-2px);
-    box-shadow: 
+    box-shadow:
       0 10px 30px rgba(99, 102, 241, 0.3),
       0 0 20px rgba(99, 102, 241, 0.2);
   }
 
   .card-tech {
-    background: linear-gradient(145deg, rgba(255,255,255,1) 0%, rgba(248,248,250,1) 100%);
+    background: linear-gradient(145deg, rgba(255, 255, 255, 1) 0%, rgba(248, 248, 250, 1) 100%);
     border: 1px solid rgba(0, 0, 0, 0.05);
-    box-shadow: 
+    box-shadow:
       0 4px 20px rgba(0, 0, 0, 0.05),
       0 0 0 1px rgba(255, 255, 255, 0.8) inset;
   }
 
   .dark .card-tech {
-    background: linear-gradient(145deg, rgba(35,35,45,1) 0%, rgba(25,25,35,1) 100%);
+    background: linear-gradient(145deg, rgba(35, 35, 45, 1) 0%, rgba(25, 25, 35, 1) 100%);
     border: 1px solid rgba(255, 255, 255, 0.05);
-    box-shadow: 
+    box-shadow:
       0 4px 20px rgba(0, 0, 0, 0.3),
       0 0 0 1px rgba(255, 255, 255, 0.03) inset;
   }
@@ -235,17 +236,4 @@
     animation: statusPulse 2s ease-in-out infinite;
   }
 
-  @keyframes statusPulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.5; }
-  }
-
-  .float-animation {
-    animation: floatAnimation 3s ease-in-out infinite;
-  }
-
-  @keyframes floatAnimation {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
-  }
 }

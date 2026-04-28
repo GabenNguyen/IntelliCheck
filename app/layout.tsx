@@ -31,33 +31,30 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
   const cookieStore = await cookies();
   const defaultSideBarOpen = cookieStore.get("sidebar_state")?.value === "true";
 
   const clerkUser = await currentUser();
 
-  if (!clerkUser) {
-    return toast.error("Not signed in");
-  }
-
-  const streakData = await prisma.user.findUnique({
-    where: { id: clerkUser?.id },
-    select: {
-      currentStreak: true,
-      longestStreak: true,
-      achievements: true,
-    }
-  })
+  // Fetch streakData ONLY if clerkUser exists
+  const streakData = clerkUser
+    ? await prisma.user.findUnique({
+      where: { id: clerkUser.id },
+      select: {
+        currentStreak: true,
+        longestStreak: true,
+        achievements: true,
+      }
+    })
+    : null;
 
   return (
     <ClerkProvider>
       <html lang="en" suppressHydrationWarning>
         <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased `}
+          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
           suppressHydrationWarning
         >
-          {/* Neon IT vibe backdrop */}
           <div className="neon-bg" aria-hidden="true" />
           <ThemeProvider
             attribute="class"
@@ -66,15 +63,17 @@ export default async function RootLayout({
             disableTransitionOnChange
           >
             <SidebarProvider defaultOpen={defaultSideBarOpen}>
+              {/* Only show/pass data to Sidebar if user is logged in, 
+                  otherwise pass default/empty values */}
               <AppSideBar streakData={{
                 currentStreak: streakData?.currentStreak || 0,
                 longestStreak: streakData?.longestStreak || 0,
                 achievements: JSON.parse(streakData?.achievements || "[]"),
               }} />
+
               <main className="w-full">
                 <NavBar />
                 <Toaster position="top-center" />
-
                 <AnimatedTransition>{children}</AnimatedTransition>
               </main>
             </SidebarProvider>
