@@ -1,6 +1,3 @@
-import { User } from "@clerk/nextjs/server";
-import { stat } from "fs";
-
 export interface UserStats {
     totalQuizzes: number,
     averageScore: number,

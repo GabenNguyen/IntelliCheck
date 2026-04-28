@@ -2,7 +2,6 @@
 import prisma from "../db";
 import { auth } from "@clerk/nextjs/server";
 import { Achievement, checkNewAchievementUnlocked, type UserStats } from "@/utils/achievements";
-import { stat } from "fs";
 
 export const updateStreakAchievement = async (
     quizScorePercent: number

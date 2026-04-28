@@ -7,6 +7,11 @@ import Link from "next/link";
 import Answer from "@/type/answer";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
+import { updateStreakAchievement } from "@/lib/db/streak_actions";
+
+import AchievementUnlocked from "../components/AchievementUnlocked";
+
+import type { Achievement } from "@/utils/achievements";
 
 // Custom Circular Progress for score
 const ScoreRing = ({ percentage }: { percentage: number }) => {
@@ -63,6 +68,7 @@ export default function ResultPage() {
   } | null>(null);
 
   const [isLoaded, setIsLoaded] = useState(false);
+  const [unlockedAchievement, setUnlockedAchievement] = useState<Achievement | null>(null);
 
   useEffect(() => {
     try {
@@ -121,6 +127,17 @@ export default function ResultPage() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [quizData?.userAnswers.length]);
 
+  useEffect(() => {
+    if (quizData && isLoaded) {
+      const percentage = (finalScore / totalQuestion) * 100;
+      updateStreakAchievement(percentage).then((result) => {
+        if (result.newAchievements.length > 0) {
+          setUnlockedAchievement(result.newAchievements[0]);
+        }
+      });
+    }
+  }, [quizData, isLoaded]);
+
   if (!isLoaded) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-zinc-50 dark:bg-zinc-950">
@@ -128,6 +145,8 @@ export default function ResultPage() {
       </div>
     );
   }
+
+
 
   if (!quizData || quizData.totalQuestion === 0) {
     return (
@@ -141,7 +160,7 @@ export default function ResultPage() {
           />
         </div>
 
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="relative z-10 max-w-lg w-full p-8 md:p-12 text-center bg-white/70 dark:bg-zinc-900/70 backdrop-blur-xl rounded-3xl border border-zinc-200/50 dark:border-zinc-800/50 shadow-2xl"
@@ -168,7 +187,7 @@ export default function ResultPage() {
 
   const { topic, finalScore, totalQuestion, userAnswers } = quizData;
   const percentage = totalQuestion > 0 ? (finalScore / totalQuestion) * 100 : 0;
-  
+
   let performanceMessage = "Good effort!";
   if (percentage === 100) performanceMessage = "Perfect Score!";
   else if (percentage >= 80) performanceMessage = "Outstanding Work!";
@@ -176,32 +195,32 @@ export default function ResultPage() {
 
   return (
     <main className="min-h-screen bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-50 py-12 px-4 sm:px-6 relative overflow-hidden">
-      
+
       {/* Background Decor */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-0 inset-x-0 h-96 bg-gradient-to-b from-indigo-500/10 to-transparent dark:from-indigo-500/5" />
+        <div className="absolute top-0 inset-x-0 h-96 bg-linear-to-b from-indigo-500/10 to-transparent dark:from-indigo-500/5" />
       </div>
 
       <div className="relative z-10 max-w-4xl mx-auto space-y-8">
-        
+
         {/* Header / Score Summary */}
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="bg-white dark:bg-zinc-900 rounded-3xl p-8 sm:p-10 border border-zinc-200 dark:border-zinc-800 shadow-xl text-center relative overflow-hidden"
         >
           {/* Subtle glow behind score */}
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none" />
-          
+
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-300 text-sm font-medium mb-8">
             <Award className="w-4 h-4 text-indigo-500" />
             <span className="uppercase tracking-wider">{topic}</span>
           </div>
 
           <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight mb-8">
-             <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-500 to-purple-500">
-               {performanceMessage}
-             </span>
+            <span className="text-transparent bg-clip-text bg-linear-to-r from-indigo-500 to-purple-500">
+              {performanceMessage}
+            </span>
           </h1>
 
           <ScoreRing percentage={percentage} />
@@ -213,7 +232,7 @@ export default function ResultPage() {
 
         {/* Detailed Answers Section */}
         <div className="space-y-6">
-          <motion.h2 
+          <motion.h2
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3 }}
@@ -225,22 +244,21 @@ export default function ResultPage() {
           <div className="space-y-6">
             {userAnswers.map((answer, i) => {
               const isCorrect = answer.userAnswer === answer.correctAnswer;
-              
+
               return (
                 <motion.div
                   key={i}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.1 * i + 0.4 }}
-                  className={`relative p-6 sm:p-8 rounded-3xl border overflow-hidden ${
-                    isCorrect 
-                      ? "bg-green-50/50 dark:bg-green-950/20 border-green-200 dark:border-green-900/50"
-                      : "bg-red-50/50 dark:bg-red-950/20 border-red-200 dark:border-red-900/50"
-                  }`}
+                  className={`relative p-6 sm:p-8 rounded-3xl border overflow-hidden ${isCorrect
+                    ? "bg-green-50/50 dark:bg-green-950/20 border-green-200 dark:border-green-900/50"
+                    : "bg-red-50/50 dark:bg-red-950/20 border-red-200 dark:border-red-900/50"
+                    }`}
                 >
                   {/* Decorative faint icon */}
                   <div className="absolute -right-6 -top-6 opacity-[0.03] dark:opacity-[0.05] pointer-events-none">
-                     {isCorrect ? <CheckCircle2 className="w-40 h-40" /> : <XCircle className="w-40 h-40" />}
+                    {isCorrect ? <CheckCircle2 className="w-40 h-40" /> : <XCircle className="w-40 h-40" />}
                   </div>
 
                   <div className="relative z-10">
@@ -256,7 +274,7 @@ export default function ResultPage() {
                           </div>
                         )}
                       </div>
-                      
+
                       <div className="flex-1 space-y-4">
                         <div className="space-y-1">
                           <p className="text-sm font-semibold text-zinc-500 dark:text-zinc-400">Question {i + 1}</p>
@@ -264,23 +282,22 @@ export default function ResultPage() {
                             {answer.question}
                           </p>
                         </div>
-                        
+
                         <div className="flex flex-col sm:flex-row gap-4 sm:gap-8 pt-4">
                           <div className="space-y-1 relative pr-4">
-                             <p className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">Your Answer</p>
-                             <p className={`font-medium ${
-                               isCorrect ? "text-green-700 dark:text-green-400" : "text-red-700 dark:text-red-400 line-through decoration-red-500/50"
-                             }`}>
-                               {answer.userAnswer}
-                             </p>
+                            <p className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">Your Answer</p>
+                            <p className={`font-medium ${isCorrect ? "text-green-700 dark:text-green-400" : "text-red-700 dark:text-red-400 line-through decoration-red-500/50"
+                              }`}>
+                              {answer.userAnswer}
+                            </p>
                           </div>
-                          
+
                           {!isCorrect && (
                             <div className="space-y-1">
-                               <p className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">Correct Answer</p>
-                               <p className="font-medium text-green-700 dark:text-green-400">
-                                 {answer.correctAnswer}
-                               </p>
+                              <p className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">Correct Answer</p>
+                              <p className="font-medium text-green-700 dark:text-green-400">
+                                {answer.correctAnswer}
+                              </p>
                             </div>
                           )}
                         </div>
@@ -316,23 +333,28 @@ export default function ResultPage() {
             })}
           </div>
         </div>
-
+        {unlockedAchievement && (
+          <AchievementUnlocked
+            achievement={unlockedAchievement}
+            onClose={() => setUnlockedAchievement(null)}
+          />
+        )}
         {/* Footer Actions */}
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.8 }}
           className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-8 pb-16"
         >
           <Button asChild size="lg" className="rounded-full px-8 h-14 bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg w-full sm:w-auto">
-             <Link href="/quiz">
-               Take Another Quiz
-             </Link>
+            <Link href="/quiz">
+              Take Another Quiz
+            </Link>
           </Button>
           <Button asChild variant="outline" size="lg" className="rounded-full px-8 h-14 border-zinc-200 hover:bg-zinc-100 dark:border-zinc-800 dark:hover:bg-zinc-900 w-full sm:w-auto">
-             <Link href="/">
-               Return Home
-             </Link>
+            <Link href="/">
+              Return Home
+            </Link>
           </Button>
         </motion.div>
       </div>
