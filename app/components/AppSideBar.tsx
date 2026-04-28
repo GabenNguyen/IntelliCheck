@@ -62,10 +62,10 @@ export default function AppSideBar({ streakData }: Props) {
   const isSignedIn = Boolean(auth?.isSignedIn && auth?.userId);
 
   return (
-    <Sidebar className="border-r border-violet-500/20 dark:border-violet-500/20 bg-gradient-to-b from-white via-white to-violet-50/30 dark:from-slate-950 dark:via-slate-900 dark:to-violet-950/20 font-sans">
+    <Sidebar className="border-r border-violet-500/20 dark:border-violet-500/20 bg-linear-to-b from-white via-white to-violet-50/30 dark:from-slate-950 dark:via-slate-900 dark:to-violet-950/20 font-sans">
       <SidebarHeader className="px-6 py-10">
         <Link href="/" className="flex items-center gap-3 group outline-none">
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-violet-600 to-indigo-600 shadow-lg shadow-violet-500/30 transition-transform group-hover:scale-105 group-hover:rotate-3">
+          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-linear-to-br from-violet-600 to-indigo-600 shadow-lg shadow-violet-500/30 transition-transform group-hover:scale-105 group-hover:rotate-3">
             <Sparkles className="h-5 w-5 text-white" />
           </div>
           <div className="flex flex-col">
@@ -213,7 +213,7 @@ export default function AppSideBar({ streakData }: Props) {
                         <UserAvatar />
                       </div>
                       <div className="flex flex-col items-start leading-tight">
-                        <span className="font-bold text-slate-900 dark:text-slate-100 truncate max-w-[120px]">
+                        <span className="font-bold text-slate-900 dark:text-slate-100 truncate max-w-30">
                           {user?.firstName || user?.username}
                         </span>
                         <span className="text-[10px] text-slate-500 font-medium tracking-wide">
