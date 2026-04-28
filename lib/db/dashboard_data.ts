@@ -46,6 +46,15 @@ export async function fetchDashboardData() {
             }
         })
 
+        const userWithStreak = await prisma.user.findUnique({
+            where: { id: clerkUser.id },
+            select: {
+                currentStreak: true,
+                longestStreak: true,
+                achievements: true
+            }
+        })
+
         // get weekly activities from the past 7 days
         const today = new Date();
         const sevenDaysAgo = new Date(today);
@@ -137,7 +146,12 @@ export async function fetchDashboardData() {
                         createdAt: quiz.createdAt.toISOString(),
                     })
                 ),
-                subjectSummary: formatedSubjectSummary
+                subjectSummary: formatedSubjectSummary,
+                streakData: {
+                    currentStreak: userWithStreak?.currentStreak || 0,
+                    longestStreak: userWithStreak?.longestStreak || 0,
+                    achievements: JSON.parse(userWithStreak?.achievements || "[]")
+                },
             }
         }
     } catch (error) {
