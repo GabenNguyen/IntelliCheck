@@ -1,14 +1,13 @@
 /*
 This is a helper function to save the generated quiz to the db via API route.
 */
-
-
-import Question from "@/type/question";
+import type { QuestionUI } from "@/app/quiz/types";
+import { saveQuizRequestSchema, saveQuizResponseSchema } from "@/app/quiz/schema";
 
 export default async function saveQuizToDB(
-    topic: string, 
-    difficulty: string, 
-    questions: Question[]
+    topic: string,
+    difficulty: string,
+    questions: QuestionUI[]
 ): Promise<{ success: boolean; quizId?: string; error?: string }> {
     try {
         // format the quiz data to match the SaveQuizRequest interface
@@ -30,23 +29,41 @@ export default async function saveQuizToDB(
             })
         }
 
+        // validate REQUEST before sending
+        const parsedRequest = saveQuizRequestSchema.safeParse(quizData);
+
+        if (!parsedRequest.success) {
+            return {
+                success: false,
+                error: "Invalid quiz data before sending to server",
+            };
+        }
+
         // send the quizData to the save-quiz API route
         const response = await fetch('/api/save-quiz', {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify(quizData)
+            body: JSON.stringify(parsedRequest.data)
         })
 
-        const result = await response.json();
+        const responseData = await response.json();
 
-        if(result.success) {
-            console.log("Quiz saved successfully with ID:", result.quizId);
-            return { success: true, quizId: result.quizId};
-        } else {
-            console.error("Failed to save quiz:", result.error);
-            return { success: false, error: result.error}
+        const validatedData = saveQuizResponseSchema.safeParse(responseData);
+
+        if (!validatedData.success) {
+            return {
+                success: false,
+                error: "Invalid response from server"
+            }
+        }
+
+        const result = validatedData.data;
+
+        return {
+            success: true,
+            quizId: result.quiz.id
         }
 
     } catch (error) {

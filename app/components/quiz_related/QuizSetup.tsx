@@ -1,7 +1,6 @@
 import { motion } from "framer-motion";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Spinner } from "@/components/ui/spinner";
 import { Label } from "@/components/ui/label";
 import { useState, useEffect } from "react";
@@ -31,7 +30,7 @@ interface Props {
   numberOfQuestions: string;
   setTopic: (topic: string) => void;
   setDifficulty: (difficulty: string) => void;
-  setNumberOfQuestions: (number: string) => void;
+  setNumberOfQuestions: (number: number) => void;
   handleStartQuiz: () => void;
   isLoading: boolean;
 }
@@ -158,7 +157,7 @@ function QuizSetup({
                     max={50}
                     placeholder="Between 1 and 50"
                     value={numberOfQuestions}
-                    onChange={(e) => setNumberOfQuestions(e.target.value)}
+                    onChange={(e) => setNumberOfQuestions(Number(e.target.value))}
                     required
                     className="input-tech h-14 pl-4 rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/50 hover:bg-slate-100 hover:dark:bg-slate-800 focus-visible:ring-violet-500 transition-all text-base file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:ring-offset-slate-900 dark:placeholder:text-slate-500 dark:focus-visible:ring-violet-400"
                   />

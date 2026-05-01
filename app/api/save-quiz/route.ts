@@ -70,13 +70,20 @@ export async function POST(req: NextRequest) {
                 title: quizData.title,
                 subject: quizData.subject,
                 questionCount: quizData.questionCount,
-                createdAt: quizData.createdAt,
+                createdAt: quizData.createdAt.toISOString(),
             }
         }
 
         const validatedResponse = saveQuizResponseSchema.safeParse(responsePayload);
 
-        return NextResponse.json(validatedResponse, { status: 201 });
+        if (!validatedResponse.success) {
+            return NextResponse.json(
+                { error: validatedResponse.error.issues },
+                { status: 500 }
+            );
+        }
+
+        return NextResponse.json(validatedResponse.data, { status: 201 });
 
     } catch (error) {
         console.error("Error: ", error)

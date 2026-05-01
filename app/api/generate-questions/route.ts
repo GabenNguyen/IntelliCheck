@@ -1,14 +1,27 @@
 import { createOpenRouter } from "@openrouter/ai-sdk-provider";
-import { streamText } from 'ai';
+import { generateText } from 'ai';
 import { NextResponse } from "next/server";
+import { quizFormSchema, aiGeneratedQuestionsSchema } from "@/app/quiz/schema";
 import DifficultyRules from "@/utils/difficulty_rules";
 
 const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
 
 export async function POST(req: Request) {
     try {
-        // wait for the user input
-        const { topic, difficulty, numOfQuestions } = await req.json();
+        // validated the request sent by the front-end
+        const incomingRequest = await req.json();
+
+        const parsedIncomingRequest = quizFormSchema.safeParse(incomingRequest);
+
+        if (!parsedIncomingRequest.success) {
+            return NextResponse.json(
+                { error: parsedIncomingRequest.error.issues },
+                { status: 400 }
+            );
+        }
+
+        const { topic, difficulty, numOfQuestions } = parsedIncomingRequest.data;
+
         const difficultyRules = DifficultyRules(difficulty)
 
         const openrouter = createOpenRouter({
@@ -65,25 +78,36 @@ export async function POST(req: Request) {
             - Output valid JSON only.
             `;
 
-        const response = streamText({
+        const response = await generateText({
             model: openrouter('openai/gpt-oss-120b:free'),
             prompt: prompt,
         })
 
-        const text = await response.text ?? "";
+        const text = response.text ?? "";
 
         // Remove code fences if present
         const cleanText = text.replace(/```json|```/g, "").trim();
 
         // Parse JSON
-        const outputQuestion = JSON.parse(cleanText);
+        const output = JSON.parse(cleanText)
+        const parsedOutputQuestion = aiGeneratedQuestionsSchema.safeParse(output);
 
+        if (!parsedOutputQuestion.success) {
+            console.error(parsedOutputQuestion.error.issues)
+            return NextResponse.json({ error: "Invalid question format" }, { status: 500 })
+        }
 
-        return NextResponse.json({ outputQuestion }, { status: 200 })
+        const validatedQuestionFormat = parsedOutputQuestion.data;
+
+        console.log(validatedQuestionFormat);
+
+        return NextResponse.json(
+            { outputQuestion: validatedQuestionFormat },
+            { status: 200 }
+        )
 
     } catch (error) {
         console.error(`AI error: ${error}`)
-
         return NextResponse.json({ error: "AI Generation Failed!" }, { status: 500 })
     }
 }

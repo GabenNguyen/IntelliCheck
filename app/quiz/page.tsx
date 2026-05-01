@@ -2,10 +2,7 @@
 
 import saveQuizToDB from "@/lib/quiz-action";
 
-import Question from "@/type/question";
 import Answer from "@/type/answer";
-
-import validateInput from "@/utils/validate_input";
 
 import QuizSetup from "../components/quiz_related/QuizSetup";
 import QuizQuestions from "../components/quiz_related/QuizQuestions";
@@ -17,101 +14,134 @@ import ResultPageDialog from "../components/dialogs/ResultPageDialog";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import type { FormState, QuizState, InteractionState, UiState, QuestionUI } from "./types";
+import { quizFormSchema, generateQuestionResponseSchema } from "./schema";
 
 function QuizPage() {
   // Form state
-  const [topic, setTopic] = useState("");
-  const [difficulty, setDifficulty] = useState("");
-  const [numOfQuestions, setNumOfQuestions] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [formState, setFormState] = useState<FormState>({
+    topic: "",
+    difficulty: "",
+    numOfQuestions: 0,
+    isLoading: false
 
+  })
   // Quiz state
-  const [quizStarted, setQuizStarted] = useState(false);
-  const [questions, setQuestions] = useState<Question[]>([]);
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [quizFinished, setQuizFinished] = useState(false);
-
+  const [quizState, setQuizState] = useState<QuizState>({
+    quizStarted: false,
+    questions: [],
+    currentQuestionIndex: 0,
+    quizFinished: false
+  })
   // Dialogs state
-  const [showAsianAlert, setShowAsianAlert] = useState(false);
-  const [showResultDialog, setShowResultDialog] = useState(false);
-  const [showTimeUpDialog, setShowTimeUpDialog] = useState(false);
+  const [uiState, setUiState] = useState<UiState>({
+    dialogs: {
+      showAsianAlert: false,
+      showTimeUpDialog: false,
+      showResultDialog: false
+    },
+    savedQuizId: null
+  })
 
   // User answers state
-  const [userAnswer, setUserAnswer] = useState<(string | null)[]>([]);
+  const [interactionState, setInteractionState] = useState<InteractionState>({
+    userAnswer: []
+  })
 
-  const [saveQuizId, setSaveQuizId] = useState<string | null>(null);
 
   // navigating to results page
   const router = useRouter();
 
   const startQuiz = async () => {
-    setIsLoading(true);
+    const parsedFormFields = quizFormSchema.safeParse(formState);
+
+    if (!parsedFormFields.success) {
+      return toast.error(parsedFormFields.error.issues[0]?.message || "Invalid input");
+    }
+
+    const { topic, difficulty, numOfQuestions } = parsedFormFields.data;
+
+    setFormState((prev) => ({ ...prev, isLoading: true }));
     try {
       const res = await fetch("/api/generate-questions", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ topic, difficulty, numOfQuestions }),
+        body: JSON.stringify({
+          topic,
+          difficulty,
+          numOfQuestions
+        }),
       });
 
-      const outputData = await res.json();
+      const responseData = await res.json();
 
-      if (!res.ok || !outputData.outputQuestion) {
-        setIsLoading(false);
+      const parsedResult = generateQuestionResponseSchema.safeParse(responseData);
+
+      if (!res.ok || !parsedResult.success) {
+        setFormState((prev) => ({ ...prev, isLoading: false }));
         return toast.error("Failed to generate questions!");
       }
 
+      const validatedData = parsedResult.data;
+
       // save the generated quiz to the db
-      const saveResult = await saveQuizToDB(
+      const savedResult = await saveQuizToDB(
         topic,
         difficulty,
-        outputData.outputQuestion
+        validatedData.outputQuestion
       );
 
-      if (saveResult.success) {
-        setSaveQuizId(saveResult.quizId || null);
-        console.log("Quiz saved with ID:", saveResult.quizId);
+      if (savedResult.success) {
+        setUiState((prev) => ({ ...prev, savedQuizId: savedResult.quizId ?? null }));
       }
 
-      setIsLoading(true);
-      setQuestions(outputData.outputQuestion);
-      setUserAnswer(Array(outputData.outputQuestion.length).fill(null));
-      setQuizStarted(true);
+      setQuizState({
+        quizStarted: true,
+        quizFinished: false,
+        currentQuestionIndex: 0,
+        questions: validatedData.outputQuestion
+      });
+
+      setInteractionState({ userAnswer: Array(validatedData.outputQuestion.length).fill(null) });
     } catch {
       return toast.error(`Failed to generate questions!`);
     } finally {
-      setIsLoading(false);
+      setFormState((prev) => ({ ...prev, isLoading: false }));
     }
   };
 
   const handleStartQuiz = () => {
-    if (!topic || !difficulty || !numOfQuestions) {
-      return toast.warning("Please fill in the blank!");
-    }
+    const parsed = quizFormSchema.safeParse(formState);
 
-    if (!validateInput(topic)) {
-      return toast.error("Invalid topic!");
-    }
+    if (!parsed.success) {
+      const message = parsed.error.issues
+        .map((issue) => issue.message)
+        .join("\n");
 
-    if (Number(numOfQuestions) < 1) {
-      return toast.error("The number of questions must be at least 1");
+      toast.error(message);
+      return;
     }
+    const validatedData = parsed.data;
 
-    if (difficulty === "asian") {
-      setShowAsianAlert(true);
+    if (validatedData.difficulty === "asian") {
+      setUiState((prev) => ({
+        ...prev,
+        dialogs: { ...prev.dialogs, showAsianAlert: true },
+      }));
       return;
     }
 
     startQuiz();
-  };
+  }
 
   const handleFinishQuiz = () => {
-    setShowResultDialog(true);
+    setUiState((prev) => ({ ...prev, dialogs: { ...prev.dialogs, showResultDialog: true } }));
 
     // map the user answers to the Answer obj
-    const savedUserAnswers: Answer[] = questions.map(
-      (question: Question, answerIndex: number) => ({
+    const savedUserAnswers: Answer[] = quizState.questions.map(
+      (question: QuestionUI, answerIndex: number) => ({
         question: question.question,
-        userAnswer: userAnswer[answerIndex] || "",
+        userAnswer: interactionState.userAnswer[answerIndex] || "",
         correctAnswer:
           question.options.find((option) =>
             option.trim().startsWith(`${question.correctAnswer}`)
@@ -119,10 +149,10 @@ function QuizPage() {
       })
     );
 
-    const finalScore = questions.reduce(
-      (acc: number, question: Question, answerIndex: number) =>
+    const finalScore = quizState.questions.reduce(
+      (acc: number, question: QuestionUI, answerIndex: number) =>
         acc +
-        (userAnswer[answerIndex]?.charAt(0) === question.correctAnswer.charAt(0)
+        (interactionState.userAnswer[answerIndex]?.charAt(0) === question.correctAnswer.charAt(0)
           ? 1
           : 0),
 
@@ -133,11 +163,11 @@ function QuizPage() {
       localStorage.setItem(
         "quizData",
         JSON.stringify({
-          topic,
+          topic: formState.topic,
           finalScore,
           savedAt: Date.now(), // for clearing the localStorage after 5 minutes
-          quizId: saveQuizId,
-          totalQuestion: numOfQuestions,
+          quizId: uiState.savedQuizId,
+          totalQuestion: formState.numOfQuestions,
           userAnswers: savedUserAnswers,
         })
       );
@@ -147,48 +177,48 @@ function QuizPage() {
     }
 
     setTimeout(() => {
-      setQuizFinished(true);
-      setQuizStarted(false);
-      setCurrentQuestionIndex(0);
-      setQuestions([]);
+      setQuizState((prev) => ({ ...prev, quizFinished: true }));
+      setQuizState((prev) => ({ ...prev, quizStarted: false }));
+      setQuizState((prev) => ({ ...prev, currentQuestionIndex: 0 }));
+      setQuizState((prev) => ({ ...prev, questions: [] }));
       router.push("/results");
     }, 1500);
   };
 
   return (
     <div className="flex justify-center items-center min-h-screen ">
-      {!quizStarted && (
+      {!quizState.quizStarted && (
         <QuizSetup
-          topic={topic}
-          difficulty={difficulty}
-          numberOfQuestions={numOfQuestions}
-          setTopic={setTopic}
-          setDifficulty={setDifficulty}
-          setNumberOfQuestions={setNumOfQuestions}
+          topic={formState.topic}
+          difficulty={formState.difficulty}
+          numberOfQuestions={String(formState.numOfQuestions)}
+          setTopic={(value: string) => setFormState((prev) => ({ ...prev, topic: value }))}
+          setDifficulty={(value: string) => setFormState((prev) => ({ ...prev, difficulty: value }))}
+          setNumberOfQuestions={(value: number) => setFormState((prev) => ({ ...prev, numOfQuestions: value }))}
           handleStartQuiz={handleStartQuiz}
-          isLoading={isLoading}
+          isLoading={formState.isLoading}
         />
       )}
 
-      {quizStarted && !quizFinished && questions.length > 0 && (
+      {quizState.quizStarted && !quizState.quizFinished && quizState.questions.length > 0 && (
         <QuizQuestions
-          questions={questions}
-          userAnswer={userAnswer}
-          setUserAnswer={setUserAnswer}
-          currentQuestionIndex={currentQuestionIndex}
-          setCurrentQuestionIndex={setCurrentQuestionIndex}
-          countDownBasedOnDifficulty={difficulty}
+          questions={quizState.questions}
+          userAnswer={interactionState.userAnswer}
+          setUserAnswer={(value: (string | null)[]) => setInteractionState((prev) => ({ ...prev, userAnswer: value }))}
+          currentQuestionIndex={quizState.currentQuestionIndex}
+          setCurrentQuestionIndex={(value: number) => setQuizState((prev) => ({ ...prev, currentQuestionIndex: value }))}
+          countDownBasedOnDifficulty={formState.difficulty}
           onFinish={handleFinishQuiz}
         />
       )}
 
       <AsianAlertDialog
-        open={showAsianAlert}
-        setOpen={setShowAsianAlert}
+        open={uiState.dialogs.showAsianAlert}
+        setOpen={(value) => setUiState((prev) => ({ ...prev, dialogs: { ...prev.dialogs, showAsianAlert: value } }))}
         onProceed={startQuiz}
       />
-      <TimeUpDialog open={showTimeUpDialog} setOpen={setShowTimeUpDialog} />
-      <ResultPageDialog open={showResultDialog} setOpen={setShowResultDialog} />
+      <TimeUpDialog open={uiState.dialogs.showTimeUpDialog} setOpen={(value) => setUiState((prev) => ({ ...prev, dialogs: { ...prev.dialogs, showTimeUpDialog: value } }))} />
+      <ResultPageDialog open={uiState.dialogs.showResultDialog} setOpen={(value) => setUiState((prev) => ({ ...prev, dialogs: { ...prev.dialogs, showResultDialog: value } }))} />
     </div>
   );
 }
