@@ -1,43 +1,42 @@
 import { NextResponse, NextRequest } from "next/server";
 import { auth } from "@clerk/nextjs/server";
+import { saveQuizRequestSchema, saveQuizResponseSchema } from "@/app/quiz/schema";
 import prisma from "@/lib/db";
-
-interface SaveQuizRequest {
-    title: string;
-    subject: string;
-    description?: string;
-    questions: {
-        question: string;
-        correctAnswer: string;
-        optionA: string;
-        optionB: string;
-        optionC: string;
-        optionD: string;
-    }[];
-}
 
 export async function POST(req: NextRequest) {
     try {
         // check if the user is authenticated
         const { userId } = await auth();
 
-        if(!userId) {
+        if (!userId) {
             return NextResponse.json(
                 { error: "Unauthorised access" },
-                { status: 401} // 401: unauthorised
+                { status: 401 } // 401: unauthorised
             );
         }
 
         // parse the request body from the helper function
-        const body: SaveQuizRequest = await req.json();
+        const json = await req.json();
 
-        if(!body.title || !body.subject || !body.questions || body.questions.length === 0) {
+        const parsed = saveQuizRequestSchema.safeParse(json);
+
+        // Converts Zod error issues into a flat object where each field path 
+        // (e.g. "title" or "questions.0.correctAnswer")
+        // maps to its corresponding error message, making it easier to display validation errors in forms.
+        const errors = parsed.error?.issues.reduce((acc, issue) => {
+            const path = issue.path.join(".");
+            acc[path] = issue.message;
+            return acc;
+        }, {} as Record<string, string>)
+
+        if (!parsed.success) {
             return NextResponse.json(
-                { error: "Missing required fields!"},
-                { status: 400} // 400: bad request
-            )
-
+                { error: errors },
+                { status: 400 }
+            );
         }
+
+        const body = parsed.data;
 
         const quizData = await prisma.quiz.create({
             data: {
@@ -62,11 +61,9 @@ export async function POST(req: NextRequest) {
                 questions: true
             }
         });
-        
-        console.log("Quiz saved successfully! ID: ", quizData.id);
 
         // return the result
-        return NextResponse.json({
+        const responsePayload = {
             success: true,
             quiz: {
                 id: quizData.id,
@@ -75,13 +72,17 @@ export async function POST(req: NextRequest) {
                 questionCount: quizData.questionCount,
                 createdAt: quizData.createdAt,
             }
-        },  { status: 201 })
+        }
+
+        const validatedResponse = saveQuizResponseSchema.safeParse(responsePayload);
+
+        return NextResponse.json(validatedResponse, { status: 201 });
 
     } catch (error) {
         console.error("Error: ", error)
         return NextResponse.json(
-            { error: "Internal Server Error "},
-            { status: 500}
+            { error: "Internal Server Error " },
+            { status: 500 }
         )
     }
 }

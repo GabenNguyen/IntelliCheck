@@ -1,39 +1,23 @@
-const validateInput = (input: string): boolean => {
-    const sanitisedInput = input.trim();
-    
-    if(sanitisedInput.length < 3 || sanitisedInput.length > 50) {
-            return false;
-        }
+const validateTopicLogic = (input: string): boolean => {
+  // Reject ONLY numbers
+  if (/^\d+$/.test(input)) return false;
 
-        // Reject ONLY Number
-        if(/^\d+$/.test(sanitisedInput)) {
-          return false;
-        }
+  // Must start with letter
+  if (!/^[A-Za-z]/.test(input)) return false;
 
-        // Only letters and spaces allowed
-        if(!/^[A-Za-z\s]/.test(sanitisedInput)) {
-          return false;
-        }
+  // At least one vowel
+  if (!/[aeiou]/i.test(input)) return false;
 
-        // Need at least one vowel and one consonant
-        if(!/[ueoai]/i.test(sanitisedInput)) {
-          return false;
-        }
+  // At least one consonant
+  if (!/[bcdfghjklmnpqrstvwxyz]/i.test(input)) return false;
 
-        if(!/[bcdfghjklmnpqrstvwxyz]/i.test(sanitisedInput)) {
-          return false;
-        }
+  // No 3 repeating chars
+  if (/(.)\1{2,}/.test(input)) return false;
 
-        if(/(.)\1{2,}/.test(sanitisedInput)) {
-          return false;
-        }
+  // No repeated words pattern
+  if (/(\w{2,})\1/.test(input)) return false;
 
-        if(/(\w{2,})\1/.test(sanitisedInput)) {
-          return false;
-        }
+  return true;
+};
 
-        return true;
-
-}
-
-export default validateInput;
+export default validateTopicLogic;

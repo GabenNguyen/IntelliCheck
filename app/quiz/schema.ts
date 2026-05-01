@@ -1,0 +1,87 @@
+import { z } from "zod";
+import validateTopicLogic from "@/utils/validate_input";
+
+
+// Form input validation schema
+// Validates: topic, difficulty, numOfQuestions before API call
+
+export const quizFormSchema = z.object({
+  topic: z
+    .string()
+    .trim()
+    .min(1, "Topic is required")
+    .max(100, "Topic must be less than 100 characters")
+    .regex(/^[a-zA-Z0-9\s\-_,:;.'()]+$/, "Invalid characters")
+    .refine(validateTopicLogic, {
+      message: "Topic failed validation rules"
+    }),
+
+  difficulty: z.enum(
+    ["easy", "normal", "hard", "asian"],
+  ),
+
+  numOfQuestions: z
+    .string()
+    .trim()
+    .min(1, "Required at least 1 question")
+    .transform((val) => Number(val)) // change the val into "number"
+    .pipe(z.number().min(1).max(50)) // validate this as a number
+});
+
+
+// API response validation for question generation
+// Validates: response from /api/generate-questions
+
+export const generateQuestionResponseSchema = z.object({
+  outputQuestion: z.array(
+    z.object({
+      question: z.string().min(1, "Question text is required!"),
+      options: z.array(
+        z.string().regex(/^[A-D]\)\s.+$/, "Invalid option format")
+      )
+        .length(4, "Must have exactly 4 options"),
+      correctAnswer: z.string().length(1, "Must have exactly 1 answer")
+        .uppercase(),
+      explanation: z.string().min(1, "Explanation required")
+    })
+      // Ensure correct answer matches one of the options
+      .refine(
+        (obj) => obj.options.some((opt) =>
+          opt.trim().toUpperCase().startsWith(`${obj.correctAnswer})`))
+        , "Correct answer must match one of the provided options"
+      ))
+})
+
+export const saveQuizRequestSchema = z.object({
+  title: z.string().trim().min(1, "Title too short").max(100, "Title too long"),
+  subject: z.string().trim().min(1, "Subject too short").max(100, "Subject too long"),
+  description: z.string().trim().min(1, "Description too short").max(1000, "Description too long"),
+  questions: z.array(
+    z.object({
+      question: z.string().min(1),
+      correctAnswer: z
+        .string()
+        .length(1)
+        .transform((val) => val.toUpperCase())
+        .refine((val) => ["A", "B", "C", "D"].includes(val), {
+          error: "Must be A, B, C, or D"
+        }),
+      optionA: z.string().min(1),
+      optionB: z.string().min(1),
+      optionC: z.string().min(1),
+      optionD: z.string().min(1),
+    })
+  )
+    .min(1)
+})
+
+export const saveQuizResponseSchema = z.object({
+  success: z.boolean(),
+  quiz: z.object({
+    id: z.string(),
+    title: z.string(),
+    subject: z.string(),
+    questionCount: z.number(),
+    createdAt: z.date()
+  })
+})
