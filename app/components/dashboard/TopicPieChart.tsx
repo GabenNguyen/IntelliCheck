@@ -21,7 +21,7 @@ export function TopicPieChart({ topicDistribution }: TopicPieChartProps) {
           Top Topics
         </CardTitle>
       </CardHeader>
-      <CardContent className="pt-6 min-h-[280px]">
+      <CardContent className="pt-6 min-h-70">
         {!hasData ? (
           <div className="flex items-center justify-center h-full text-muted-foreground">
             <p className="text-sm">No quiz data yet</p>

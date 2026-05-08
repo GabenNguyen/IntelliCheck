@@ -27,7 +27,7 @@ export function ActivityChart({ weeklyActivities }: ActivityChartProps) {
           <CardTitle className="text-lg font-semibold">Weekly Activity</CardTitle>
         </div>
       </CardHeader>
-      <CardContent className="pt-6 min-h-[280px]">
+      <CardContent className="pt-6 min-h-70">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={weeklyActivities} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
             <CartesianGrid vertical={false} strokeDasharray="3 3" stroke="var(--border)" />
