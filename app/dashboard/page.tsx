@@ -1,5 +1,5 @@
-import Dashboard from "../components/DashBoard";
-import { fetchDashboardData } from "@/lib/db/dashboard_data";
+import { Dashboard } from "../components/dashboard";
+import { fetchDashboardData } from "@/lib/db/dashboard";
 
 export default async function DashBoardPage() {
   const { userName, dashboardData } = await fetchDashboardData();
