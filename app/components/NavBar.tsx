@@ -2,13 +2,6 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { motion } from "framer-motion";
-import {
-  NavigationMenu,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-} from "@/components/ui/navigation-menu";
 import { ModeToggle } from "./ModeToggle";
 import { cn } from "@/lib/utils";
 import {
@@ -17,138 +10,95 @@ import {
   Show,
   UserButton,
 } from "@clerk/nextjs";
-import { Sparkles, Cpu, Menu } from "lucide-react";
+import { Sparkles } from "lucide-react";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import { useState } from "react";
 
 const navItems = [
   { label: "Home", href: "/" },
   { label: "About", href: "/about" },
   { label: "Quiz", href: "/quiz" },
-  { label: "Results", href: "/results" },
 ];
 
 function NavBar() {
   const pathname = usePathname();
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <motion.nav
-      initial={{ y: -20, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.4, ease: "easeOut" }}
-      className="sticky top-0 z-50 w-full border-b border-violet-500/20 dark:border-violet-500/20 bg-white/80 dark:bg-slate-950/80 backdrop-blur-xl shadow-xs font-sans"
-    >
+    <nav className="sticky top-0 z-50 w-full border-b border-border/50 bg-background/80 backdrop-blur-md">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid h-16 md:h-20 grid-cols-[minmax(200px,auto)_1fr_minmax(200px,auto)] items-center">
-          <div className="flex items-center gap-4">
-            <SidebarTrigger className="cursor-pointer rounded-xl p-2.5 transition-colors hover:bg-violet-100 dark:hover:bg-violet-900/30 text-slate-600 dark:text-slate-400" />
+        <div className="flex h-16 items-center justify-between">
+          {/* Left Section - Logo & Sidebar */}
+          <div className="flex items-center gap-3">
+            <SidebarTrigger className="cursor-pointer rounded-lg p-2 transition-colors hover:bg-muted text-muted-foreground hover:text-foreground" />
 
-            <Link href="/" className="group flex items-center gap-3 outline-none">
-              <motion.div
-                whileHover={{ scale: 1.05, rotate: 3 }}
-                whileTap={{ scale: 0.95 }}
-                className="flex h-10 w-10 items-center justify-center rounded-xl bg-linear-to-br from-violet-600 to-indigo-600 shadow-lg shadow-violet-500/30 transition-colors"
-              >
-                <Sparkles className="h-5 w-5 text-white" />
-              </motion.div>
-
-              <span className="hidden text-xl font-bold tracking-tight text-slate-900 dark:text-white sm:block">
+            <Link href="/" className="flex items-center gap-2.5 outline-none">
+              <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+                <Sparkles className="h-4 w-4" />
+              </div>
+              <span className="text-lg font-semibold text-foreground">
                 IntelliCheck
               </span>
             </Link>
           </div>
 
-          <div className="hidden md:flex justify-center flex-1">
-            <NavigationMenu>
-              <NavigationMenuList className="flex items-center gap-1">
-                {navItems.map(({ label, href }) => {
-                  const active = pathname === href;
-
-                  return (
-                    <NavigationMenuItem key={label}>
-                      <NavigationMenuLink asChild>
-                        <div className="relative group">
-                          <Link
-                            href={href}
-                            className={cn(
-                              "relative flex items-center rounded-xl px-4 py-2 text-sm font-semibold transition-all duration-200 outline-none",
-                              active
-                                ? "text-violet-700 dark:text-violet-300"
-                                : "text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100 hover:bg-violet-50 dark:hover:bg-violet-900/20"
-                            )}
-                          >
-                            {label}
-                            {active && (
-                              <motion.span
-                                layoutId="nav-underline"
-                                className="absolute left-4 right-4 -bottom-px h-0.5 rounded-t-full bg-violet-600 dark:bg-violet-400"
-                                transition={{
-                                  type: "spring",
-                                  stiffness: 350,
-                                  damping: 30,
-                                }}
-                              />
-                            )}
-                          </Link>
-                        </div>
-                      </NavigationMenuLink>
-                    </NavigationMenuItem>
-                  );
-                })}
-              </NavigationMenuList>
-            </NavigationMenu>
+          {/* Center Section - Navigation */}
+          <div className="hidden md:flex items-center gap-1">
+            {navItems.map(({ label, href }) => {
+              const isActive = pathname === href;
+              return (
+                <Link
+                  key={label}
+                  href={href}
+                  className={cn(
+                    "relative px-4 py-2 text-sm font-medium rounded-lg transition-colors",
+                    isActive
+                      ? "text-primary"
+                      : "text-muted-foreground hover:text-foreground hover:bg-muted/50"
+                  )}
+                >
+                  {label}
+                  {isActive && (
+                    <span className="absolute inset-x-4 -bottom-px h-0.5 rounded-t-full bg-primary" />
+                  )}
+                </Link>
+              );
+            })}
           </div>
 
-          <div className="flex items-center justify-end gap-3 min-w-35">
+          {/* Right Section - Auth & Theme */}
+          <div className="flex items-center gap-2">
             <ModeToggle />
 
             <Show when={"signed-out"}>
-              <div className="hidden items-center gap-3 sm:flex ml-1">
+              <div className="hidden sm:flex items-center gap-2">
                 <SignInButton>
-                  <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="cursor-pointer rounded-xl px-4 py-2 text-sm font-semibold text-slate-600 dark:text-slate-300 hover:text-violet-700 dark:hover:text-violet-300 hover:bg-violet-50 dark:hover:bg-violet-900/20 transition-colors"
-                  >
-                    Sign In
-                  </motion.button>
+                  <button className="cursor-pointer rounded-lg px-4 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors">
+                    Sign in
+                  </button>
                 </SignInButton>
 
                 <SignUpButton>
-                  <motion.button
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="cursor-pointer rounded-xl bg-linear-to-r from-violet-600 to-indigo-600 px-5 py-2 text-sm font-semibold text-white shadow-lg shadow-violet-500/30 hover:shadow-violet-500/50 transition-all"
-                  >
-                    Sign Up
-                  </motion.button>
+                  <button className="cursor-pointer rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors">
+                    Sign up
+                  </button>
                 </SignUpButton>
               </div>
             </Show>
 
             <Show when={"signed-in"}>
-              <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.3 }}
-                className="ml-2"
-              >
-                <UserButton
-                  showName
-                  appearance={{
-                    elements: {
-                      userButtonBox: "text-slate-900 dark:text-slate-50 font-medium",
-                      userButtonOuterIdentifier: "text-slate-900 dark:text-slate-50 font-medium",
-                    },
-                  }}
-                />
-              </motion.div>
+              <UserButton
+                showName
+                appearance={{
+                  elements: {
+                    userButtonBox: "text-foreground font-medium",
+                    userButtonOuterIdentifier: "text-foreground font-medium",
+                  },
+                }}
+              />
             </Show>
           </div>
         </div>
       </div>
-    </motion.nav>
+    </nav>
   );
 }
 

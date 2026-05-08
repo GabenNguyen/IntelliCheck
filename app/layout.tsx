@@ -23,7 +23,49 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "IntelliCheck - AI-Powered Quiz Generator",
+  title: {
+    default: "IntelliCheck - AI-Powered Quiz Generator",
+    template: "%s | IntelliCheck",
+  },
+  description: "Generate personalized quizzes on any topic with AI. Track your progress, get instant explanations, and master any subject faster. Start learning for free today.",
+  keywords: ["AI quiz", "quiz generator", "online learning", "education", "study tool", "quiz platform", "AI-powered education", "smart quizzes"],
+  authors: [{ name: "Ba Hoa (Gaben) Nguyen" }],
+  creator: "IntelliCheck",
+  publisher: "IntelliCheck",
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "https://intellichkeck.com",
+    siteName: "IntelliCheck",
+    title: "IntelliCheck - Learn Smarter with AI Quizzes",
+    description: "Generate personalized quizzes on any topic with AI. Track your progress, get instant explanations, and master any subject faster.",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "IntelliCheck - AI-Powered Quiz Platform",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "IntelliCheck - AI-Powered Quiz Generator",
+    description: "Generate personalized quizzes on any topic with AI. Start learning for free today.",
+    creator: "@bahoanguyen",
+    images: ["/og-image.png"],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
 };
 
 export default async function RootLayout({

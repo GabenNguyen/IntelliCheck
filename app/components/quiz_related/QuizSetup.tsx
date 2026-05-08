@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
@@ -20,7 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { BookOpen, Target, Hash, Terminal, Zap } from "lucide-react";
+import { BookOpen, Target, Hash, Sparkles } from "lucide-react";
 import { IT_FUN_FACTS } from "@/utils/it-facts";
 import { AlertDialog, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger, AlertDialogCancel } from "@/components/ui/alert-dialog";
 
@@ -59,23 +58,25 @@ function QuizSetup({
     return shuffled[0];
   };
 
-  // Show fact alert when loading starts
   useEffect(() => {
     if (isLoading) {
       setShowFactAlert(true);
     }
   }, [isLoading]);
+
   return (
-    <div className="min-h-screen w-full flex items-center justify-center p-4 md:p-8 bg-linear-to-br from-slate-50 via-white to-violet-50/30 dark:from-slate-950 dark:via-slate-900 dark:to-violet-950/20 font-sans">
-      <motion.div
-        initial={{ opacity: 0, y: 20, scale: 0.98 }}
-        animate={{ opacity: 1, y: 0, scale: 1 }}
-        transition={{ duration: 0.4, ease: "easeOut" }}
-        className="w-full max-w-xl"
-      >
-        <Card className="border border-violet-500/20 shadow-xl shadow-violet-500/10 bg-white dark:bg-slate-900 rounded-4xl overflow-hidden relative">
-          <div className="absolute top-0 left-0 w-full h-1 bg-linear-to-r from-violet-500 via-indigo-500 to-cyan-500" />
-          <div className="absolute top-0 right-0 w-32 h-32 bg-linear-to-bl from-violet-500/5 to-transparent rounded-full -translate-y-1/2 translate-x-1/2" />
+    <div className="min-h-screen w-full flex items-center justify-center p-4 md:p-8 bg-background font-sans">
+      <div className="w-full max-w-lg">
+        <Card className="border-border">
+          <CardHeader className="text-center pt-8 pb-6">
+            <div className="w-12 h-12 mx-auto bg-primary text-primary-foreground rounded-lg flex items-center justify-center mb-4">
+              <Sparkles className="w-5 h-5" />
+            </div>
+            <CardTitle className="text-2xl font-bold">Configure Your Quiz</CardTitle>
+            <CardDescription>
+              Customize the parameters below to generate a tailored testing experience.
+            </CardDescription>
+          </CardHeader>
 
           <form
             onSubmit={(e) => {
@@ -83,60 +84,41 @@ function QuizSetup({
               handleStartQuiz();
             }}
           >
-            <CardHeader className="text-center pt-10 pb-6 px-8">
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ type: "spring", stiffness: 200, damping: 15, delay: 0.1 }}
-                className="w-16 h-16 mx-auto bg-linear-to-br from-violet-500 to-indigo-500 rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-violet-500/30"
-              >
-                <Terminal className="w-8 h-8 text-white" />
-              </motion.div>
-              <CardTitle className="text-2xl md:text-3xl font-bold tracking-tight text-slate-900 dark:text-white mb-2">
-                Configure Your Quiz
-              </CardTitle>
-              <CardDescription className="text-slate-500 dark:text-slate-400 text-sm md:text-base">
-                Customize the parameters below to generate a tailored testing experience.
-              </CardDescription>
-            </CardHeader>
-
-            <CardContent className="space-y-8 px-8 pb-8">
-              <div className="space-y-3">
-                <Label htmlFor="topic" className="flex items-center gap-2 text-sm font-semibold text-slate-700 dark:text-slate-300">
-                  <BookOpen className="w-4 h-4 text-violet-500" /> Topic
+            <CardContent className="space-y-6">
+              <div className="space-y-2">
+                <Label htmlFor="topic" className="flex items-center gap-2 text-sm font-medium">
+                  <BookOpen className="w-4 h-4 text-muted-foreground" /> Topic
                 </Label>
-                <div className="relative">
-                  <Input
-                    id="topic"
-                    type="text"
-                    placeholder="e.g. React Native, European History..."
-                    value={topic}
-                    onChange={(e) => setTopic(e.target.value)}
-                    required
-                    className="input-tech h-14 pl-4 rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/50 hover:bg-slate-100 hover:dark:bg-slate-800 focus-visible:ring-violet-500 transition-all text-base file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:ring-offset-slate-900 dark:placeholder:text-slate-500 dark:focus-visible:ring-violet-400"
-                  />
-                </div>
+                <Input
+                  id="topic"
+                  type="text"
+                  placeholder="e.g. React Native, European History..."
+                  value={topic}
+                  onChange={(e) => setTopic(e.target.value)}
+                  required
+                  className="h-11 rounded-lg"
+                />
               </div>
 
-              <div className="space-y-3">
-                <Label htmlFor="difficulty" className="flex items-center gap-2 text-sm font-semibold text-slate-700 dark:text-slate-300">
-                  <Target className="w-4 h-4 text-indigo-500" /> Difficulty Level
+              <div className="space-y-2">
+                <Label htmlFor="difficulty" className="flex items-center gap-2 text-sm font-medium">
+                  <Target className="w-4 h-4 text-muted-foreground" /> Difficulty Level
                 </Label>
                 <Select value={difficulty} onValueChange={setDifficulty}>
-                  <SelectTrigger className="input-tech h-14 px-4 text-base rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/50 hover:bg-slate-100 dark:hover:bg-slate-800/50 focus:ring-violet-500 transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:ring-offset-slate-900 dark:focus:ring-violet-400">
+                  <SelectTrigger className="h-11 rounded-lg">
                     <SelectValue placeholder="Select a level" />
                   </SelectTrigger>
-                  <SelectContent className="rounded-xl border border-violet-500/20 bg-white dark:bg-slate-900 shadow-xl shadow-violet-500/10">
+                  <SelectContent>
                     <SelectGroup>
                       {difficulties.map((level) => (
                         <SelectItem
                           key={level.value}
                           value={level.value}
-                          className="rounded-lg my-1 cursor-pointer focus:bg-violet-50 dark:focus:bg-violet-900/20 transition-colors py-3"
+                          className="rounded-md"
                         >
-                          <div className="flex items-center gap-3">
+                          <div className="flex items-center gap-2">
                             <span className={`w-2 h-2 rounded-full ${level.color}`} />
-                            <span className="font-medium text-base text-slate-700 dark:text-slate-200">{level.label}</span>
+                            <span>{level.label}</span>
                           </div>
                         </SelectItem>
                       ))}
@@ -145,42 +127,38 @@ function QuizSetup({
                 </Select>
               </div>
 
-              <div className="space-y-3">
-                <Label htmlFor="numOfQuestions" className="flex items-center gap-2 text-sm font-semibold text-slate-700 dark:text-slate-300">
-                  <Hash className="w-4 h-4 text-cyan-500" /> Question Count
+              <div className="space-y-2">
+                <Label htmlFor="numOfQuestions" className="flex items-center gap-2 text-sm font-medium">
+                  <Hash className="w-4 h-4 text-muted-foreground" /> Question Count
                 </Label>
-                <div className="relative">
-                  <Input
-                    id="numOfQuestions"
-                    type="number"
-                    min={1}
-                    max={50}
-                    placeholder="Between 1 and 50"
-                    value={numberOfQuestions}
-                    onChange={(e) => setNumberOfQuestions(Number(e.target.value))}
-                    required
-                    className="input-tech h-14 pl-4 rounded-xl border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/50 hover:bg-slate-100 hover:dark:bg-slate-800 focus-visible:ring-violet-500 transition-all text-base file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-slate-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 dark:ring-offset-slate-900 dark:placeholder:text-slate-500 dark:focus-visible:ring-violet-400"
-                  />
-                </div>
+                <Input
+                  id="numOfQuestions"
+                  type="number"
+                  min={1}
+                  max={50}
+                  placeholder="Between 1 and 50"
+                  value={numberOfQuestions}
+                  onChange={(e) => setNumberOfQuestions(Number(e.target.value))}
+                  required
+                  className="h-11 rounded-lg"
+                />
               </div>
             </CardContent>
 
-            <CardFooter className="px-8 pb-10 pt-2">
+            <CardFooter className="pb-8 pt-4">
               <Button
                 type="submit"
                 disabled={isLoading}
-                className="w-full h-14 text-base font-semibold rounded-xl bg-linear-to-r from-violet-600 to-indigo-600 hover:from-violet-500 hover:to-indigo-500 text-white transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70 disabled:hover:scale-100 shadow-lg shadow-violet-500/30 hover:shadow-violet-500/50"
+                className="w-full h-11 rounded-lg"
               >
                 {isLoading ? (
-                  <>
-                    <div className="flex items-center gap-2 mb-2 w-full">
-                      <Spinner className="h-4 w-4" />
-                      <span>Creating Session...</span>
-                    </div>
-                  </>
+                  <span className="flex items-center gap-2">
+                    <Spinner className="h-4 w-4" />
+                    Creating Session...
+                  </span>
                 ) : (
                   <span className="flex items-center gap-2">
-                    <Zap className="w-4 h-4" />
+                    <Sparkles className="w-4 h-4" />
                     Generate Quiz
                   </span>
                 )}
@@ -189,20 +167,15 @@ function QuizSetup({
           </form>
         </Card>
 
-        {/* IT Fun Fact Alert Dialog */}
         <AlertDialog open={showFactAlert} onOpenChange={setShowFactAlert}>
-          <AlertDialogContent className="bg-violet-900/90 dark:bg-violet-950 border border-violet-200 dark:border-violet-800">
-            <AlertDialogHeader className="space-y-2">
-              <AlertDialogTitle className="text-violet-100 dark:text-violet-100">
-                IT Fun Fact
-              </AlertDialogTitle>
-              <AlertDialogDescription className="text-slate-400 dark:text-slate-300">
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>IT Fun Fact</AlertDialogTitle>
+              <AlertDialogDescription>
                 Interesting tech tidbit to enjoy while we prepare your quiz
               </AlertDialogDescription>
             </AlertDialogHeader>
-            <div className="space-y-4">
-              <p className="text-slate-200 dark:text-slate-100">{getRandomFact()}</p>
-            </div>
+            <p className="text-foreground">{getRandomFact()}</p>
             <AlertDialogFooter>
               <AlertDialogCancel onClick={() => setShowFactAlert(false)}>
                 Got it!
@@ -210,7 +183,7 @@ function QuizSetup({
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
-      </motion.div>
+      </div>
     </div>
   );
 }
