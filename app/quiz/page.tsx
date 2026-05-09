@@ -22,7 +22,7 @@ import {
   QuestionSchema,
   quizFormSchema,
   generateQuestionResponseSchema
-} from "@/schemas/quiz/index";
+} from "@/zod-schemas/quiz/index";
 
 function QuizPage() {
   // Form state
