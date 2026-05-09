@@ -14,8 +14,15 @@ import ResultPageDialog from "../components/dialogs/ResultPageDialog";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
-import type { FormState, QuizState, InteractionState, UiState, QuestionUI } from "./types";
-import { quizFormSchema, generateQuestionResponseSchema } from "./schema";
+import {
+  FormState,
+  QuizState,
+  InteractionState,
+  UiState,
+  QuestionSchema,
+  quizFormSchema,
+  generateQuestionResponseSchema
+} from "@/schemas/quiz/index";
 
 function QuizPage() {
   // Form state
@@ -139,7 +146,7 @@ function QuizPage() {
 
     // map the user answers to the Answer obj
     const savedUserAnswers: Answer[] = quizState.questions.map(
-      (question: QuestionUI, answerIndex: number) => ({
+      (question: QuestionSchema, answerIndex: number) => ({
         question: question.question,
         userAnswer: interactionState.userAnswer[answerIndex] || "",
         correctAnswer:
@@ -150,7 +157,7 @@ function QuizPage() {
     );
 
     const finalScore = quizState.questions.reduce(
-      (acc: number, question: QuestionUI, answerIndex: number) =>
+      (acc: number, question: QuestionSchema, answerIndex: number) =>
         acc +
         (interactionState.userAnswer[answerIndex]?.charAt(0) === question.correctAnswer.charAt(0)
           ? 1
