@@ -11,7 +11,7 @@ import AsianAlertDialog from "../components/dialogs/AsianAlertDialog";
 import TimeUpDialog from "../components/dialogs/TimeUpDialog";
 import ResultPageDialog from "../components/dialogs/ResultPageDialog";
 
-import { useState } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import {
@@ -55,9 +55,122 @@ function QuizPage() {
     userAnswer: []
   })
 
-
   // navigating to results page
   const router = useRouter();
+  const isNavigatingRef = useRef(false);
+
+  // Navigation guard
+  const handleNavigationAttempt = useCallback((href: string) => {
+    if (quizState.quizStarted && !quizState.quizFinished) {
+      const confirmed = window.confirm(
+        'Are you sure you want to leave? All your quiz progress will be lost.'
+      );
+      if (!confirmed) {
+        return false;
+      }
+      isNavigatingRef.current = true;
+    }
+    return true;
+  }, [quizState.quizStarted, quizState.quizFinished]);
+
+  // Set up navigation guards when quiz is active
+  useEffect(() => {
+    if (!quizState.quizStarted || quizState.quizFinished) return;
+
+    // 1. Tab close / refresh warning
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+    };
+
+// 2. Back / forward button — push dummy state to intercept
+    const handlePopState = () => {
+      if (quizState.quizStarted && !quizState.quizFinished) {
+        const confirmed = window.confirm(
+          'Are you sure you want to leave? All your quiz progress will be lost.'
+        );
+        if (!confirmed) {
+          window.history.pushState(null, '', window.location.href);
+        } else {
+          isNavigatingRef.current = true;
+        }
+      }
+    };
+
+    // 3. Intercept all link clicks on the page
+    const handleDocClick = (e: MouseEvent) => {
+      if (isNavigatingRef.current) return;
+
+      const target = e.target as HTMLElement;
+      const anchor = target.closest('a');
+
+      if (!anchor) return;
+
+      const href = anchor.getAttribute('href');
+      if (!href) return;
+
+      if (
+        href === '#' ||
+        href.startsWith('mailto:') ||
+        href.startsWith('tel:') ||
+        anchor.target === '_blank' ||
+        href.startsWith('http') ||
+        href.startsWith('//')
+      ) return;
+
+      if (href.startsWith('#')) return;
+
+      e.preventDefault();
+
+      const allowed = handleNavigationAttempt(href);
+      if (allowed) {
+        window.location.href = href;
+      }
+    };
+
+    // 4. Intercept history.pushState / replaceState (catches programmatic router.push)
+    const origPushState = window.history.pushState.bind(window.history);
+    const origReplaceState = window.history.replaceState.bind(window.history);
+
+    window.history.pushState = function (...args) {
+      if (quizState.quizStarted && !quizState.quizFinished && !isNavigatingRef.current) {
+        const confirmed = window.confirm(
+          'Are you sure you want to leave? All your quiz progress will be lost.'
+        );
+        if (!confirmed) return;
+        isNavigatingRef.current = true;
+      }
+      return origPushState(...args);
+    };
+
+    window.history.replaceState = function (...args) {
+      if (quizState.quizStarted && !quizState.quizFinished && !isNavigatingRef.current) {
+        const confirmed = window.confirm(
+          'Are you sure you want to leave? All your quiz progress will be lost.'
+        );
+        if (!confirmed) return;
+        isNavigatingRef.current = true;
+      }
+      return origReplaceState(...args);
+    };
+
+    // Push initial dummy state after mount (deferred to avoid immediate popstate)
+    const timeoutId = setTimeout(() => {
+      window.history.pushState(null, '', window.location.href);
+    }, 0);
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    window.addEventListener('popstate', handlePopState);
+    document.addEventListener('click', handleDocClick, true);
+
+    return () => {
+      clearTimeout(timeoutId);
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      window.removeEventListener('popstate', handlePopState);
+      document.removeEventListener('click', handleDocClick, true);
+      window.history.pushState = origPushState;
+      window.history.replaceState = origReplaceState;
+    };
+  }, [quizState.quizStarted, quizState.quizFinished, handleNavigationAttempt]);
 
   const startQuiz = async () => {
     const parsedFormFields = quizFormSchema.safeParse(formState);
@@ -188,6 +301,7 @@ function QuizPage() {
       setQuizState((prev) => ({ ...prev, quizStarted: false }));
       setQuizState((prev) => ({ ...prev, currentQuestionIndex: 0 }));
       setQuizState((prev) => ({ ...prev, questions: [] }));
+      isNavigatingRef.current = true;
       router.push("/results");
     }, 1500);
   };

@@ -1,6 +1,6 @@
 import { NextResponse, NextRequest } from "next/server";
 import { auth } from "@clerk/nextjs/server";
-import { saveQuizRequestSchema, saveQuizResponseSchema } from "@/app/quiz/schema";
+import { saveQuizRequestSchema, saveQuizResponseSchema } from "@/zod-schemas/quiz";
 import prisma from "@/lib/db";
 
 export async function POST(req: NextRequest) {
