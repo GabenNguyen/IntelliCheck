@@ -6,7 +6,7 @@ Repository: https://github.com/GabenNguyen/IntelliCheck.git
 
 ## Features
 
-- **On-demand quiz generation** through OpenRouter models, with configurable topic, difficulty, and question count.
+- **On-demand quiz generation** through OpenRouter's Flint model, with configurable topic, difficulty, and question count.
 - **Answer review** with generated explanations for incorrect answers.
 - **Persistent quiz history**, topic breakdown, weekly activity, and streak tracking.
 - **Account management** with Clerk sign-in, sign-up, and user profile pages.
@@ -21,7 +21,7 @@ Repository: https://github.com/GabenNguyen/IntelliCheck.git
 | Styling | Tailwind CSS 4, shadcn/ui, Framer Motion |
 | Data | Prisma 7, PostgreSQL (Neon), `@prisma/adapter-pg` |
 | Authentication | Clerk |
-| AI | OpenRouter (`gpt-oss-120b:free` for questions, `gpt-oss-20b:free` for explanations) |
+| AI | OpenRouter (`recursive/flint-v1.0:free` for question generation and explanations) |
 | Validation | Zod |
 
 ## Architecture
