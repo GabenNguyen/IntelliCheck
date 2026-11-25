@@ -1,13 +1,13 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { ArrowLeft, CheckCircle2, XCircle, Sparkles, Award } from "lucide-react";
+import { ArrowLeft, Award, CheckCircle2, XCircle } from "lucide-react";
 import { toast } from "sonner";
 import Link from "next/link";
 import Answer from "@/type/answer";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card } from "@/components/ui/card";
 import { updateStreakAchievement } from "@/lib/db/streak_actions";
 
 import AchievementUnlocked from "../components/AchievementUnlocked";
@@ -45,11 +45,11 @@ const ScoreRing = ({ percentage }: { percentage: number }) => {
           cy="60"
           initial={{ strokeDashoffset: circumference }}
           animate={{ strokeDashoffset }}
-          transition={{ duration: 1.5, ease: "easeOut", delay: 0.5 }}
+          transition={{ duration: 0.6, ease: "easeOut" }}
         />
       </svg>
       <div className="absolute">
-        <span className="text-3xl font-bold text-foreground">
+        <span className="text-3xl font-semibold tabular-nums text-foreground">
           {Math.round(percentage)}%
         </span>
       </div>
@@ -152,12 +152,12 @@ export default function ResultPage() {
           </div>
           <h1 className="text-2xl font-bold text-foreground mb-2">No Results Found</h1>
           <p className="text-muted-foreground mb-6">
-            Looks like you haven't completed any quizzes recently, or your session has expired.
+            You haven&apos;t completed a quiz recently, or this session has expired.
           </p>
           <Link href="/quiz" className="block">
             <Button className="w-full rounded-lg">
               <ArrowLeft className="w-4 h-4 mr-2" />
-              Return to Quiz
+              Return to quiz
             </Button>
           </Link>
         </Card>
@@ -168,10 +168,10 @@ export default function ResultPage() {
   const { topic, finalScore, totalQuestion, userAnswers } = quizData;
   const percentage = totalQuestion > 0 ? (finalScore / totalQuestion) * 100 : 0;
 
-  let performanceMessage = "Good effort!";
-  if (percentage === 100) performanceMessage = "Perfect Score!";
-  else if (percentage >= 80) performanceMessage = "Outstanding!";
-  else if (percentage >= 60) performanceMessage = "Well Done!";
+  let performanceMessage = "Keep practicing";
+  if (percentage === 100) performanceMessage = "Every answer correct";
+  else if (percentage >= 80) performanceMessage = "Strong result";
+  else if (percentage >= 60) performanceMessage = "Solid work";
 
   return (
     <main className="min-h-screen bg-background text-foreground py-12 px-4 sm:px-6">
@@ -181,12 +181,9 @@ export default function ResultPage() {
           animate={{ opacity: 1, y: 0 }}
           className="bg-card border border-border rounded-xl p-8 text-center"
         >
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-muted text-sm text-muted-foreground mb-6">
-            <Award className="w-4 h-4" />
-            <span>{topic}</span>
-          </div>
+          <p className="mb-4 text-sm text-muted-foreground">{topic}</p>
 
-          <h1 className="text-3xl sm:text-4xl font-bold mb-6">
+          <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
             {performanceMessage}
           </h1>
 
@@ -198,9 +195,7 @@ export default function ResultPage() {
         </motion.div>
 
         <div className="space-y-4">
-          <h2 className="text-xl font-semibold px-2">
-            Review Your Answers
-          </h2>
+          <h2 className="px-2 text-lg font-semibold">Answer review</h2>
 
           <div className="space-y-4">
             {userAnswers.map((answer, i) => {
@@ -212,28 +207,24 @@ export default function ResultPage() {
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.1 * i }}
-                  className={`p-5 rounded-xl border ${
-                    isCorrect
-                      ? "bg-green-50 dark:bg-green-950/20 border-green-200 dark:border-green-900"
-                      : "bg-red-50 dark:bg-red-950/20 border-red-200 dark:border-red-900"
-                  }`}
+                  className="rounded-lg border border-border bg-card p-5"
                 >
                   <div className="flex items-start gap-3">
                     <div className="shrink-0 mt-0.5">
                       {isCorrect ? (
-                        <div className="flex h-7 w-7 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/50 text-green-600">
-                          <CheckCircle2 className="h-4 w-4" />
+                        <div className="flex h-7 w-7 items-center justify-center rounded-md text-emerald-600 dark:text-emerald-400">
+                          <CheckCircle2 className="h-5 w-5" />
                         </div>
                       ) : (
-                        <div className="flex h-7 w-7 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/50 text-red-600">
-                          <XCircle className="h-4 w-4" />
+                        <div className="flex h-7 w-7 items-center justify-center rounded-md text-destructive">
+                          <XCircle className="h-5 w-5" />
                         </div>
                       )}
                     </div>
 
                     <div className="flex-1 space-y-3">
                       <div>
-                        <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Question {i + 1}</p>
+                        <p className="text-xs text-muted-foreground">Question {i + 1}</p>
                         <p className="text-foreground mt-1 leading-relaxed">
                           {answer.question}
                         </p>
@@ -241,7 +232,7 @@ export default function ResultPage() {
 
                       <div className="flex flex-col sm:flex-row gap-4 sm:gap-8 pt-2">
                         <div>
-                          <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Your Answer</p>
+                          <p className="text-xs text-muted-foreground">Your Answer</p>
                           <p className={`font-medium ${
                             isCorrect ? "text-green-700 dark:text-green-400" : "text-red-700 dark:text-red-400 line-through"
                           }`}>
@@ -251,7 +242,7 @@ export default function ResultPage() {
 
                         {!isCorrect && (
                           <div>
-                            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Correct Answer</p>
+                            <p className="text-xs text-muted-foreground">Correct Answer</p>
                             <p className="font-medium text-green-700 dark:text-green-400">
                               {answer.correctAnswer}
                             </p>
@@ -261,11 +252,8 @@ export default function ResultPage() {
 
                       {!isCorrect && (
                         <div className="pt-4 mt-4 border-t border-border">
-                          <div className="flex items-center gap-2 mb-2">
-                            <Sparkles className="w-4 h-4 text-primary" />
-                            <span className="text-sm font-semibold">AI Explanation</span>
-                          </div>
-                          <div className="text-sm text-muted-foreground bg-muted/50 p-3 rounded-lg leading-relaxed">
+                          <p className="mb-2 text-sm font-medium">Explanation</p>
+                          <div className="rounded-md bg-muted/50 p-3 text-sm leading-relaxed text-muted-foreground">
                             {answer.explanation ? (
                               <motion.div
                                 initial={{ opacity: 0 }}
@@ -276,7 +264,7 @@ export default function ResultPage() {
                             ) : (
                               <div className="flex items-center gap-2">
                                 <div className="w-3 h-3 rounded-full border-2 border-primary border-t-transparent animate-spin" />
-                                <span>Generating insights...</span>
+                                <span>Writing explanation…</span>
                               </div>
                             )}
                           </div>
@@ -297,23 +285,18 @@ export default function ResultPage() {
           />
         )}
 
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.5 }}
-          className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4"
-        >
+        <div className="flex flex-col items-center justify-center gap-4 pt-4 sm:flex-row">
           <Button asChild size="lg" className="rounded-lg w-full sm:w-auto">
             <Link href="/quiz">
-              Take Another Quiz
+              Take another quiz
             </Link>
           </Button>
           <Button asChild variant="outline" size="lg" className="rounded-lg w-full sm:w-auto">
             <Link href="/">
-              Return Home
+              Return home
             </Link>
           </Button>
-        </motion.div>
+        </div>
       </div>
     </main>
   );

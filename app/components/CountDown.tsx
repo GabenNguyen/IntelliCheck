@@ -21,7 +21,7 @@ function CountDown( { difficulty, onTimeUp }: CountDownTime ) {
 
         const timer = setInterval(() => {
             setCounter(prev => prev - 1)
-        }, 900)
+        }, 1000)
 
         return () => clearInterval(timer)
 
@@ -31,7 +31,7 @@ function CountDown( { difficulty, onTimeUp }: CountDownTime ) {
     const seconds = counter % 60;
 
     return (
-        <div className={`text-center font-sans text-3xl ${minutes <= 0 && seconds <= 10 ? "text-red-600 animate-pulse bg-red-300 font-bold rounded-lg" : ""}`}>
+        <div className={`text-center font-sans text-2xl font-medium tabular-nums ${minutes <= 0 && seconds <= 10 ? "rounded-md bg-destructive/10 px-2 py-1 text-destructive" : ""}`} role="timer" aria-label={`${minutes} minutes ${seconds} seconds remaining`}>
             <span>{minutes.toString().padStart(2, "0")}:</span>
             <span>{seconds.toString().padStart(2, "0")}</span>
         </div>

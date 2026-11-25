@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { TrendingUp } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import formatRelativeTime from "@/utils/format_time";
 import type { RecentQuiz } from "./types";
@@ -13,11 +12,8 @@ export function RecentQuizzes({ recentQuizzes }: RecentQuizzesProps) {
 
   return (
     <section>
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-xl font-semibold text-foreground flex items-center gap-2">
-          <TrendingUp className="h-5 w-5 text-muted-foreground" />
-          Recent Quizzes
-        </h2>
+      <div className="mb-5 flex items-center justify-between gap-4">
+        <h2 className="text-base font-semibold text-foreground">Recent quizzes</h2>
         {!isEmpty && (
           <Link href="/quiz-history" className="text-sm font-medium text-primary hover:underline">
             View all
@@ -26,22 +22,25 @@ export function RecentQuizzes({ recentQuizzes }: RecentQuizzesProps) {
       </div>
 
       {isEmpty ? (
-        <Card className="border-dashed border-2 border-border">
-          <CardContent className="p-12 text-center text-muted-foreground">
-            <p className="font-medium mb-1">No quizzes yet</p>
-            <p className="text-sm">Create your first quiz to see it here.</p>
+        <Card className="border-dashed">
+          <CardContent className="flex flex-col items-center gap-3 p-10 text-center">
+            <p className="text-sm font-medium text-foreground">No quizzes yet</p>
+            <p className="text-sm text-muted-foreground">Create one to see it here.</p>
+            <Link href="/quiz" className="text-sm font-medium text-primary hover:underline">
+              Create a quiz
+            </Link>
           </CardContent>
         </Card>
       ) : (
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {recentQuizzes.map((quiz) => (
-            <Link key={quiz.id} href="/quiz-history" className="block">
-              <Card className="h-full border-border hover:border-primary/50 transition-colors cursor-pointer">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-base font-semibold line-clamp-2">{quiz.title}</CardTitle>
+            <Link key={quiz.id} href="/quiz-history" className="block rounded-lg">
+              <Card className="h-full border-border transition-colors hover:bg-muted/40">
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm font-medium leading-snug">{quiz.title}</CardTitle>
                 </CardHeader>
-                <CardContent className="pt-0 flex items-center justify-between text-sm text-muted-foreground">
-                  <span className="px-2 py-1 rounded bg-muted text-xs">{quiz.questionCount} Qs</span>
+                <CardContent className="flex items-center justify-between gap-3 pt-0 text-xs text-muted-foreground">
+                  <span className="tabular-nums">{quiz.questionCount} questions</span>
                   <span>{formatRelativeTime(quiz.createdAt)}</span>
                 </CardContent>
               </Card>

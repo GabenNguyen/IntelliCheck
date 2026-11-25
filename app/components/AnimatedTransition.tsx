@@ -4,16 +4,17 @@ import React from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { usePathname } from 'next/navigation'
 
-function AnimatedTransition( {children}:{ children: React.ReactNode } ){
-    const pathName = usePathname() // retrieves the current pathname from the URL
+function AnimatedTransition({ children }: { children: React.ReactNode }) {
+    const pathname = usePathname()
 
     return (
-        <AnimatePresence mode='wait' initial={true}>
+        <AnimatePresence mode="wait" initial={false}>
             <motion.div
-                key={pathName}
-                initial={{ opacity: 0, scale: 0.98 }} // Contents appear
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.35, ease: "easeIn",  delay: 0.05}}
+                key={pathname}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.15 }}
             >
                 {children}
             </motion.div>

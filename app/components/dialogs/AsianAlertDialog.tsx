@@ -8,7 +8,6 @@ import {
     AlertDialogAction,
     AlertDialogCancel
 } from "@/components/ui/alert-dialog";
-import { SetStateAction } from "react";
 
 interface Props {
     open: boolean,
@@ -23,7 +22,7 @@ function AsianAlertDialog({ open, setOpen, onProceed }: Props) {
                 <AlertDialogHeader>
                     <AlertDialogTitle>Asian Difficulty Selected</AlertDialogTitle>
                     <AlertDialogDescription>
-                        Yo! You&apos;ve selected the <span className="text-red-600 font-semibold text-xl">&quot;Asian&quot;</span> difficulty level. Less time but with Asian-difficult questions. Are you sure you want to proceed?
+                        You selected the Asian difficulty: less time and harder questions. Continue?
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>

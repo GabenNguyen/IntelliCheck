@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { toast, Toaster } from "sonner";
-import { ClerkProvider } from "@clerk/nextjs";
+import { Toaster } from "sonner";
+import { ClerkProvider, Show } from "@clerk/nextjs";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { cookies } from "next/headers";
 import AppSideBar from "./components/AppSideBar";
@@ -97,7 +97,6 @@ export default async function RootLayout({
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
           suppressHydrationWarning
         >
-          <div className="neon-bg" aria-hidden="true" />
           <ThemeProvider
             attribute="class"
             defaultTheme="system"
@@ -107,11 +106,13 @@ export default async function RootLayout({
             <SidebarProvider defaultOpen={defaultSideBarOpen}>
               {/* Only show/pass data to Sidebar if user is logged in, 
                   otherwise pass default/empty values */}
-              <AppSideBar streakData={{
-                currentStreak: streakData?.currentStreak || 0,
-                longestStreak: streakData?.longestStreak || 0,
-                achievements: JSON.parse(streakData?.achievements || "[]"),
-              }} />
+              <Show when="signed-in">
+                <AppSideBar streakData={{
+                  currentStreak: streakData?.currentStreak || 0,
+                  longestStreak: streakData?.longestStreak || 0,
+                  achievements: JSON.parse(streakData?.achievements || "[]"),
+                }} />
+              </Show>
 
               <main className="w-full">
                 <NavBar />

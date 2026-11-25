@@ -1,4 +1,3 @@
-import React, { SetStateAction } from "react"
 import {
     AlertDialog,
     AlertDialogContent,
@@ -20,7 +19,7 @@ function ResultPageDialog({ open, setOpen }: Props) {
                 <AlertDialogHeader>
                     <AlertDialogTitle>
                         <div className="flex items-center justify-between">
-                            <span className='text-xl'>Result being calculated</span>
+                            <span className="text-base font-medium">Calculating your results…</span>
                             <Spinner className='size-8' />
                         </div>
                     </AlertDialogTitle>

@@ -1,88 +1,68 @@
 "use client";
 import { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { Trophy } from "lucide-react";
 import { type Achievement } from "@/utils/achievements";
 import Confetti from "react-confetti";
 import useWindowSize from "@/hooks/use-window";
+
 interface Props {
-    achievement: Achievement | null;
-    onClose: () => void;
+  achievement: Achievement | null;
+  onClose: () => void;
 }
+
 export default function AchievementUnlocked({ achievement, onClose }: Props) {
-    const { width, height } = useWindowSize();
-    const [showConfetti, setShowConfetti] = useState(true);
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            setShowConfetti(false);
-            onClose();
-        }, 5000);
-        return () => clearTimeout(timer);
-    }, [onClose]);
-    if (!achievement) return null;
-    return (
-        <>
-            {showConfetti && width && height && (
-                <Confetti
-                    width={width}
-                    height={height}
-                    numberOfPieces={200}
-                    recycle={false}
-                    gravity={0.2}
-                />
-            )}
+  const { width, height } = useWindowSize();
+  const [showConfetti, setShowConfetti] = useState(true);
 
-            <AnimatePresence>
-                <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
-                    onClick={onClose}
-                >
-                    <motion.div
-                        initial={{ scale: 0, rotate: -10 }}
-                        animate={{ scale: 1, rotate: 0 }}
-                        transition={{ type: "spring", damping: 15 }}
-                        className="relative bg-white dark:bg-slate-900 rounded-3xl p-12 max-w-md w-full mx-4 text-center shadow-2xl"
-                        onClick={(e) => e.stopPropagation()}
-                    >
-                        {/* Glow effect */}
-                        <div className="absolute inset-0 rounded-3xl bg-linear-to-r from-yellow-400 via-orange-400 to-red-400 opacity-20 blur-2xl" />
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowConfetti(false);
+      onClose();
+    }, 5000);
+    return () => clearTimeout(timer);
+  }, [onClose]);
 
-                        <div className="relative">
-                            <motion.div
-                                initial={{ scale: 0 }}
-                                animate={{ scale: 1 }}
-                                transition={{ delay: 0.2, type: "spring" }}
-                                className="text-6xl mb-4"
-                            >
-                                {achievement.icon}
-                            </motion.div>
+  if (!achievement) return null;
 
-                            <p className="text-sm font-semibold text-orange-500 uppercase tracking-wider mb-2">
-                                Achievement Unlocked!
-                            </p>
+  return (
+    <>
+      {showConfetti && width && height && (
+        <Confetti
+          width={width}
+          height={height}
+          numberOfPieces={60}
+          recycle={false}
+          gravity={0.2}
+        />
+      )}
 
-                            <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-2">
-                                {achievement.name}
-                            </h2>
-
-                            <p className="text-slate-600 dark:text-slate-400">
-                                {achievement.description}
-                            </p>
-
-                            <motion.button
-                                whileHover={{ scale: 1.05 }}
-                                whileTap={{ scale: 0.95 }}
-                                onClick={onClose}
-                                className="mt-8 px-8 py-3 bg-linear-to-r from-orange-500 to-red-500 text-white rounded-full font-semibold"
-                            >
-                                Awesome!
-                            </motion.button>
-                        </div>
-                    </motion.div>
-                </motion.div>
-            </AnimatePresence>
-        </>
-    );
+      <div
+        className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/40 px-4"
+        onClick={onClose}
+        role="presentation"
+      >
+        <div
+          className="w-full max-w-sm rounded-lg border border-border bg-card p-8 text-center"
+          onClick={(e) => e.stopPropagation()}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="achievement-title"
+        >
+          <Trophy className="mx-auto h-7 w-7 text-primary" />
+          <p className="mt-4 text-xs font-medium text-muted-foreground">Achievement unlocked</p>
+          <h2 id="achievement-title" className="mt-2 text-xl font-semibold text-foreground">
+            {achievement.name}
+          </h2>
+          <p className="mt-2 text-sm text-muted-foreground">{achievement.description}</p>
+          <button
+            type="button"
+            onClick={onClose}
+            className="mt-6 rounded-md bg-primary px-5 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+          >
+            Continue
+          </button>
+        </div>
+      </div>
+    </>
+  );
 }

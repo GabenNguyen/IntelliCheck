@@ -1,5 +1,4 @@
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Brain } from "lucide-react";
 import type { SubjectData } from "./types";
 
 interface TopicProgressBarsProps {
@@ -14,10 +13,7 @@ export function TopicProgressBars({ subjectSummary }: TopicProgressBarsProps) {
   return (
     <Card className="border-border">
       <CardHeader className="border-b border-border pb-4">
-        <CardTitle className="text-lg font-semibold flex items-center gap-2">
-          <Brain className="h-5 w-5 text-muted-foreground" />
-          Subject Distribution
-        </CardTitle>
+        <CardTitle className="text-base font-semibold">Topics you have practiced</CardTitle>
       </CardHeader>
       <CardContent className="pt-6">
         <div className="space-y-6">

@@ -1,84 +1,58 @@
-"use client";
-
-import { motion } from "framer-motion";
+import { CircleAlert } from "lucide-react";
 
 function About() {
   return (
-    <div className="min-h-screen w-full flex justify-center py-20 px-6 md:px-12 bg-zinc-50 dark:bg-zinc-950 font-sans">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: "easeOut" }}
-        className="max-w-3xl w-full"
-      >
-        {/* HEADER */}
-        <div className="space-y-6 pb-12 border-b border-zinc-200 dark:border-zinc-800">
-          <h1 className="flex items-center text-4xl md:text-5xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
-            Hi there <span className="ml-3 motion-rotate-loop-6">👋</span>
-          </h1>
-          <p className="text-lg md:text-xl leading-relaxed text-zinc-600 dark:text-zinc-400">
-            IntelliCheck was born from a simple observation:{" "}
-            <span className="font-semibold text-zinc-900 dark:text-zinc-100">
-              traditional learning is often static, while the human brain is dynamic.
-            </span>
+    <div className="mx-auto max-w-3xl px-6 py-16 md:py-24">
+      <div className="space-y-5 border-b border-border pb-10">
+        <p className="text-xs font-medium text-muted-foreground">About</p>
+        <h1 className="text-4xl font-semibold tracking-tight text-foreground md:text-5xl">
+          About IntelliCheck
+        </h1>
+        <p className="text-lg leading-relaxed text-muted-foreground">
+          Traditional study material stays the same while your understanding changes. IntelliCheck
+          generates a new quiz for the topic you are working on, so practice follows your progress.
+        </p>
+      </div>
+
+      <div className="space-y-12 py-12 text-base leading-relaxed">
+        <section className="space-y-3">
+          <h2 className="text-xl font-semibold text-foreground">Beyond a fixed question bank</h2>
+          <p className="text-muted-foreground">
+            Fixed question sets become predictable, and memorising answers is not the same as knowing
+            a subject. IntelliCheck writes questions when you ask for them, at the difficulty you
+            choose, so each session is based on the topic rather than a stored list.
           </p>
-        </div>
+        </section>
 
-        {/* CONTENT */}
-        <div className="space-y-10 py-12 text-base md:text-lg">
-          <section className="space-y-4">
-            <h2 className="text-xl font-bold text-zinc-900 dark:text-zinc-100">Beyond the Question Bank</h2>
-            <p className="leading-relaxed text-zinc-700 dark:text-zinc-300">
-              Most study platforms rely on fixed question banks that eventually become predictable,
-              leading to memorization rather than true mastery. At the core of IntelliCheck is a
-              sophisticated AI engine designed to understand your unique learning curve. Instead
-              of following a linear path, the platform generates adaptive quizzes that evolve alongside you.
-            </p>
-          </section>
+        <section className="space-y-3">
+          <h2 className="text-xl font-semibold text-foreground">Understanding the answer</h2>
+          <p className="text-muted-foreground">
+            A correct answer is only part of learning. Incorrect answers come with an explanation of
+            the underlying concept, so you can see where your reasoning went wrong before moving on.
+          </p>
+        </section>
 
-          <section className="space-y-4">
-            <h2 className="text-xl font-bold text-zinc-900 dark:text-zinc-100">Understanding the &quot;Why&quot;</h2>
-            <p className="leading-relaxed text-zinc-700 dark:text-zinc-300">
-              We believe that a correct answer is only half the victory. Every question includes
-              deep-dive explanations so you understand the underlying concept—not just the answer.
-              If you hit a roadblock, the system intelligently pivots to reinforce the fundamentals,
-              turning every quiz into a conversation between you and the material.
-            </p>
-          </section>
+        <section className="space-y-3">
+          <h2 className="text-xl font-semibold text-foreground">A record of your practice</h2>
+          <p className="text-muted-foreground">
+            Your quiz history, streaks and topic breakdown stay available, which makes it easier to
+            decide what to revisit next, whether you are preparing for an exam or exploring a topic.
+          </p>
+        </section>
 
-          <section className="space-y-4">
-            <h2 className="text-xl font-bold text-zinc-900 dark:text-zinc-100">Designed for Every Journey</h2>
-            <p className="leading-relaxed text-zinc-700 dark:text-zinc-300">
-              Whether you&apos;re studying for high-stakes exams, upskilling in a competitive market,
-              or exploring new topics out of curiosity, IntelliCheck is designed to remove the
-              friction of finding study materials. We provide the instant, tailored content you
-              need to stay motivated and focused.
-            </p>
-          </section>
-
-          {/* Warning */}
-          <div className="rounded-[1.5rem] border border-amber-200/50 dark:border-amber-900/50 bg-amber-50/50 dark:bg-amber-900/10 p-8 shadow-sm">
-            <h3 className="mb-3 text-lg flex items-center gap-2 font-bold text-amber-900 dark:text-amber-500">
-              ⚠️ Important notice
-            </h3>
-            <p className="text-base leading-relaxed text-amber-800/80 dark:text-amber-200/70">
-              AI-generated answers and explanations may occasionally be
-              inaccurate. Always verify important information with trusted,
-              reliable sources.
-            </p>
+        <aside className="rounded-lg border border-border bg-muted/40 p-6">
+          <div className="flex items-start gap-3">
+            <CircleAlert className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
+            <div>
+              <h3 className="text-sm font-medium text-foreground">On AI-generated answers</h3>
+              <p className="mt-2 text-sm leading-relaxed text-muted-foreground">
+                Generated questions and explanations can be inaccurate. Check important information
+                against a reliable source before relying on it.
+              </p>
+            </div>
           </div>
-
-          {/* Footer Card */}
-          <div className="mt-12 rounded-[1.5rem] border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-8 md:p-12 text-center shadow-sm">
-            <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">
-              Good luck with your studies
-            </h2>
-            <p className="mt-3 text-zinc-500 dark:text-zinc-400 font-medium tracking-wide">
-              Learn consistently. Learn confidently.
-            </p>
-          </div>
-        </div>
-      </motion.div>
+        </aside>
+      </div>
     </div>
   );
 }
