@@ -3,3 +3,6 @@ allowBuilds:
   prisma: true
   protobufjs: true
   unrs-resolver: true
+
+overrides:
+  effect: ^3.22.1

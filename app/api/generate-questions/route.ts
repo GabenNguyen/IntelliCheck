@@ -1,34 +1,39 @@
 import { createOpenRouter } from "@openrouter/ai-sdk-provider";
-import { generateText } from 'ai';
+import { generateText } from "ai";
 import { NextResponse } from "next/server";
-import { quizFormSchema, aiGeneratedQuestionsSchema } from "@/app/quiz/schema";
+import { auth } from "@clerk/nextjs/server";
+import {
+  quizFormSchema,
+  generateQuestionResponseSchema,
+} from "@/app/quiz/schema";
 import DifficultyRules from "@/utils/difficulty_rules";
 
-const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
+const openrouter = createOpenRouter({ apiKey: process.env.OPENROUTER_API_KEY });
 
 export async function POST(req: Request) {
-    try {
-        // validated the request sent by the front-end
-        const incomingRequest = await req.json();
+  try {
+    const { userId } = await auth();
+    if (!userId) {
+      return NextResponse.json({ error: "Unauthorised" }, { status: 401 });
+    }
 
-        const parsedIncomingRequest = quizFormSchema.safeParse(incomingRequest);
+    // validated the request sent by the front-end
+    const incomingRequest = await req.json();
 
-        if (!parsedIncomingRequest.success) {
-            return NextResponse.json(
-                { error: parsedIncomingRequest.error.issues },
-                { status: 400 }
-            );
-        }
+    const parsedIncomingRequest = quizFormSchema.safeParse(incomingRequest);
 
-        const { topic, difficulty, numOfQuestions } = parsedIncomingRequest.data;
+    if (!parsedIncomingRequest.success) {
+      return NextResponse.json(
+        { error: parsedIncomingRequest.error.issues },
+        { status: 400 },
+      );
+    }
 
-        const difficultyRules = DifficultyRules(difficulty)
+    const { topic, difficulty, numOfQuestions } = parsedIncomingRequest.data;
 
-        const openrouter = createOpenRouter({
-            apiKey: OPENROUTER_API_KEY,
-        })
+    const difficultyRules = DifficultyRules(difficulty);
 
-        const prompt = `
+    const prompt = `
             You are a professional exam generator AI.
 
             Generate exactly ${numOfQuestions} multiple-choice questions about **${topic}**.
@@ -78,36 +83,42 @@ export async function POST(req: Request) {
             - Output valid JSON only.
             `;
 
-        const response = await generateText({
-            model: openrouter('openai/gpt-oss-120b:free'),
-            prompt: prompt,
-        })
+    const response = await generateText({
+      model: openrouter("recursive/flint-v1.0:free"),
+      prompt: prompt,
+      timeout: 30000,
+    });
 
-        const text = response.text ?? "";
+    const text = response.text ?? "";
 
-        // Remove code fences if present
-        const cleanText = text.replace(/```json|```/g, "").trim();
+    // Remove code fences if present
+    const cleanText = text.replace(/```json|```/g, "").trim();
 
-        // Parse JSON
-        const output = JSON.parse(cleanText)
-        const parsedOutputQuestion = aiGeneratedQuestionsSchema.safeParse(output);
+    // Parse JSON
+    const output = JSON.parse(cleanText);
+    const parsedOutputQuestion = generateQuestionResponseSchema.safeParse({
+      outputQuestion: output,
+    });
 
-        if (!parsedOutputQuestion.success) {
-            console.error(parsedOutputQuestion.error.issues)
-            return NextResponse.json({ error: "Invalid question format" }, { status: 500 })
-        }
-
-        const validatedQuestionFormat = parsedOutputQuestion.data;
-
-        console.log(validatedQuestionFormat);
-
-        return NextResponse.json(
-            { outputQuestion: validatedQuestionFormat },
-            { status: 200 }
-        )
-
-    } catch (error) {
-        console.error(`AI error: ${error}`)
-        return NextResponse.json({ error: "AI Generation Failed!" }, { status: 500 })
+    if (!parsedOutputQuestion.success) {
+      console.error(parsedOutputQuestion.error.issues);
+      return NextResponse.json(
+        { error: "Invalid question format" },
+        { status: 500 },
+      );
     }
+
+    const validatedQuestionFormat = parsedOutputQuestion.data.outputQuestion;
+
+    return NextResponse.json(
+      { outputQuestion: validatedQuestionFormat },
+      { status: 200 },
+    );
+  } catch (error) {
+    console.error(`AI error: ${error}`);
+    return NextResponse.json(
+      { error: "AI Generation Failed!" },
+      { status: 500 },
+    );
+  }
 }

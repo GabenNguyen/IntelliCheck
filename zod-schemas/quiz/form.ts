@@ -16,7 +16,7 @@ export const quizFormSchema = z.object({
         }),
 
     difficulty: z.enum(
-        ["easy", "normal", "hard", "asian"],
+        ["easy", "medium", "hard", "asian"],
     ),
 
     numOfQuestions: z

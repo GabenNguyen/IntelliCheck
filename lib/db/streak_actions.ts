@@ -9,71 +9,64 @@ export const updateStreakAchievement = async (
     const MS_PER_DAY = 1000 * 60 * 60 * 24;
 
     const { userId } = await auth();
-
     if (!userId) throw new Error("Unauthorised");
 
-    const existingUser = await prisma.user.findUnique({
-        where: { id: userId }
-    })
+    return prisma.$transaction(async (tx) => {
+        // Lock the row so two quiz finishes cannot overwrite each other's streak.
+        const [existingUser] = await tx.$queryRaw<Array<{
+            currentStreak: number;
+            longestStreak: number;
+            lastQuizDate: Date | null;
+            achievements: string;
+        }>>`
+            SELECT "currentStreak", "longestStreak", "lastQuizDate", "achievements"
+            FROM users WHERE id = ${userId} FOR UPDATE
+        `;
 
-    if (!existingUser) throw new Error("User not found!");
+        if (!existingUser) throw new Error("User not found!");
 
-    // for calculating day difference
-    const now = new Date();
-    const today = now.toDateString();
-    const lastDay = existingUser.lastQuizDate?.toDateString();
+        const now = new Date();
+        const utcDay = (date: Date) =>
+            Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate());
 
-    // calculate streak
-    let newStreak = existingUser.currentStreak;
+        const today = utcDay(now);
+        const lastDay = existingUser.lastQuizDate ? utcDay(existingUser.lastQuizDate) : null;
+        const dayDifference = lastDay === null ? -1 : (today - lastDay) / MS_PER_DAY;
 
-    if (lastDay != today) {
-        const dayDifference = existingUser.lastQuizDate
-            ? Math.floor((now.getTime() - existingUser.lastQuizDate.getTime()) / MS_PER_DAY)
-            : -1;
-
+        let newStreak = existingUser.currentStreak;
         if (dayDifference === 1) {
             newStreak += 1;
-        } else if (dayDifference > 1 || lastDay === undefined) {
-            newStreak = 1; // lost streak
+        } else if (dayDifference > 1 || dayDifference < 0) {
+            newStreak = 1;
         }
-    }
 
-    const newLongestStreak = Math.max(existingUser.longestStreak, newStreak);
+        const newLongestStreak = Math.max(existingUser.longestStreak, newStreak);
+        const totalQuizzes = await tx.quiz.count({ where: { userId } });
 
-    const totalQuizzes = await prisma.quiz.count({
-        where: { userId }
-    })
-
-    // update user stats
-    const newStats: UserStats = {
-        totalQuizzes,
-        averageScore: quizScorePercent,
-        currentStreak: newStreak,
-        longestStreak: newLongestStreak,
-    };
-
-
-    const existingAchievements = JSON.parse(existingUser.achievements || "[]");
-    const newAchievements = checkNewAchievementUnlocked(newStats, existingAchievements)
-
-    const allAchievements = [
-        ...existingAchievements,
-        ...newAchievements.map(achievement => achievement.id)
-    ]
-
-    // update the user streak
-    await prisma.user.update({
-        where: { id: userId },
-        data: {
+        const newStats: UserStats = {
+            totalQuizzes,
+            averageScore: quizScorePercent,
             currentStreak: newStreak,
             longestStreak: newLongestStreak,
-            lastQuizDate: now,
-            achievements: JSON.stringify(allAchievements)
-        }
-    })
+        };
 
-    return {
-        streak: newStreak,
-        newAchievements
-    };
-}
+        const existingAchievements = JSON.parse(existingUser.achievements || "[]") as string[];
+        const newAchievements = checkNewAchievementUnlocked(newStats, existingAchievements);
+        const allAchievements = [
+            ...existingAchievements,
+            ...newAchievements.map((achievement) => achievement.id),
+        ];
+
+        await tx.user.update({
+            where: { id: userId },
+            data: {
+                currentStreak: newStreak,
+                longestStreak: newLongestStreak,
+                lastQuizDate: now,
+                achievements: JSON.stringify(allAchievements),
+            },
+        });
+
+        return { streak: newStreak, newAchievements };
+    });
+};

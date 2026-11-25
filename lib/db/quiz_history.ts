@@ -49,6 +49,6 @@ export async function fetchQuizHistoryData(page = 1, limit = 9) {
 
     } catch (error) {
         console.error(error)
-        throw new Error(`Error fetching data: ${error}`)
+        throw new Error("Could not load quiz history")
     }
 }

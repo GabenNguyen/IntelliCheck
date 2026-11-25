@@ -21,14 +21,11 @@ export async function getSubjectData(userId: string): Promise<SubjectData[]> {
   }));
 }
 
-export async function getTopicDistribution(userId: string): Promise<TopicDistribution[]> {
-  const subjectData = await getSubjectData(userId);
+export function buildTopicDistribution(subjectData: SubjectData[]): TopicDistribution[] {
+  const topFive = [...subjectData].sort((a, b) => b.count - a.count).slice(0, 5);
+  const totalCount = topFive.reduce((sum, s) => sum + s.count, 0);
 
-  const sortedSubjects = [...subjectData].sort((a, b) => b.count - a.count).slice(0, 5);
-
-  const totalCount = sortedSubjects.reduce((sum, s) => sum + s.count, 0);
-
-  return sortedSubjects.map((item) => ({
+  return topFive.map((item) => ({
     subject: item.subject,
     count: item.count,
     percentage: totalCount > 0 ? Math.round((item.count / totalCount) * 100) : 0,
